@@ -1,0 +1,3 @@
+development:
+  driver: postgres
+  open: user=shion0625 password=Xshion0912 dbname=portfolio sslmode=disable
