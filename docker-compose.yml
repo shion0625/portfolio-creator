@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: go-api
+    container_name: go-backend
     tty: true
     ports:
       - '8080:8080'
@@ -17,7 +17,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: postgre
+    container_name: postgresql
     environment:
       POSTGRES_DB: 'portfolio'
       POSTGRES_PASSWORD: 'Xshion0912'
