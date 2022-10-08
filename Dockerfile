@@ -7,6 +7,8 @@ ENV APP_ROOT /app
 
 RUN mkdir $APP_ROOT
 
+RUN apk update &&  apk add git
+
 WORKDIR $APP_ROOT
 
 ENV CGO_ENABLED=1 \
@@ -22,5 +24,3 @@ RUN go mod download
 COPY . $APP_ROOT
 
 EXPOSE 8080
-
-CMD ["go", "run", "main.go"]
