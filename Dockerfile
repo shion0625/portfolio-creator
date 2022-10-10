@@ -1,11 +1,13 @@
 # goバージョン
 FROM golang:1.19.1-alpine
 
-RUN apk update && apk add git
+RUN apk update && apk add git && apk add alpine-sdk
 
 ENV APP_ROOT /app
 
 RUN mkdir $APP_ROOT
+
+RUN apk update &&  apk add git
 
 WORKDIR $APP_ROOT
 
@@ -22,5 +24,3 @@ RUN go mod download
 COPY . $APP_ROOT
 
 EXPOSE 8080
-
-CMD ["go", "run", "main.go"]

@@ -1,0 +1,28 @@
+# type： モデル情報を記述
+# Query： データフェッチのエンドポイントを定義
+# input： Mutationのオブジェクトの定義
+# Mutation： データを修正するエンドポイントを定義
+
+type User {
+  id: ID!
+  username: String!
+  password: String!
+  email: String!
+}
+
+###  Query(read系)
+type Query {
+  users: [User!]!
+}
+
+###インプット用のスキーマ定義
+input NewUser {
+  username: String!
+  password: String!
+  email: String!
+}
+
+### Mutation(更新系)の定義
+type Mutation {
+  createUser(input: NewUser!): User!
+}
