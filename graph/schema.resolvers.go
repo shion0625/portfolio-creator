@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
@@ -24,7 +23,9 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented: Users - users"))
+	users := []*model.User{}
+	r.DB.Find(&users)
+	return users, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
