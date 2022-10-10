@@ -32,41 +32,25 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/", welcome())
-
-	port := os.Getenv("PORT")
-
-	errPort := e.Start(port)
-	if errPort != nil {
-		log.Fatalln(errPort)
-	}
-
 	graphqlHandler := handler.NewDefaultServer(
 		generated.NewExecutableSchema(
 			generated.Config{Resolvers: &graph.Resolver{DB: db}},
 		),
 	)
-	playgroundHandler := playground.Handler("GraphQL", "/query")
-
 	e.POST("/query", func(c echo.Context) error {
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})
 
-	e.GET("/playground", func(c echo.Context) error {
-		playgroundHandler.ServeHTTP(c.Response(), c.Request())
-		return nil
-	})
+	e.GET("/", welcome())
+	e.GET("/playground", pagePlayground)
 
-	// srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-
-	// http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	// http.Handle("/query", srv)
-
-	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	// log.Fatal(http.ListenAndServe(":"+port, nil))
+	port := os.Getenv("PORT")
+	errPort := e.Start(port)
+	if errPort == nil {
+		log.Fatalln(errPort)
+	}
 }
-
 
 func welcome() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -84,4 +68,10 @@ func loadEnv() {
 	if err != nil {
 		fmt.Printf("読み込み出来ませんでした: %v", err)
 	}
+}
+
+func pagePlayground(c echo.Context) error {
+	playgroundHandler := playground.Handler("GraphQL playground", "/query")
+	playgroundHandler.ServeHTTP(c.Response(), c.Request())
+	return nil
 }
