@@ -18,4 +18,4 @@ graphql:
 	rm graph/schema.resolvers.go
 	go run github.com/99designs/gqlgen
 graph-generate:
-	go generate ./
+	go generate ./...
