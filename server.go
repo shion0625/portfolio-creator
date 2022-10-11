@@ -3,36 +3,29 @@ package main
 import (
 	"os"
 	"log"
-	"net/http"
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/shion0625/my-portfolio-backend/graph"
-	"github.com/shion0625/my-portfolio-backend/graph/generated"
-	"github.com/shion0625/my-portfolio-backend/db"
+	"fmt"
+	"github.com/shion0625/my-portfolio-backend/handler"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/joho/godotenv"
 )
 
 
 func main() {
-	db := db.ConnectGORM()
+	loadEnv()
 	e := echo.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/", welcome())
-	e.GET("/playground", pagePlayground)
+	e.GET("/", handler.Welcome())
+	e.GET("/playground", handler.Playground())
+	e.POST("/login", handler.Login())
+	e.POST("/query", handler.QueryPlayground())
 
-	graphqlHandler := handler.NewDefaultServer(
-		generated.NewExecutableSchema(
-			generated.Config{Resolvers: &graph.Resolver{DB: db}},
-		),
-	)
-	e.POST("/query", func(c echo.Context) error {
-		graphqlHandler.ServeHTTP(c.Response(), c.Request())
-		return nil
-	})
+	r := e.Group("restricted")
+	r.Use(middleware.JWT([]byte("secret")))
+	r.POST("", handler.Restricted())
 
 	port := os.Getenv("PORT")
 	errPort := e.Start(port)
@@ -41,14 +34,12 @@ func main() {
 	}
 }
 
-func welcome() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		return c.String(http.StatusOK, "Welcome!")
+// ここで.envファイル全体を読み込みます。
+// この読み込み処理がないと、個々の環境変数が取得出来ません。
+func loadEnv() {
+	// 読み込めなかったら err にエラーが入ります。
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Printf("読み込み出来ませんでした: %v", err)
 	}
-}
-
-func pagePlayground(c echo.Context) error {
-	playgroundHandler := playground.Handler("GraphQL playground", "/query")
-	playgroundHandler.ServeHTTP(c.Response(), c.Request())
-	return nil
 }
