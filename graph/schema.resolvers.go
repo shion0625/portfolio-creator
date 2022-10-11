@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
@@ -13,12 +14,19 @@ import (
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	user := model.User{
-		Username: input.Username,
+		IsAdmin:  input.IsAdmin,
+		Name:     input.Name,
 		Password: input.Password,
-		Email: input.Email,
+		Email:    input.Email,
+		IsAble:   input.IsAble,
 	}
 	r.DB.Create(&user)
 	return &user, nil
+}
+
+// CreateWork is the resolver for the createWork field.
+func (r *mutationResolver) CreateWork(ctx context.Context, input model.NewWork) (*model.Work, error) {
+	panic(fmt.Errorf("not implemented: CreateWork - createWork"))
 }
 
 // Users is the resolver for the users field.
@@ -26,6 +34,11 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	users := []*model.User{}
 	r.DB.Find(&users)
 	return users, nil
+}
+
+// Works is the resolver for the works field.
+func (r *queryResolver) Works(ctx context.Context) ([]*model.Work, error) {
+	panic(fmt.Errorf("not implemented: Works - works"))
 }
 
 // Mutation returns generated.MutationResolver implementation.

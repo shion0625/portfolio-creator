@@ -5,24 +5,55 @@
 
 type User {
   id: ID!
-  username: String!
+  is_admin: Boolean!
+  name: String!
   password: String!
   email: String!
+  is_able: Boolean!
 }
+
+type Work {
+  id: ID!
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+  }
 
 ###  Query(read系)
 type Query {
   users: [User!]!
-}
-
-###インプット用のスキーマ定義
-input NewUser {
-  username: String!
-  password: String!
-  email: String!
+  works: [Work!]!
 }
 
 ### Mutation(更新系)の定義
 type Mutation {
   createUser(input: NewUser!): User!
+  createWork(input: NewWork!): Work!
+}
+
+###インプット用のスキーマ定義
+input NewUser {
+  is_admin: Boolean!
+  name: String!
+  password: String!
+  email: String!
+  is_able: Boolean!
+}
+
+input NewWork {
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
 }
