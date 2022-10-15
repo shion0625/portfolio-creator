@@ -5,45 +5,37 @@ import (
 	"log"
 	"net/http"
 	"os"
+  "github.com/gorilla/sessions"
+  "github.com/labstack/echo-contrib/session"
 	"github.com/joho/godotenv"
-  "gorm.io/driver/postgres"
-  "gorm.io/gorm"
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/shion0625/my-portfolio-backend/graph"
-	"github.com/shion0625/my-portfolio-backend/graph/generated"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/shion0625/my-portfolio-backend/handler"
+	"github.com/shion0625/my-portfolio-backend/mymiddleware"
 )
 
 
 func main() {
 	loadEnv()
-	//データベースへの接続
-	dsn := os.Getenv("DATABASE_URL")
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	e := echo.New()
-
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	// cors対策
+  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+        AllowOrigins: []string{"http://localhost:3000"},
+        AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+    }))
+	// sessionの使用
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))))
+	e.GET("/", mymiddleware.SessionHandler())
 
-	graphqlHandler := handler.NewDefaultServer(
-		generated.NewExecutableSchema(
-			generated.Config{Resolvers: &graph.Resolver{DB: db}},
-		),
-	)
-	e.POST("/query", func(c echo.Context) error {
-		graphqlHandler.ServeHTTP(c.Response(), c.Request())
-		return nil
-	})
+	e.GET("/playground", handler.Playground())
+	e.POST("/login", handler.Login())
 
-	e.GET("/", welcome())
-	e.GET("/playground", pagePlayground)
+	r := e.Group("/api")
+	// r.Use(middleware.JWT([]byte("secret")))
+	r.POST("/query", handler.QueryPlayground())
+	e.GET("/welcome", handler.Welcome())
 
 	port := os.Getenv("PORT")
 	errPort := e.Start(port)
@@ -52,26 +44,12 @@ func main() {
 	}
 }
 
-func welcome() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		return c.String(http.StatusOK, "Welcome!")
-	}
-}
-
+// ここで.envファイル全体を読み込みます。
+// この読み込み処理がないと、個々の環境変数が取得出来ません。
 func loadEnv() {
-	// ここで.envファイル全体を読み込みます。
-	// この読み込み処理がないと、個々の環境変数が取得出来ません。
 	// 読み込めなかったら err にエラーが入ります。
 	err := godotenv.Load(".env")
-
-	// もし err がnilではないなら、"読み込み出来ませんでした"が出力されます。
 	if err != nil {
 		fmt.Printf("読み込み出来ませんでした: %v", err)
 	}
-}
-
-func pagePlayground(c echo.Context) error {
-	playgroundHandler := playground.Handler("GraphQL playground", "/query")
-	playgroundHandler.ServeHTTP(c.Response(), c.Request())
-	return nil
 }

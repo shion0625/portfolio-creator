@@ -2,15 +2,117 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type NewUser struct {
-	Username string `json:"username"`
+	IsAdmin  bool   `json:"is_admin"`
+	Name     string `json:"name"`
 	Password string `json:"password"`
 	Email    string `json:"email"`
+	IsAble   bool   `json:"is_able"`
+}
+
+type NewWork struct {
+	Title          string  `json:"title"`
+	Summary        *string `json:"summary"`
+	ImageURL       *string `json:"image_url"`
+	Duration       *string `json:"duration"`
+	NumberOfPeople *int    `json:"number_of_people"`
+	Language       *string `json:"language"`
+	Role           *string `json:"role"`
+	URL            string  `json:"url"`
+	BriefStory     *string `json:"brief_story"`
 }
 
 type User struct {
 	ID       string `json:"id"`
-	Username string `json:"username"`
+	IsAdmin  bool   `json:"is_admin"`
+	Name     string `json:"name"`
 	Password string `json:"password"`
 	Email    string `json:"email"`
+	IsAble   bool   `json:"is_able"`
+}
+
+type Work struct {
+	ID             string  `json:"id"`
+	Title          string  `json:"title"`
+	Summary        *string `json:"summary"`
+	ImageURL       *string `json:"image_url"`
+	Duration       *string `json:"duration"`
+	NumberOfPeople *int    `json:"number_of_people"`
+	Language       *string `json:"language"`
+	Role           *string `json:"role"`
+	URL            string  `json:"url"`
+	BriefStory     *string `json:"brief_story"`
+}
+
+type DeleteWork struct {
+	ID string `json:"id"`
+}
+
+type UpdateUser struct {
+	IsAdmin bool   `json:"is_admin"`
+	Name    string `json:"name"`
+	Email   string `json:"email"`
+	IsAble  bool   `json:"is_able"`
+}
+
+type UpdateWork struct {
+	ID             string  `json:"id"`
+	Title          *string `json:"title"`
+	Summary        *string `json:"summary"`
+	ImageURL       *string `json:"image_url"`
+	Duration       *string `json:"duration"`
+	NumberOfPeople *int    `json:"number_of_people"`
+	Language       *string `json:"language"`
+	Role           *string `json:"role"`
+	URL            *string `json:"url"`
+	BriefStory     *string `json:"brief_story"`
+}
+
+type Role string
+
+const (
+	RoleAdmin  Role = "ADMIN"
+	RoleUser   Role = "USER"
+	RoleViewer Role = "VIEWER"
+)
+
+var AllRole = []Role{
+	RoleAdmin,
+	RoleUser,
+	RoleViewer,
+}
+
+func (e Role) IsValid() bool {
+	switch e {
+	case RoleAdmin, RoleUser, RoleViewer:
+		return true
+	}
+	return false
+}
+
+func (e Role) String() string {
+	return string(e)
+}
+
+func (e *Role) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Role(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Role", str)
+	}
+	return nil
+}
+
+func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

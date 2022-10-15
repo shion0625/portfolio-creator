@@ -5,24 +5,92 @@
 
 type User {
   id: ID!
-  username: String!
+  is_admin: Boolean!
+  name: String!
   password: String!
   email: String!
+  is_able: Boolean!
 }
+
+type Work {
+  id: ID!
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+  }
 
 ###  Query(read系)
 type Query {
   users: [User!]!
-}
-
-###インプット用のスキーマ定義
-input NewUser {
-  username: String!
-  password: String!
-  email: String!
+  works: [Work!]!
+  work: Work!
+  user: User!
 }
 
 ### Mutation(更新系)の定義
 type Mutation {
-  createUser(input: NewUser!): User!
+  createUser(input: NewUser!): User! @hasRole(role: [ADMIN,USER])
+  createWork(input: NewWork!): Work! @hasRole(role: [ADMIN,USER])
+  updateUser(input: updateUser!): User! @hasRole(role: [ADMIN,USER])
+  updateWork(input: updateWork!): Work! @hasRole(role: [ADMIN,USER])
+  deleteWork(input: deleteWork!): Boolean @hasRole(role: [ADMIN,USER])
+}
+
+###インプット用のスキーマ定義
+input NewUser {
+  is_admin: Boolean!
+  name: String!
+  password: String!
+  email: String!
+  is_able: Boolean!
+}
+
+input updateUser {
+  is_admin: Boolean!
+  name: String!
+  email: String!
+  is_able: Boolean!
+}
+
+input NewWork {
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+}
+
+input updateWork {
+  id: ID!
+  title: String
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String
+  brief_story: String
+}
+
+input deleteWork {
+  id: ID!
+}
+
+directive @hasRole(role: [Role!]!) on FIELD_DEFINITION
+
+enum Role {
+  ADMIN
+  USER
+  VIEWER
 }
