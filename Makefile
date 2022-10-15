@@ -15,7 +15,6 @@ migrate-down:
 migrate-force:
 	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path db/migrations force 2
 graphql:
-	rm graph/schema.resolvers.go
 	go run github.com/99designs/gqlgen
 graph-generate:
 	go generate ./...
