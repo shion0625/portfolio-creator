@@ -28,6 +28,7 @@ func main() {
 	e.GET("/logout", handler.Logout())
 
 	g := e.Group("/api")
+	// g.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	g.POST("/query", handler.QueryPlayground())
 	e.GET("/welcome", handler.Welcome())
 

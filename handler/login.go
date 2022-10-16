@@ -2,18 +2,20 @@ package handler
 
 import (
 	"net/http"
+	"os"
 	"time"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo-contrib/session"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/sessions"
-	"github.com/shion0625/my-portfolio-backend/middleware"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	"github.com/shion0625/my-portfolio-backend/db"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/shion0625/my-portfolio-backend/middleware"
 )
 
 func Login(e *echo.Echo) echo.HandlerFunc{
-    e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
+    e.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))))
     return func(c echo.Context) error {
 			username := c.FormValue("username")
 			password := c.FormValue("password")
@@ -32,7 +34,7 @@ func Login(e *echo.Echo) echo.HandlerFunc{
 				claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 				// Generate encoded token and send it as response.
-				t, _ := token.SignedString([]byte("secret"))
+				t, _ := token.SignedString([]byte(os.Getenv("TOKEN_KEY")))
 				return c.JSON(http.StatusOK, map[string]string{
 					"token": t,
 				})
