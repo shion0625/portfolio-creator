@@ -9,7 +9,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shion0625/my-portfolio-backend/handler"
-		"github.com/labstack/echo-contrib/session"
 )
 
 
@@ -25,13 +24,12 @@ func main() {
     }))
 
 	e.GET("/playground", handler.Playground())
-	e.POST("/login", handler.Login(e))
-	e.GET("/session", handler.Logout())
-	e.GET("/secret", secret())
+	e.GET("/login", handler.Login(e))
+	e.GET("/logout", handler.Logout())
 
-	// r := e.Group("/api")
+	r := e.Group("/api")
 	// r.Use(middleware.JWT([]byte("secret")))
-	// r.POST("/query", handler.QueryPlayground())
+	r.POST("/query", handler.QueryPlayground())
 	e.GET("/welcome", handler.Welcome())
 
 	port := os.Getenv("PORT")
@@ -49,21 +47,4 @@ func loadEnv() {
 	if err != nil {
 		fmt.Printf("読み込み出来ませんでした: %v", err)
 	}
-}
-
-func secret() echo.HandlerFunc{
-    return func(c echo.Context)error{
-        //sessionを見る
-        session, err := session.Get("session", c)
-        if err!=nil {
-            return c.String(http.StatusInternalServerError, "Error")
-        }
-					fmt.Println(session)
-        //ログインしているか
-        if b, _:=session.Values["auth"];b!=true{
-            return c.String(http.StatusUnauthorized, "401")
-        }else {
-            return c.String(http.StatusOK, session.Values["role"].(string))
-        }
-    }
 }

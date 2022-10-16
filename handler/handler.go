@@ -1,19 +1,21 @@
 package handler
 
 import (
-	// "context"
-	// "fmt"
+	"context"
+	"fmt"
 	"net/http"
 	"github.com/labstack/echo/v4"
-		// "github.com/99designs/gqlgen/graphql"
+		"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/playground"
 	// "github.com/shion0625/my-portfolio-backend/middleware"
-	// "github.com/shion0625/my-portfolio-backend/db"
-	// "github.com/shion0625/my-portfolio-backend/graph/model"
-	// "github.com/99designs/gqlgen/graphql/handler"
-	// "github.com/shion0625/my-portfolio-backend/graph/generated"
-	// "github.com/shion0625/my-portfolio-backend/graph"
-	// "github.com/shion0625/my-portfolio-backend/graph/directives"
+	"github.com/shion0625/my-portfolio-backend/db"
+	"github.com/shion0625/my-portfolio-backend/graph/model"
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/shion0625/my-portfolio-backend/graph/generated"
+	"github.com/shion0625/my-portfolio-backend/graph"
+	"github.com/shion0625/my-portfolio-backend/graph/directives"
+		"github.com/labstack/echo-contrib/session"
+
 )
 
 func Welcome() echo.HandlerFunc {
@@ -30,26 +32,34 @@ func Playground() echo.HandlerFunc {
 		}
 }
 
-// func QueryPlayground() echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-// 		db := db.ConnectGORM()
-// 		gc:=generated.Config{Resolvers: &graph.Resolver{DB: db}}
-// 			gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
-// 				content, _ := middleware.GetSession(c, "role")
-// 				if !directives.HasRole(content, role) {
-// 					return nil, fmt.Errorf("Access denied")
-// 				}
-// 				return next(ctx)
-// 			}
-// 		graphqlHandler := handler.NewDefaultServer(
-// 		generated.NewExecutableSchema(
-// 			gc,
-// 		),
-// 	)
-// 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
-// 		return nil
-// 	}
-// }
+func QueryPlayground() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		db := db.ConnectGORM()
+		gc:=generated.Config{Resolvers: &graph.Resolver{DB: db}}
+			gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
+				session, err := session.Get("session", c)
+				if err!=nil {
+            return nil, c.String(http.StatusInternalServerError, "Error")
+        }
+				//ログインしているか
+        if b, _:=session.Values["auth"];b!=true{
+            return nil, c.String(http.StatusUnauthorized, "401")
+        }else {
+					if !directives.HasRole(session.Values["role"].(string), role) {
+						return nil, fmt.Errorf("Access denied")
+					}
+					return next(ctx)
+				}
+			}
+		graphqlHandler := handler.NewDefaultServer(
+		generated.NewExecutableSchema(
+			gc,
+		),
+	)
+		graphqlHandler.ServeHTTP(c.Response(), c.Request())
+		return nil
+	}
+}
 
 
 // func Restricted() echo.HandlerFunc  {
