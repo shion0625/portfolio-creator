@@ -8,15 +8,25 @@ import (
 	"strconv"
 )
 
-type NewUser struct {
-	IsAdmin  bool   `json:"is_admin"`
+type Node interface {
+	IsNode()
+	GetID() string
+}
+
+type Pagination interface {
+	IsPagination()
+	GetPageInfo() *PaginationInfo
+	GetNodes() []Node
+}
+
+type CreateUserInput struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 	Email    string `json:"email"`
-	IsAble   bool   `json:"is_able"`
+	IsAdmin  bool   `json:"is_admin"`
 }
 
-type NewWork struct {
+type CreateWorkInput struct {
 	Title          string  `json:"title"`
 	Summary        *string `json:"summary"`
 	ImageURL       *string `json:"image_url"`
@@ -28,13 +38,64 @@ type NewWork struct {
 	BriefStory     *string `json:"brief_story"`
 }
 
+type PaginationInfo struct {
+	Page             int  `json:"page"`
+	PaginationLength int  `json:"paginationLength"`
+	HasNextPage      bool `json:"hasNextPage"`
+	HasPreviousPage  bool `json:"hasPreviousPage"`
+	Count            int  `json:"count"`
+	TotalCount       int  `json:"totalCount"`
+}
+
+type UpdateUserInput struct {
+	ID      string  `json:"id"`
+	IsAdmin *bool   `json:"is_admin"`
+	Name    *string `json:"name"`
+	Email   *string `json:"email"`
+}
+
+type UpdateWorkInput struct {
+	ID             string  `json:"id"`
+	Title          *string `json:"title"`
+	Summary        *string `json:"summary"`
+	ImageURL       *string `json:"image_url"`
+	Duration       *string `json:"duration"`
+	NumberOfPeople *int    `json:"number_of_people"`
+	Language       *string `json:"language"`
+	Role           *string `json:"role"`
+	URL            *string `json:"url"`
+	BriefStory     *string `json:"brief_story"`
+}
+
 type User struct {
-	ID       string `json:"id"`
-	IsAdmin  bool   `json:"is_admin"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	IsAble   bool   `json:"is_able"`
+	ID       string          `json:"id"`
+	IsAdmin  bool            `json:"is_admin"`
+	Name     string          `json:"name"`
+	Password string          `json:"password"`
+	Email    string          `json:"email"`
+	IsAble   bool            `json:"is_able"`
+	Works    *WorkPagination `json:"works"`
+}
+
+func (User) IsNode()            {}
+func (this User) GetID() string { return this.ID }
+
+type UserPagination struct {
+	PageInfo *PaginationInfo `json:"pageInfo"`
+	Nodes    []*User         `json:"nodes"`
+}
+
+func (UserPagination) IsPagination()                     {}
+func (this UserPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
+func (this UserPagination) GetNodes() []Node {
+	if this.Nodes == nil {
+		return nil
+	}
+	interfaceSlice := make([]Node, 0, len(this.Nodes))
+	for _, concrete := range this.Nodes {
+		interfaceSlice = append(interfaceSlice, concrete)
+	}
+	return interfaceSlice
 }
 
 type Work struct {
@@ -48,30 +109,28 @@ type Work struct {
 	Role           *string `json:"role"`
 	URL            string  `json:"url"`
 	BriefStory     *string `json:"brief_story"`
+	User           *User   `json:"user"`
 }
 
-type DeleteWork struct {
-	ID string `json:"id"`
+func (Work) IsNode()            {}
+func (this Work) GetID() string { return this.ID }
+
+type WorkPagination struct {
+	PageInfo *PaginationInfo `json:"pageInfo"`
+	Nodes    []*Work         `json:"nodes"`
 }
 
-type UpdateUser struct {
-	IsAdmin bool   `json:"is_admin"`
-	Name    string `json:"name"`
-	Email   string `json:"email"`
-	IsAble  bool   `json:"is_able"`
-}
-
-type UpdateWork struct {
-	ID             string  `json:"id"`
-	Title          *string `json:"title"`
-	Summary        *string `json:"summary"`
-	ImageURL       *string `json:"image_url"`
-	Duration       *string `json:"duration"`
-	NumberOfPeople *int    `json:"number_of_people"`
-	Language       *string `json:"language"`
-	Role           *string `json:"role"`
-	URL            *string `json:"url"`
-	BriefStory     *string `json:"brief_story"`
+func (WorkPagination) IsPagination()                     {}
+func (this WorkPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
+func (this WorkPagination) GetNodes() []Node {
+	if this.Nodes == nil {
+		return nil
+	}
+	interfaceSlice := make([]Node, 0, len(this.Nodes))
+	for _, concrete := range this.Nodes {
+		interfaceSlice = append(interfaceSlice, concrete)
+	}
+	return interfaceSlice
 }
 
 type Role string
