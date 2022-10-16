@@ -7,7 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 		"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/playground"
-	// "github.com/shion0625/my-portfolio-backend/middleware"
 	"github.com/shion0625/my-portfolio-backend/db"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -15,11 +14,12 @@ import (
 	"github.com/shion0625/my-portfolio-backend/graph"
 	"github.com/shion0625/my-portfolio-backend/graph/directives"
 		"github.com/labstack/echo-contrib/session"
-
 )
 
 func Welcome() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		session, _ := session.Get("session", c)
+		fmt.Println(session)
 		return c.String(http.StatusOK, "Welcome!")
 	}
 }

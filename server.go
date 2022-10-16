@@ -27,9 +27,8 @@ func main() {
 	e.GET("/login", handler.Login(e))
 	e.GET("/logout", handler.Logout())
 
-	r := e.Group("/api")
-	// r.Use(middleware.JWT([]byte("secret")))
-	r.POST("/query", handler.QueryPlayground())
+	g := e.Group("/api")
+	g.POST("/query", handler.QueryPlayground())
 	e.GET("/welcome", handler.Welcome())
 
 	port := os.Getenv("PORT")
