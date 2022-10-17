@@ -36,6 +36,7 @@ type CreateWorkInput struct {
 	Role           *string `json:"role"`
 	URL            string  `json:"url"`
 	BriefStory     *string `json:"brief_story"`
+	UserID         string  `json:"user_id"`
 }
 
 type PaginationInfo struct {

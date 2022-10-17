@@ -567,7 +567,6 @@ input CreateUserInput {
   password: String!
   email: String!
   is_admin: Boolean!
-  # is_able: Boolean!
 }
 
 input UpdateUserInput {
@@ -587,6 +586,7 @@ input CreateWorkInput {
   role: String
   url: String!
   brief_story: String
+  user_id: String!
 }
 
 input UpdateWorkInput {
@@ -4962,7 +4962,7 @@ func (ec *executionContext) unmarshalInputCreateWorkInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "summary", "image_url", "duration", "number_of_people", "language", "role", "url", "brief_story"}
+	fieldsInOrder := [...]string{"title", "summary", "image_url", "duration", "number_of_people", "language", "role", "url", "brief_story", "user_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5038,6 +5038,14 @@ func (ec *executionContext) unmarshalInputCreateWorkInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("brief_story"))
 			it.BriefStory, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "user_id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+			it.UserID, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

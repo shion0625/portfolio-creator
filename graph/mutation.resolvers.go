@@ -22,7 +22,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: input.Password,
-		IsAble: true,
+		IsAble:   true,
 	}
 	result := r.DB.Create(&user)
 	return &user, result.Error
@@ -32,13 +32,13 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUse
 func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUserInput) (*model.User, error) {
 	user := model.User{ID: input.ID}
 	r.DB.First(&user)
-	if(input.IsAdmin ==nil) {
+	if input.IsAdmin == nil {
 		input.IsAdmin = &user.IsAdmin
 	}
-	if(input.Name == nil) {
+	if input.Name == nil {
 		input.Name = &user.Name
 	}
-		if(input.Email ==nil) {
+	if input.Email == nil {
 		input.Email = &user.Email
 	}
 	r.DB.Model(&user).Updates(model.User{IsAdmin: *input.IsAdmin, Name: *input.Name, Email: *input.Email})
@@ -54,7 +54,7 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*bool, er
 	result := r.DB.Save(&user)
 	b := true
 	if result.Error != nil {
-		b =false
+		b = false
 	}
 	return &b, result.Error
 }
@@ -63,34 +63,36 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*bool, er
 func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWorkInput) (*model.Work, error) {
 	id := fmt.Sprintf("work:%d", rand.Int())
 	work := model.Work{
-		ID: base64.StdEncoding.EncodeToString([]byte(id)),
-		Title: input.Title,
-		Summary: input.Summary,
-		ImageURL: input.ImageURL,
-		Duration: input.Duration,
+		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
+		Title:          input.Title,
+		Summary:        input.Summary,
+		ImageURL:       input.ImageURL,
+		Duration:       input.Duration,
 		NumberOfPeople: input.NumberOfPeople,
-		Language: input.Language,
-		Role: input.Role,
-		URL: input.URL,
-		BriefStory: input.BriefStory,
+		Language:       input.Language,
+		Role:           input.Role,
+		URL:            input.URL,
+		BriefStory:     input.BriefStory,
+		UserID:         input.UserID,
 	}
 	r.DB.Create(&work)
-	return &work, nil}
+	return &work, nil
+}
 
 // UpdateWork is the resolver for the updateWork field.
 func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error) {
 	work := model.Work{ID: input.ID}
 	r.DB.First(&work)
 	r.DB.Model(&work).Updates(model.Work{
-		Title: *input.Title,
-		Summary: input.Summary,
-		ImageURL: input.ImageURL,
-		Duration: input.Duration,
+		Title:          *input.Title,
+		Summary:        input.Summary,
+		ImageURL:       input.ImageURL,
+		Duration:       input.Duration,
 		NumberOfPeople: input.NumberOfPeople,
-		Language: input.Language,
-		Role: input.Role,
-		URL: *input.URL,
-		BriefStory: input.BriefStory,
+		Language:       input.Language,
+		Role:           input.Role,
+		URL:            *input.URL,
+		BriefStory:     input.BriefStory,
 	})
 	result := r.DB.Save(&work)
 	return &work, result.Error
@@ -99,9 +101,9 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWor
 // DeleteWork is the resolver for the deleteWork field.
 func (r *mutationResolver) DeleteWork(ctx context.Context, id string) (*bool, error) {
 	result := r.DB.Delete(&model.Work{}, id)
-	b :=true
+	b := true
 	if result.Error != nil {
-		b =false
+		b = false
 	}
 	return &b, result.Error
 }
