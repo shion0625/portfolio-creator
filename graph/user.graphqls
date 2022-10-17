@@ -5,7 +5,7 @@ type User implements Node{
   password: String!
   email: String!
   is_able: Boolean!
-  works: WorkPagination!
+  works: WorkPagination
 }
 
 type UserPagination implements Pagination{

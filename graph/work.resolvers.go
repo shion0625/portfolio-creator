@@ -13,6 +13,8 @@ import (
 
 // User is the resolver for the user field.
 func (r *workResolver) User(ctx context.Context, obj *model.Work) (*model.User, error) {
+	// user, err := r.UserLoader.Load("123")
+
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 

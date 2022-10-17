@@ -13,6 +13,7 @@ import (
 
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error) {
+	// work, err := r.WorkLoader.Load("123")
 	panic(fmt.Errorf("not implemented: Works - works"))
 }
 

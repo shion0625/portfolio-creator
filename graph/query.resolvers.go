@@ -13,7 +13,9 @@ import (
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
+	user := model.User{ID: id}
+	r.DB.First(&user)
+	return &user, nil
 }
 
 // Users is the resolver for the users field.

@@ -1,6 +1,6 @@
 BEGIN;
   CREATE TABLE IF NOT EXISTS works(
-    id serial PRIMARY KEY,
+    id VARCHAR (255) UNIQUE NOT NULL PRIMARY KEY,
     title VARCHAR (255) UNIQUE NOT NULL,
     summary text,
     image_url text,
