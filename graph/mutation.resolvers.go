@@ -50,7 +50,7 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUse
 func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (*bool, error) {
 	user := model.User{ID: id}
 	r.DB.First(&user)
-	r.DB.Model(&user).Updates(model.User{IsAble: false})
+	r.DB.Model(&user).Update("IsAble", true)
 	result := r.DB.Save(&user)
 	b := true
 	if result.Error != nil {
