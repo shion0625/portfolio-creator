@@ -1,0 +1,18 @@
+type Work implements Node{
+  id: ID!
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+  user: User!
+  }
+
+type WorkPagination implements Pagination {
+  pageInfo: PaginationInfo!
+  nodes: [Work!]!
+}

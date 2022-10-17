@@ -38,6 +38,8 @@ type Config struct {
 type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
+	User() UserResolver
+	Work() WorkResolver
 }
 
 type DirectiveRoot struct {
@@ -46,18 +48,28 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Mutation struct {
-		CreateUser func(childComplexity int, input model.NewUser) int
-		CreateWork func(childComplexity int, input model.NewWork) int
-		DeleteWork func(childComplexity int, input model.DeleteWork) int
-		UpdateUser func(childComplexity int, input model.UpdateUser) int
-		UpdateWork func(childComplexity int, input model.UpdateWork) int
+		CreateUser func(childComplexity int, input model.CreateUserInput) int
+		CreateWork func(childComplexity int, input model.CreateWorkInput) int
+		DeleteUser func(childComplexity int, id string) int
+		DeleteWork func(childComplexity int, id string) int
+		UpdateUser func(childComplexity int, input model.UpdateUserInput) int
+		UpdateWork func(childComplexity int, input model.UpdateWorkInput) int
+	}
+
+	PaginationInfo struct {
+		Count            func(childComplexity int) int
+		HasNextPage      func(childComplexity int) int
+		HasPreviousPage  func(childComplexity int) int
+		Page             func(childComplexity int) int
+		PaginationLength func(childComplexity int) int
+		TotalCount       func(childComplexity int) int
 	}
 
 	Query struct {
-		User  func(childComplexity int) int
-		Users func(childComplexity int) int
-		Work  func(childComplexity int) int
-		Works func(childComplexity int) int
+		User  func(childComplexity int, id string) int
+		Users func(childComplexity int, limit int, offset *int) int
+		Work  func(childComplexity int, id string) int
+		Works func(childComplexity int, limit int, offset *int) int
 	}
 
 	User struct {
@@ -67,6 +79,12 @@ type ComplexityRoot struct {
 		IsAdmin  func(childComplexity int) int
 		Name     func(childComplexity int) int
 		Password func(childComplexity int) int
+		Works    func(childComplexity int) int
+	}
+
+	UserPagination struct {
+		Nodes    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
 	}
 
 	Work struct {
@@ -80,21 +98,34 @@ type ComplexityRoot struct {
 		Summary        func(childComplexity int) int
 		Title          func(childComplexity int) int
 		URL            func(childComplexity int) int
+		User           func(childComplexity int) int
+	}
+
+	WorkPagination struct {
+		Nodes    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
-	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
-	CreateWork(ctx context.Context, input model.NewWork) (*model.Work, error)
-	UpdateUser(ctx context.Context, input model.UpdateUser) (*model.User, error)
-	UpdateWork(ctx context.Context, input model.UpdateWork) (*model.Work, error)
-	DeleteWork(ctx context.Context, input model.DeleteWork) (*bool, error)
+	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
+	UpdateUser(ctx context.Context, input model.UpdateUserInput) (*model.User, error)
+	DeleteUser(ctx context.Context, id string) (*bool, error)
+	CreateWork(ctx context.Context, input model.CreateWorkInput) (*model.Work, error)
+	UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error)
+	DeleteWork(ctx context.Context, id string) (*bool, error)
 }
 type QueryResolver interface {
-	Users(ctx context.Context) ([]*model.User, error)
-	Works(ctx context.Context) ([]*model.Work, error)
-	Work(ctx context.Context) (*model.Work, error)
-	User(ctx context.Context) (*model.User, error)
+	User(ctx context.Context, id string) (*model.User, error)
+	Users(ctx context.Context, limit int, offset *int) (*model.UserPagination, error)
+	Work(ctx context.Context, id string) (*model.Work, error)
+	Works(ctx context.Context, limit int, offset *int) (*model.WorkPagination, error)
+}
+type UserResolver interface {
+	Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error)
+}
+type WorkResolver interface {
+	User(ctx context.Context, obj *model.Work) (*model.User, error)
 }
 
 type executableSchema struct {
@@ -122,7 +153,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.NewUser)), true
+		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.CreateUserInput)), true
 
 	case "Mutation.createWork":
 		if e.complexity.Mutation.CreateWork == nil {
@@ -134,7 +165,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateWork(childComplexity, args["input"].(model.NewWork)), true
+		return e.complexity.Mutation.CreateWork(childComplexity, args["input"].(model.CreateWorkInput)), true
+
+	case "Mutation.deleteUser":
+		if e.complexity.Mutation.DeleteUser == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteUser_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteUser(childComplexity, args["id"].(string)), true
 
 	case "Mutation.deleteWork":
 		if e.complexity.Mutation.DeleteWork == nil {
@@ -146,7 +189,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteWork(childComplexity, args["input"].(model.DeleteWork)), true
+		return e.complexity.Mutation.DeleteWork(childComplexity, args["id"].(string)), true
 
 	case "Mutation.updateUser":
 		if e.complexity.Mutation.UpdateUser == nil {
@@ -158,7 +201,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUser(childComplexity, args["input"].(model.UpdateUser)), true
+		return e.complexity.Mutation.UpdateUser(childComplexity, args["input"].(model.UpdateUserInput)), true
 
 	case "Mutation.updateWork":
 		if e.complexity.Mutation.UpdateWork == nil {
@@ -170,35 +213,97 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateWork(childComplexity, args["input"].(model.UpdateWork)), true
+		return e.complexity.Mutation.UpdateWork(childComplexity, args["input"].(model.UpdateWorkInput)), true
+
+	case "PaginationInfo.count":
+		if e.complexity.PaginationInfo.Count == nil {
+			break
+		}
+
+		return e.complexity.PaginationInfo.Count(childComplexity), true
+
+	case "PaginationInfo.hasNextPage":
+		if e.complexity.PaginationInfo.HasNextPage == nil {
+			break
+		}
+
+		return e.complexity.PaginationInfo.HasNextPage(childComplexity), true
+
+	case "PaginationInfo.hasPreviousPage":
+		if e.complexity.PaginationInfo.HasPreviousPage == nil {
+			break
+		}
+
+		return e.complexity.PaginationInfo.HasPreviousPage(childComplexity), true
+
+	case "PaginationInfo.page":
+		if e.complexity.PaginationInfo.Page == nil {
+			break
+		}
+
+		return e.complexity.PaginationInfo.Page(childComplexity), true
+
+	case "PaginationInfo.paginationLength":
+		if e.complexity.PaginationInfo.PaginationLength == nil {
+			break
+		}
+
+		return e.complexity.PaginationInfo.PaginationLength(childComplexity), true
+
+	case "PaginationInfo.totalCount":
+		if e.complexity.PaginationInfo.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.PaginationInfo.TotalCount(childComplexity), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
 			break
 		}
 
-		return e.complexity.Query.User(childComplexity), true
+		args, err := ec.field_Query_user_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.User(childComplexity, args["id"].(string)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
 			break
 		}
 
-		return e.complexity.Query.Users(childComplexity), true
+		args, err := ec.field_Query_users_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Users(childComplexity, args["limit"].(int), args["offset"].(*int)), true
 
 	case "Query.work":
 		if e.complexity.Query.Work == nil {
 			break
 		}
 
-		return e.complexity.Query.Work(childComplexity), true
+		args, err := ec.field_Query_work_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Work(childComplexity, args["id"].(string)), true
 
 	case "Query.works":
 		if e.complexity.Query.Works == nil {
 			break
 		}
 
-		return e.complexity.Query.Works(childComplexity), true
+		args, err := ec.field_Query_works_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Works(childComplexity, args["limit"].(int), args["offset"].(*int)), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -241,6 +346,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Password(childComplexity), true
+
+	case "User.works":
+		if e.complexity.User.Works == nil {
+			break
+		}
+
+		return e.complexity.User.Works(childComplexity), true
+
+	case "UserPagination.nodes":
+		if e.complexity.UserPagination.Nodes == nil {
+			break
+		}
+
+		return e.complexity.UserPagination.Nodes(childComplexity), true
+
+	case "UserPagination.pageInfo":
+		if e.complexity.UserPagination.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.UserPagination.PageInfo(childComplexity), true
 
 	case "Work.brief_story":
 		if e.complexity.Work.BriefStory == nil {
@@ -312,6 +438,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Work.URL(childComplexity), true
 
+	case "Work.user":
+		if e.complexity.Work.User == nil {
+			break
+		}
+
+		return e.complexity.Work.User(childComplexity), true
+
+	case "WorkPagination.nodes":
+		if e.complexity.WorkPagination.Nodes == nil {
+			break
+		}
+
+		return e.complexity.WorkPagination.Nodes(childComplexity), true
+
+	case "WorkPagination.pageInfo":
+		if e.complexity.WorkPagination.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.WorkPagination.PageInfo(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -320,11 +467,10 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
-		ec.unmarshalInputNewUser,
-		ec.unmarshalInputNewWork,
-		ec.unmarshalInputdeleteWork,
-		ec.unmarshalInputupdateUser,
-		ec.unmarshalInputupdateWork,
+		ec.unmarshalInputCreateUserInput,
+		ec.unmarshalInputCreateWorkInput,
+		ec.unmarshalInputUpdateUserInput,
+		ec.unmarshalInputUpdateWorkInput,
 	)
 	first := true
 
@@ -385,67 +531,52 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../schema.graphqls", Input: `# type： モデル情報を記述
-# Query： データフェッチのエンドポイントを定義
-# input： Mutationのオブジェクトの定義
-# Mutation： データを修正するエンドポイントを定義
-
-type User {
-  id: ID!
-  is_admin: Boolean!
-  name: String!
-  password: String!
-  email: String!
-  is_able: Boolean!
+	{Name: "../common.graphqls", Input: `interface Node {
+    id: ID!
 }
 
-type Work {
-  id: ID!
-  title: String!
-  summary: String
-  image_url: String
-  duration: String
-  number_of_people: Int
-  language: String
-  role: String
-  url: String!
-  brief_story: String
-  }
+scalar Timestamp
 
-###  Query(read系)
-type Query {
-  users: [User!]!
-  works: [Work!]!
-  work: Work!
-  user: User!
+interface Pagination {
+    pageInfo: PaginationInfo!
+    nodes: [Node!]! # Node型の配列という意味
 }
 
-### Mutation(更新系)の定義
+type PaginationInfo {
+    page: Int!
+    paginationLength: Int!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    count: Int!
+    totalCount: Int!
+}
+`, BuiltIn: false},
+	{Name: "../mutation.graphqls", Input: `### Mutation(更新系)の定義
 type Mutation {
-  createUser(input: NewUser!): User! @hasRole(role: [ADMIN,USER])
-  createWork(input: NewWork!): Work! @hasRole(role: [ADMIN,USER])
-  updateUser(input: updateUser!): User! @hasRole(role: [ADMIN,USER])
-  updateWork(input: updateWork!): Work! @hasRole(role: [ADMIN,USER])
-  deleteWork(input: deleteWork!): Boolean @hasRole(role: [ADMIN,USER])
+  createUser(input: CreateUserInput!): User! @hasRole(role: [ADMIN,USER])
+  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER])
+  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
+  createWork(input: CreateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
+  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
+  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
 }
 
 ###インプット用のスキーマ定義
-input NewUser {
-  is_admin: Boolean!
+input CreateUserInput {
   name: String!
   password: String!
   email: String!
-  is_able: Boolean!
-}
-
-input updateUser {
   is_admin: Boolean!
-  name: String!
-  email: String!
-  is_able: Boolean!
 }
 
-input NewWork {
+input UpdateUserInput {
+  id: ID!
+  is_admin: Boolean
+  name: String
+  email: String
+}
+
+input CreateWorkInput {
   title: String!
   summary: String
   image_url: String
@@ -455,9 +586,10 @@ input NewWork {
   role: String
   url: String!
   brief_story: String
+  user_id: String!
 }
 
-input updateWork {
+input UpdateWorkInput {
   id: ID!
   title: String
   summary: String
@@ -470,16 +602,54 @@ input updateWork {
   brief_story: String
 }
 
-input deleteWork {
-  id: ID!
-}
-
 directive @hasRole(role: [Role!]!) on FIELD_DEFINITION
 
 enum Role {
   ADMIN
   USER
   VIEWER
+}
+`, BuiltIn: false},
+	{Name: "../query.graphqls", Input: `###  Query(read系)
+type Query {
+  user(id: ID!): User
+  users(limit: Int!, offset: Int): UserPagination
+  work(id: ID!): Work
+  works(limit: Int!, offset: Int): WorkPagination
+}
+`, BuiltIn: false},
+	{Name: "../user.graphqls", Input: `type User implements Node{
+  id: ID!
+  is_admin: Boolean!
+  name: String!
+  password: String!
+  email: String!
+  is_able: Boolean!
+  works: WorkPagination
+}
+
+type UserPagination implements Pagination{
+    pageInfo: PaginationInfo!
+    nodes: [User!]!
+}
+`, BuiltIn: false},
+	{Name: "../work.graphqls", Input: `type Work implements Node{
+  id: ID!
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+  user: User!
+  }
+
+type WorkPagination implements Pagination {
+  pageInfo: PaginationInfo!
+  nodes: [Work!]!
 }
 `, BuiltIn: false},
 }
@@ -507,10 +677,10 @@ func (ec *executionContext) dir_hasRole_args(ctx context.Context, rawArgs map[st
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewUser
+	var arg0 model.CreateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewUser2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐNewUser(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐCreateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -522,40 +692,55 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_createWork_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewWork
+	var arg0 model.CreateWorkInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐNewWork(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐCreateWorkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
 func (ec *executionContext) field_Mutation_deleteWork_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.DeleteWork
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNdeleteWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐDeleteWork(ctx, tmp)
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["input"] = arg0
+	args["id"] = arg0
 	return args, nil
 }
 
 func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateUser
+	var arg0 model.UpdateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNupdateUser2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateUser(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateUserInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -567,10 +752,10 @@ func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updateWork_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UpdateWork
+	var arg0 model.UpdateWorkInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNupdateWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateWork(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateWorkInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateWorkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -591,6 +776,84 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_user_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["limit"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["limit"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["offset"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["offset"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_work_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_works_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["limit"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["limit"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["offset"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["offset"] = arg1
 	return args, nil
 }
 
@@ -647,7 +910,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateUser(rctx, fc.Args["input"].(model.NewUser))
+			return ec.resolvers.Mutation().CreateUser(rctx, fc.Args["input"].(model.CreateUserInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
@@ -707,6 +970,8 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 				return ec.fieldContext_User_email(ctx, field)
 			case "is_able":
 				return ec.fieldContext_User_is_able(ctx, field)
+			case "works":
+				return ec.fieldContext_User_works(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
@@ -719,6 +984,177 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateUser(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["input"].(model.UpdateUserInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.User); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio-backend/graph/model.User`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "is_admin":
+				return ec.fieldContext_User_is_admin(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "password":
+				return ec.fieldContext_User_password(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "is_able":
+				return ec.fieldContext_User_is_able(ctx, field)
+			case "works":
+				return ec.fieldContext_User_works(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteUser(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["id"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -740,7 +1176,7 @@ func (ec *executionContext) _Mutation_createWork(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateWork(rctx, fc.Args["input"].(model.NewWork))
+			return ec.resolvers.Mutation().CreateWork(rctx, fc.Args["input"].(model.CreateWorkInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
@@ -808,6 +1244,8 @@ func (ec *executionContext) fieldContext_Mutation_createWork(ctx context.Context
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "user":
+				return ec.fieldContext_Work_user(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
 		},
@@ -820,99 +1258,6 @@ func (ec *executionContext) fieldContext_Mutation_createWork(ctx context.Context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createWork_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateUser(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		directive0 := func(rctx context.Context) (interface{}, error) {
-			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["input"].(model.UpdateUser))
-		}
-		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-
-		tmp, err := directive1(rctx)
-		if err != nil {
-			return nil, graphql.ErrorOnPath(ctx, err)
-		}
-		if tmp == nil {
-			return nil, nil
-		}
-		if data, ok := tmp.(*model.User); ok {
-			return data, nil
-		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio-backend/graph/model.User`, tmp)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.User)
-	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_User_id(ctx, field)
-			case "is_admin":
-				return ec.fieldContext_User_is_admin(ctx, field)
-			case "name":
-				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
-			case "email":
-				return ec.fieldContext_User_email(ctx, field)
-			case "is_able":
-				return ec.fieldContext_User_is_able(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -934,7 +1279,7 @@ func (ec *executionContext) _Mutation_updateWork(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateWork(rctx, fc.Args["input"].(model.UpdateWork))
+			return ec.resolvers.Mutation().UpdateWork(rctx, fc.Args["input"].(model.UpdateWorkInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
@@ -1002,6 +1347,8 @@ func (ec *executionContext) fieldContext_Mutation_updateWork(ctx context.Context
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "user":
+				return ec.fieldContext_Work_user(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
 		},
@@ -1035,7 +1382,7 @@ func (ec *executionContext) _Mutation_deleteWork(ctx context.Context, field grap
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteWork(rctx, fc.Args["input"].(model.DeleteWork))
+			return ec.resolvers.Mutation().DeleteWork(rctx, fc.Args["id"].(string))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
@@ -1096,8 +1443,8 @@ func (ec *executionContext) fieldContext_Mutation_deleteWork(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_users(ctx, field)
+func (ec *executionContext) _PaginationInfo_page(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PaginationInfo_page(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1110,7 +1457,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Users(rctx)
+		return obj.Page, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1122,12 +1469,273 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.User)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PaginationInfo_page(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PaginationInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PaginationInfo_paginationLength(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PaginationInfo_paginationLength(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PaginationLength, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PaginationInfo_paginationLength(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PaginationInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PaginationInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PaginationInfo_hasNextPage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasNextPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PaginationInfo_hasNextPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PaginationInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PaginationInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PaginationInfo_hasPreviousPage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasPreviousPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PaginationInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PaginationInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PaginationInfo_count(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PaginationInfo_count(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Count, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PaginationInfo_count(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PaginationInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PaginationInfo_totalCount(ctx context.Context, field graphql.CollectedField, obj *model.PaginationInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PaginationInfo_totalCount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PaginationInfo_totalCount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PaginationInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_user(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().User(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -1147,15 +1755,28 @@ func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field 
 				return ec.fieldContext_User_email(ctx, field)
 			case "is_able":
 				return ec.fieldContext_User_is_able(ctx, field)
+			case "works":
+				return ec.fieldContext_User_works(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
 	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_user_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_works(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_works(ctx, field)
+func (ec *executionContext) _Query_users(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_users(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1168,24 +1789,21 @@ func (ec *executionContext) _Query_works(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Works(rctx)
+		return ec.resolvers.Query().Users(rctx, fc.Args["limit"].(int), fc.Args["offset"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Work)
+	res := resTmp.(*model.UserPagination)
 	fc.Result = res
-	return ec.marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkᚄ(ctx, field.Selections, res)
+	return ec.marshalOUserPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -1193,29 +1811,24 @@ func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field 
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Work_id(ctx, field)
-			case "title":
-				return ec.fieldContext_Work_title(ctx, field)
-			case "summary":
-				return ec.fieldContext_Work_summary(ctx, field)
-			case "image_url":
-				return ec.fieldContext_Work_image_url(ctx, field)
-			case "duration":
-				return ec.fieldContext_Work_duration(ctx, field)
-			case "number_of_people":
-				return ec.fieldContext_Work_number_of_people(ctx, field)
-			case "language":
-				return ec.fieldContext_Work_language(ctx, field)
-			case "role":
-				return ec.fieldContext_Work_role(ctx, field)
-			case "url":
-				return ec.fieldContext_Work_url(ctx, field)
-			case "brief_story":
-				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_UserPagination_pageInfo(ctx, field)
+			case "nodes":
+				return ec.fieldContext_UserPagination_nodes(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type UserPagination", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_users_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -1234,21 +1847,18 @@ func (ec *executionContext) _Query_work(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Work(rctx)
+		return ec.resolvers.Query().Work(rctx, fc.Args["id"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.Work)
 	fc.Result = res
-	return ec.marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWork(ctx, field.Selections, res)
+	return ec.marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWork(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_work(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1279,15 +1889,28 @@ func (ec *executionContext) fieldContext_Query_work(ctx context.Context, field g
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "user":
+				return ec.fieldContext_Work_user(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
 		},
 	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_work_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_user(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_user(ctx, field)
+func (ec *executionContext) _Query_works(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_works(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1300,24 +1923,21 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().User(rctx)
+		return ec.resolvers.Query().Works(rctx, fc.Args["limit"].(int), fc.Args["offset"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.User)
+	res := resTmp.(*model.WorkPagination)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -1325,21 +1945,24 @@ func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field g
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_User_id(ctx, field)
-			case "is_admin":
-				return ec.fieldContext_User_is_admin(ctx, field)
-			case "name":
-				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
-			case "email":
-				return ec.fieldContext_User_email(ctx, field)
-			case "is_able":
-				return ec.fieldContext_User_is_able(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_WorkPagination_pageInfo(ctx, field)
+			case "nodes":
+				return ec.fieldContext_WorkPagination_nodes(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type WorkPagination", field.Name)
 		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_works_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -1732,6 +2355,171 @@ func (ec *executionContext) fieldContext_User_is_able(ctx context.Context, field
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _User_works(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_works(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.User().Works(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.WorkPagination)
+	fc.Result = res
+	return ec.marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_works(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "pageInfo":
+				return ec.fieldContext_WorkPagination_pageInfo(ctx, field)
+			case "nodes":
+				return ec.fieldContext_WorkPagination_nodes(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type WorkPagination", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserPagination_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.UserPagination) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserPagination_pageInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.PaginationInfo)
+	fc.Result = res
+	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐPaginationInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserPagination_pageInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserPagination",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "page":
+				return ec.fieldContext_PaginationInfo_page(ctx, field)
+			case "paginationLength":
+				return ec.fieldContext_PaginationInfo_paginationLength(ctx, field)
+			case "hasNextPage":
+				return ec.fieldContext_PaginationInfo_hasNextPage(ctx, field)
+			case "hasPreviousPage":
+				return ec.fieldContext_PaginationInfo_hasPreviousPage(ctx, field)
+			case "count":
+				return ec.fieldContext_PaginationInfo_count(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_PaginationInfo_totalCount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PaginationInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserPagination_nodes(ctx context.Context, field graphql.CollectedField, obj *model.UserPagination) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserPagination_nodes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Nodes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserPagination_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserPagination",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "is_admin":
+				return ec.fieldContext_User_is_admin(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "password":
+				return ec.fieldContext_User_password(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "is_able":
+				return ec.fieldContext_User_is_able(ctx, field)
+			case "works":
+				return ec.fieldContext_User_works(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
 		},
 	}
 	return fc, nil
@@ -2151,6 +2939,192 @@ func (ec *executionContext) fieldContext_Work_brief_story(ctx context.Context, f
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Work_user(ctx context.Context, field graphql.CollectedField, obj *model.Work) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Work_user(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Work().User(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Work_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Work",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "is_admin":
+				return ec.fieldContext_User_is_admin(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "password":
+				return ec.fieldContext_User_password(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "is_able":
+				return ec.fieldContext_User_is_able(ctx, field)
+			case "works":
+				return ec.fieldContext_User_works(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _WorkPagination_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.WorkPagination) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_WorkPagination_pageInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.PaginationInfo)
+	fc.Result = res
+	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐPaginationInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_WorkPagination_pageInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "WorkPagination",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "page":
+				return ec.fieldContext_PaginationInfo_page(ctx, field)
+			case "paginationLength":
+				return ec.fieldContext_PaginationInfo_paginationLength(ctx, field)
+			case "hasNextPage":
+				return ec.fieldContext_PaginationInfo_hasNextPage(ctx, field)
+			case "hasPreviousPage":
+				return ec.fieldContext_PaginationInfo_hasPreviousPage(ctx, field)
+			case "count":
+				return ec.fieldContext_PaginationInfo_count(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_PaginationInfo_totalCount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PaginationInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _WorkPagination_nodes(ctx context.Context, field graphql.CollectedField, obj *model.WorkPagination) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_WorkPagination_nodes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Nodes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Work)
+	fc.Result = res
+	return ec.marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_WorkPagination_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "WorkPagination",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Work_id(ctx, field)
+			case "title":
+				return ec.fieldContext_Work_title(ctx, field)
+			case "summary":
+				return ec.fieldContext_Work_summary(ctx, field)
+			case "image_url":
+				return ec.fieldContext_Work_image_url(ctx, field)
+			case "duration":
+				return ec.fieldContext_Work_duration(ctx, field)
+			case "number_of_people":
+				return ec.fieldContext_Work_number_of_people(ctx, field)
+			case "language":
+				return ec.fieldContext_Work_language(ctx, field)
+			case "role":
+				return ec.fieldContext_Work_role(ctx, field)
+			case "url":
+				return ec.fieldContext_Work_url(ctx, field)
+			case "brief_story":
+				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "user":
+				return ec.fieldContext_Work_user(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
 		},
 	}
 	return fc, nil
@@ -3929,28 +4903,20 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj interface{}) (model.NewUser, error) {
-	var it model.NewUser
+func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, obj interface{}) (model.CreateUserInput, error) {
+	var it model.CreateUserInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"is_admin", "name", "password", "email", "is_able"}
+	fieldsInOrder := [...]string{"name", "password", "email", "is_admin"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "is_admin":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("is_admin"))
-			it.IsAdmin, err = ec.unmarshalNBoolean2bool(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "name":
 			var err error
 
@@ -3975,11 +4941,11 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 			if err != nil {
 				return it, err
 			}
-		case "is_able":
+		case "is_admin":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("is_able"))
-			it.IsAble, err = ec.unmarshalNBoolean2bool(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("is_admin"))
+			it.IsAdmin, err = ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3989,14 +4955,14 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputNewWork(ctx context.Context, obj interface{}) (model.NewWork, error) {
-	var it model.NewWork
+func (ec *executionContext) unmarshalInputCreateWorkInput(ctx context.Context, obj interface{}) (model.CreateWorkInput, error) {
+	var it model.CreateWorkInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "summary", "image_url", "duration", "number_of_people", "language", "role", "url", "brief_story"}
+	fieldsInOrder := [...]string{"title", "summary", "image_url", "duration", "number_of_people", "language", "role", "url", "brief_story", "user_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4075,20 +5041,28 @@ func (ec *executionContext) unmarshalInputNewWork(ctx context.Context, obj inter
 			if err != nil {
 				return it, err
 			}
+		case "user_id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user_id"))
+			it.UserID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputdeleteWork(ctx context.Context, obj interface{}) (model.DeleteWork, error) {
-	var it model.DeleteWork
+func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, obj interface{}) (model.UpdateUserInput, error) {
+	var it model.UpdateUserInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id"}
+	fieldsInOrder := [...]string{"id", "is_admin", "name", "email"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4103,31 +5077,11 @@ func (ec *executionContext) unmarshalInputdeleteWork(ctx context.Context, obj in
 			if err != nil {
 				return it, err
 			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputupdateUser(ctx context.Context, obj interface{}) (model.UpdateUser, error) {
-	var it model.UpdateUser
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"is_admin", "name", "email", "is_able"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
 		case "is_admin":
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("is_admin"))
-			it.IsAdmin, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.IsAdmin, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4135,7 +5089,7 @@ func (ec *executionContext) unmarshalInputupdateUser(ctx context.Context, obj in
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4143,15 +5097,7 @@ func (ec *executionContext) unmarshalInputupdateUser(ctx context.Context, obj in
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-			it.Email, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "is_able":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("is_able"))
-			it.IsAble, err = ec.unmarshalNBoolean2bool(ctx, v)
+			it.Email, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4161,8 +5107,8 @@ func (ec *executionContext) unmarshalInputupdateUser(ctx context.Context, obj in
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputupdateWork(ctx context.Context, obj interface{}) (model.UpdateWork, error) {
-	var it model.UpdateWork
+func (ec *executionContext) unmarshalInputUpdateWorkInput(ctx context.Context, obj interface{}) (model.UpdateWorkInput, error) {
+	var it model.UpdateWorkInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -4265,6 +5211,52 @@ func (ec *executionContext) unmarshalInputupdateWork(ctx context.Context, obj in
 
 // region    ************************** interface.gotpl ***************************
 
+func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj model.Node) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case model.User:
+		return ec._User(ctx, sel, &obj)
+	case *model.User:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._User(ctx, sel, obj)
+	case model.Work:
+		return ec._Work(ctx, sel, &obj)
+	case *model.Work:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Work(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
+func (ec *executionContext) _Pagination(ctx context.Context, sel ast.SelectionSet, obj model.Pagination) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case model.UserPagination:
+		return ec._UserPagination(ctx, sel, &obj)
+	case *model.UserPagination:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._UserPagination(ctx, sel, obj)
+	case model.WorkPagination:
+		return ec._WorkPagination(ctx, sel, &obj)
+	case *model.WorkPagination:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._WorkPagination(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
@@ -4297,19 +5289,25 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "createWork":
+		case "updateUser":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_createWork(ctx, field)
+				return ec._Mutation_updateUser(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "updateUser":
+		case "deleteUser":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateUser(ctx, field)
+				return ec._Mutation_deleteUser(ctx, field)
+			})
+
+		case "createWork":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createWork(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -4341,6 +5339,69 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	return out
 }
 
+var paginationInfoImplementors = []string{"PaginationInfo"}
+
+func (ec *executionContext) _PaginationInfo(ctx context.Context, sel ast.SelectionSet, obj *model.PaginationInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, paginationInfoImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PaginationInfo")
+		case "page":
+
+			out.Values[i] = ec._PaginationInfo_page(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "paginationLength":
+
+			out.Values[i] = ec._PaginationInfo_paginationLength(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hasNextPage":
+
+			out.Values[i] = ec._PaginationInfo_hasNextPage(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hasPreviousPage":
+
+			out.Values[i] = ec._PaginationInfo_hasPreviousPage(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "count":
+
+			out.Values[i] = ec._PaginationInfo_count(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalCount":
+
+			out.Values[i] = ec._PaginationInfo_totalCount(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -4360,7 +5421,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "users":
+		case "user":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -4369,10 +5430,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_users(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
+				res = ec._Query_user(ctx, field)
 				return res
 			}
 
@@ -4383,7 +5441,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "works":
+		case "users":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -4392,10 +5450,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_works(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
+				res = ec._Query_users(ctx, field)
 				return res
 			}
 
@@ -4416,9 +5471,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_work(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -4429,7 +5481,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "user":
+		case "works":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -4438,10 +5490,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_user(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
+				res = ec._Query_works(ctx, field)
 				return res
 			}
 
@@ -4475,7 +5524,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var userImplementors = []string{"User"}
+var userImplementors = []string{"User", "Node"}
 
 func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
@@ -4490,39 +5539,91 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._User_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "is_admin":
 
 			out.Values[i] = ec._User_is_admin(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 
 			out.Values[i] = ec._User_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "password":
 
 			out.Values[i] = ec._User_password(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "email":
 
 			out.Values[i] = ec._User_email(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "is_able":
 
 			out.Values[i] = ec._User_is_able(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "works":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_works(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var userPaginationImplementors = []string{"UserPagination", "Pagination"}
+
+func (ec *executionContext) _UserPagination(ctx context.Context, sel ast.SelectionSet, obj *model.UserPagination) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, userPaginationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UserPagination")
+		case "pageInfo":
+
+			out.Values[i] = ec._UserPagination_pageInfo(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "nodes":
+
+			out.Values[i] = ec._UserPagination_nodes(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -4538,7 +5639,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
-var workImplementors = []string{"Work"}
+var workImplementors = []string{"Work", "Node"}
 
 func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj *model.Work) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, workImplementors)
@@ -4553,14 +5654,14 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Work_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "title":
 
 			out.Values[i] = ec._Work_title(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "summary":
 
@@ -4591,12 +5692,67 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Work_url(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "brief_story":
 
 			out.Values[i] = ec._Work_brief_story(ctx, field, obj)
 
+		case "user":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Work_user(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var workPaginationImplementors = []string{"WorkPagination", "Pagination"}
+
+func (ec *executionContext) _WorkPagination(ctx context.Context, sel ast.SelectionSet, obj *model.WorkPagination) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, workPaginationImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("WorkPagination")
+		case "pageInfo":
+
+			out.Values[i] = ec._WorkPagination_pageInfo(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "nodes":
+
+			out.Values[i] = ec._WorkPagination_nodes(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4941,6 +6097,16 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
+	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐCreateWorkInput(ctx context.Context, v interface{}) (model.CreateWorkInput, error) {
+	res, err := ec.unmarshalInputCreateWorkInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4956,14 +6122,29 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewUser2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐNewUser(ctx context.Context, v interface{}) (model.NewUser, error) {
-	res, err := ec.unmarshalInputNewUser(ctx, v)
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐNewWork(ctx context.Context, v interface{}) (model.NewWork, error) {
-	res, err := ec.unmarshalInputNewWork(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐPaginationInfo(ctx context.Context, sel ast.SelectionSet, v *model.PaginationInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PaginationInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRole(ctx context.Context, v interface{}) (model.Role, error) {
@@ -5050,6 +6231,16 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateUserInput(ctx context.Context, v interface{}) (model.UpdateUserInput, error) {
+	res, err := ec.unmarshalInputUpdateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateWorkInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateWorkInput(ctx context.Context, v interface{}) (model.UpdateWorkInput, error) {
+	res, err := ec.unmarshalInputUpdateWorkInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
@@ -5421,21 +6612,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) unmarshalNdeleteWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐDeleteWork(ctx context.Context, v interface{}) (model.DeleteWork, error) {
-	res, err := ec.unmarshalInputdeleteWork(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNupdateUser2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateUser(ctx context.Context, v interface{}) (model.UpdateUser, error) {
-	res, err := ec.unmarshalInputupdateUser(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNupdateWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUpdateWork(ctx context.Context, v interface{}) (model.UpdateWork, error) {
-	res, err := ec.unmarshalInputupdateWork(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5492,6 +6668,34 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._User(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUserPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v *model.UserPagination) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UserPagination(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWork(ctx context.Context, sel ast.SelectionSet, v *model.Work) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Work(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v *model.WorkPagination) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._WorkPagination(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {
