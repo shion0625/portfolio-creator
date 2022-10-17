@@ -5,13 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-  "github.com/gorilla/sessions"
-  "github.com/labstack/echo-contrib/session"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shion0625/my-portfolio-backend/handler"
-	"github.com/shion0625/my-portfolio-backend/mymiddleware"
 )
 
 
@@ -25,16 +22,13 @@ func main() {
         AllowOrigins: []string{"http://localhost:3000"},
         AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
     }))
-	// sessionの使用
-	e.Use(session.Middleware(sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))))
-	e.GET("/", mymiddleware.SessionHandler())
-
 	e.GET("/playground", handler.Playground())
-	e.POST("/login", handler.Login())
+	e.GET("/login", handler.Login(e))
+	e.GET("/logout", handler.Logout())
 
-	r := e.Group("/api")
-	// r.Use(middleware.JWT([]byte("secret")))
-	r.POST("/query", handler.QueryPlayground())
+	g := e.Group("/api")
+	// g.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	g.POST("/query", handler.QueryPlayground())
 	e.GET("/welcome", handler.Welcome())
 
 	port := os.Getenv("PORT")

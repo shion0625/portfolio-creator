@@ -4,25 +4,24 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 	"github.com/labstack/echo/v4"
-	"github.com/dgrijalva/jwt-go"
-		"github.com/99designs/gqlgen/graphql"
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/shion0625/my-portfolio-backend/db"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph"
-	"github.com/shion0625/my-portfolio-backend/graph/directives"
-  "github.com/labstack/echo-contrib/session"
+	_"github.com/shion0625/my-portfolio-backend/graph/directives"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/shion0625/my-portfolio-backend/dataloader"
+
 )
 
 func Welcome() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		session, _ := session.Get("session_agent", c)
-		content := session.Values["foo"]
-		fmt.Println(content)
+		session, _ := session.Get("session", c)
+		fmt.Println(session)
 		return c.String(http.StatusOK, "Welcome!")
 	}
 }
@@ -36,65 +35,43 @@ func Playground() echo.HandlerFunc {
 }
 
 func QueryPlayground() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		userLoader := dataloader.NewUserLoader()
+		workLoader := dataloader.NewWorkLoader()
+
 		db := db.ConnectGORM()
-		c:=generated.Config{Resolvers: &graph.Resolver{DB: db}}
-			c.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
-				token, _ := directives.GetToken(ctx)
-				if !directives.HasRole(token, role) {
-					return nil, fmt.Errorf("Access denied")
-				}
+		gc:=generated.Config{Resolvers: &graph.Resolver{
+			DB: db,
+			UserLoader: userLoader,
+			WorkLoader: workLoader,
+		}}
+			gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
+				// session, err := session.Get("session", c)
+				// if err!=nil {
+        //     return nil, c.String(http.StatusInternalServerError, "Error")
+        // }
+				// //ログインしているか
+        // if b, _:=session.Values["auth"];b!=true{
+        //     return nil, c.String(http.StatusUnauthorized, "401")
+        // }else {
+				// 	if !directives.HasRole(session.Values["role"].(string), role) {
+				// 		return nil, fmt.Errorf("Access denied")
+				// 	}
+				// 	return next(ctx)
+				// }
 				return next(ctx)
 			}
 		graphqlHandler := handler.NewDefaultServer(
 		generated.NewExecutableSchema(
-			c,
+			gc,
 		),
 	)
-	return func(c echo.Context) error {
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	}
 }
 
-func Login() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		username := c.FormValue("username")
-		password := c.FormValue("password")
-		db := db.ConnectGORM()
-		user := [] model.User{}
-		db.Find(&user, "name=? and password=?", username, password)
-		if len(user) > 0 && username == user[0].Name {
-      // Create token
-			token := jwt.New(jwt.SigningMethodHS256)
 
-			// Set claims
-			claims := token.Claims.(jwt.MapClaims)
-			claims["name"] = username
-			claims["admin"] = true
-			claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-			fmt.Println(claims)
-
-			// Generate encoded token and send it as response.
-      t, err := token.SignedString([]byte("secret"))
-
-      if err != nil {
-				fmt.Println(err)
-        return err
-      }
-    return c.JSON(http.StatusOK, map[string]string{
-			"token": t,
-    })
-		}
-		return echo.ErrUnauthorized
-	}
-}
-
-func SetRole(ctx context.Context, is_admin bool) context.Context{
-	if is_admin {
-		return directives.SetToken(ctx, "ADMIN")
-	}
-	return directives.SetToken(ctx, "USER")
-}
 // func Restricted() echo.HandlerFunc  {
 //   return func(c echo.Context) error {
 // 		db := db.ConnectGORM()
