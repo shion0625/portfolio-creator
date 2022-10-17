@@ -82,6 +82,13 @@ func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWor
 // UpdateWork is the resolver for the updateWork field.
 func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error) {
 	work := model.Work{ID: input.ID}
+	if input.Title == nil {
+		input.Title = &work.Title
+	}
+	if input.URL == nil {
+		input.URL = &work.URL
+	}
+
 	r.DB.First(&work)
 	r.DB.Model(&work).Updates(model.Work{
 		Title:          *input.Title,
@@ -100,7 +107,8 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWor
 
 // DeleteWork is the resolver for the deleteWork field.
 func (r *mutationResolver) DeleteWork(ctx context.Context, id string) (*bool, error) {
-	result := r.DB.Delete(&model.Work{}, id)
+		work := model.Work{ID: id}
+	result := r.DB.Delete(&work)
 	b := true
 	if result.Error != nil {
 		b = false
