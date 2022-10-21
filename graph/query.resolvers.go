@@ -6,7 +6,7 @@ package graph
 import (
 	"context"
 	"fmt"
-
+	"math"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
 )
@@ -32,7 +32,36 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error
 
 // Works is the resolver for the works field.
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*model.WorkPagination, error) {
-	panic(fmt.Errorf("not implemented: Works - works"))
+	var totalCount int64
+	hasNextPage := true
+	hasPreviousPage := true
+
+	works := []*model.Work{}
+	r.DB.Model(&model.Work{}).Count(&totalCount)
+	result := r.DB.Debug().Limit(limit).Offset(*offset).Find(&works)
+	if limit < *offset {
+		hasPreviousPage = false
+	}
+	if int(totalCount) < limit + *offset {
+		hasNextPage = false
+	}
+	// if int(result.RowsAffected) == 0 {
+	// 	result.Error = "データが見つかりませんでした。"
+	// }
+
+	pageInfo := model.PaginationInfo{
+		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
+		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
+		HasNextPage:      hasNextPage,
+		HasPreviousPage:  hasPreviousPage,
+		Count:            int(result.RowsAffected),
+		TotalCount:       int(totalCount),
+	}
+	pagination := model.WorkPagination{
+		PageInfo: &pageInfo,
+		Nodes:    works,
+	}
+	return &pagination, result.Error
 }
 
 // Query returns generated.QueryResolver implementation.
