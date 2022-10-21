@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"math"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
@@ -20,7 +19,33 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*model.UserPagination, error) {
-	panic(fmt.Errorf("not implemented: Users - users"))
+var totalCount int64
+	hasNextPage := true
+	hasPreviousPage := true
+
+	users := []*model.User{}
+	r.DB.Model(&model.User{}).Count(&totalCount)
+	result := r.DB.Debug().Limit(limit).Offset(*offset).Find(&users)
+	if limit < *offset {
+		hasPreviousPage = false
+	}
+	if int(totalCount) < limit + *offset {
+		hasNextPage = false
+	}
+
+	pageInfo := model.PaginationInfo{
+		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
+		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
+		HasNextPage:      hasNextPage,
+		HasPreviousPage:  hasPreviousPage,
+		Count:            int(result.RowsAffected),
+		TotalCount:       int(totalCount),
+	}
+	pagination := model.UserPagination{
+		PageInfo: &pageInfo,
+		Nodes:    users,
+	}
+	return &pagination, result.Error
 }
 
 // Work is the resolver for the work field.
