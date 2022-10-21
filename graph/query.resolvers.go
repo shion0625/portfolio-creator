@@ -25,7 +25,9 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 
 // Work is the resolver for the work field.
 func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error) {
-	panic(fmt.Errorf("not implemented: Work - work"))
+	work := model.Work{ID: id}
+	r.DB.First(&work)
+	return &work, nil
 }
 
 // Works is the resolver for the works field.
