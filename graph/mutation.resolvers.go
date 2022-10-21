@@ -107,7 +107,7 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWor
 
 // DeleteWork is the resolver for the deleteWork field.
 func (r *mutationResolver) DeleteWork(ctx context.Context, id string) (*bool, error) {
-		work := model.Work{ID: id}
+	work := model.Work{ID: id}
 	result := r.DB.Delete(&work)
 	b := true
 	if result.Error != nil {

@@ -14,8 +14,6 @@ import (
 	"github.com/shion0625/my-portfolio-backend/graph"
 	_"github.com/shion0625/my-portfolio-backend/graph/directives"
 	"github.com/labstack/echo-contrib/session"
-	"github.com/shion0625/my-portfolio-backend/dataloader"
-
 )
 
 func Welcome() echo.HandlerFunc {
@@ -36,14 +34,10 @@ func Playground() echo.HandlerFunc {
 
 func QueryPlayground() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		userLoader := dataloader.NewUserLoader()
-		workLoader := dataloader.NewWorkLoader()
 
 		db := db.ConnectGORM()
 		gc:=generated.Config{Resolvers: &graph.Resolver{
 			DB: db,
-			UserLoader: userLoader,
-			WorkLoader: workLoader,
 		}}
 			gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
 				// session, err := session.Get("session", c)

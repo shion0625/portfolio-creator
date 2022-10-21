@@ -9,6 +9,6 @@ type User implements Node{
 }
 
 type UserPagination implements Pagination{
-    pageInfo: PaginationInfo!
-    nodes: [User!]!
+  pageInfo: PaginationInfo!
+  nodes: [User!]!
 }

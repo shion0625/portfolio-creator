@@ -532,23 +532,23 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "../common.graphqls", Input: `interface Node {
-    id: ID!
+  id: ID!
 }
 
 scalar Timestamp
 
 interface Pagination {
-    pageInfo: PaginationInfo!
-    nodes: [Node!]! # Node型の配列という意味
+  pageInfo: PaginationInfo!
+  nodes: [Node!]! # Node型の配列という意味
 }
 
 type PaginationInfo {
-    page: Int!
-    paginationLength: Int!
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    count: Int!
-    totalCount: Int!
+  page: Int!
+  paginationLength: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  count: Int!
+  totalCount: Int!
 }
 `, BuiltIn: false},
 	{Name: "../mutation.graphqls", Input: `### Mutation(更新系)の定義
@@ -629,8 +629,8 @@ type Query {
 }
 
 type UserPagination implements Pagination{
-    pageInfo: PaginationInfo!
-    nodes: [User!]!
+  pageInfo: PaginationInfo!
+  nodes: [User!]!
 }
 `, BuiltIn: false},
 	{Name: "../work.graphqls", Input: `type Work implements Node{
