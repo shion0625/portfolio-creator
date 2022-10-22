@@ -47,3 +47,7 @@ func loadEnv() {
 		fmt.Printf("読み込み出来ませんでした: %v", err)
 	}
 }
+
+// go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/my-portfolio-backend/graph/model.User
+
+// go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/my-portfolio-backend/graph/model.Work

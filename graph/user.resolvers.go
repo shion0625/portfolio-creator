@@ -12,21 +12,20 @@ import (
 
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error) {
-	works := []*model.Work{}
-	result := r.DB.Debug().Where("user_id = ?", obj.ID).Find(&works)
+	works,err :=r.WorkLoader.Load(obj.ID)
 	pageInfo := model.PaginationInfo{
 		Page:             1,
 		PaginationLength: 1,
 		HasNextPage:      false,
 		HasPreviousPage:  false,
-		Count:            int(result.RowsAffected),
-		TotalCount:       int(result.RowsAffected),
+		Count:            len(works),
+		TotalCount:       len(works),
 	}
 	pagination := model.WorkPagination{
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}
-	return &pagination, nil
+	return &pagination, err
 }
 
 // User returns generated.UserResolver implementation.
