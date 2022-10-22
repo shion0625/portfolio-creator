@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"os"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shion0625/my-portfolio-backend/handler"
+	"log"
+	"net/http"
+	"os"
 )
-
 
 func main() {
 	loadEnv()
@@ -18,10 +17,10 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	// cors対策
-  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-        AllowOrigins: []string{"http://localhost:3000"},
-        AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
-    }))
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 	e.GET("/playground", handler.Playground())
 	e.GET("/login", handler.Login(e))
 	e.GET("/logout", handler.Logout())

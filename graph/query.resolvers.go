@@ -5,9 +5,9 @@ package graph
 
 import (
 	"context"
-	"math"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
+	"math"
 )
 
 // User is the resolver for the user field.
@@ -19,7 +19,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*model.UserPagination, error) {
-var totalCount int64
+	var totalCount int64
 	hasNextPage := true
 	hasPreviousPage := true
 
@@ -29,7 +29,7 @@ var totalCount int64
 	if limit < *offset {
 		hasPreviousPage = false
 	}
-	if int(totalCount) < limit + *offset {
+	if int(totalCount) < limit+*offset {
 		hasNextPage = false
 	}
 
@@ -67,7 +67,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*mod
 	if limit < *offset {
 		hasPreviousPage = false
 	}
-	if int(totalCount) < limit + *offset {
+	if int(totalCount) < limit+*offset {
 		hasNextPage = false
 	}
 	// if int(result.RowsAffected) == 0 {

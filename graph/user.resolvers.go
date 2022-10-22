@@ -12,7 +12,7 @@ import (
 
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error) {
-	works,err :=r.WorkLoader.Load(obj.ID)
+	works, err := r.WorkLoader.Load(obj.ID)
 	pageInfo := model.PaginationInfo{
 		Page:             1,
 		PaginationLength: 1,

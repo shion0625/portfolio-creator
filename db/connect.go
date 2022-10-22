@@ -1,9 +1,9 @@
 package db
 
 import (
-	"os"
 	"gorm.io/driver/postgres"
-  "gorm.io/gorm"
+	"gorm.io/gorm"
+	"os"
 )
 
 func ConnectGORM() *gorm.DB {
@@ -12,7 +12,7 @@ func ConnectGORM() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-    panic(err.Error())
+		panic(err.Error())
 	}
 	return db
 }

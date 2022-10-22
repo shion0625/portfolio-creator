@@ -10,8 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
-type Resolver struct{
+type Resolver struct {
 	WorkLoader *dataloader.WorkLoader
 	UserLoader *dataloader.UserLoader
-	DB *gorm.DB
+	DB         *gorm.DB
 }

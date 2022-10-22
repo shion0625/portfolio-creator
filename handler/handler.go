@@ -3,18 +3,18 @@ package handler
 import (
 	"context"
 	"fmt"
-	"net/http"
-	"github.com/labstack/echo/v4"
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/shion0625/my-portfolio-backend/db"
-	"github.com/shion0625/my-portfolio-backend/graph/model"
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/shion0625/my-portfolio-backend/graph/generated"
-	"github.com/shion0625/my-portfolio-backend/graph"
-	_"github.com/shion0625/my-portfolio-backend/graph/directives"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	"github.com/shion0625/my-portfolio-backend/dataloader"
+	"github.com/shion0625/my-portfolio-backend/db"
+	"github.com/shion0625/my-portfolio-backend/graph"
+	_ "github.com/shion0625/my-portfolio-backend/graph/directives"
+	"github.com/shion0625/my-portfolio-backend/graph/generated"
+	"github.com/shion0625/my-portfolio-backend/graph/model"
+	"net/http"
 )
 
 func Welcome() echo.HandlerFunc {
@@ -26,11 +26,11 @@ func Welcome() echo.HandlerFunc {
 }
 
 func Playground() echo.HandlerFunc {
-	return func (c echo.Context) error {
-			playgroundHandler := playground.Handler("GraphQL playground", "/api/query")
-			playgroundHandler.ServeHTTP(c.Response(), c.Request())
-			return nil
-		}
+	return func(c echo.Context) error {
+		playgroundHandler := playground.Handler("GraphQL playground", "/api/query")
+		playgroundHandler.ServeHTTP(c.Response(), c.Request())
+		return nil
+	}
 }
 
 func QueryPlayground() echo.HandlerFunc {
@@ -38,37 +38,36 @@ func QueryPlayground() echo.HandlerFunc {
 		db := db.ConnectGORM()
 		userLoader := dataloader.UsersByIDs(db)
 		workLoader := dataloader.WorksByIDs(db)
-		gc:=generated.Config{Resolvers: &graph.Resolver{
-			DB: db,
+		gc := generated.Config{Resolvers: &graph.Resolver{
+			DB:         db,
 			UserLoader: userLoader,
 			WorkLoader: workLoader,
 		}}
-			gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
-				// session, err := session.Get("session", c)
-				// if err!=nil {
-        //     return nil, c.String(http.StatusInternalServerError, "Error")
-        // }
-				// //ログインしているか
-        // if b, _:=session.Values["auth"];b!=true{
-        //     return nil, c.String(http.StatusUnauthorized, "401")
-        // }else {
-				// 	if !directives.HasRole(session.Values["role"].(string), role) {
-				// 		return nil, fmt.Errorf("Access denied")
-				// 	}
-				// 	return next(ctx)
-				// }
-				return next(ctx)
-			}
+		gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
+			// session, err := session.Get("session", c)
+			// if err!=nil {
+			//     return nil, c.String(http.StatusInternalServerError, "Error")
+			// }
+			// //ログインしているか
+			// if b, _:=session.Values["auth"];b!=true{
+			//     return nil, c.String(http.StatusUnauthorized, "401")
+			// }else {
+			// 	if !directives.HasRole(session.Values["role"].(string), role) {
+			// 		return nil, fmt.Errorf("Access denied")
+			// 	}
+			// 	return next(ctx)
+			// }
+			return next(ctx)
+		}
 		graphqlHandler := handler.NewDefaultServer(
-		generated.NewExecutableSchema(
-			gc,
-		),
-	)
+			generated.NewExecutableSchema(
+				gc,
+			),
+		)
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	}
 }
-
 
 // func Restricted() echo.HandlerFunc  {
 //   return func(c echo.Context) error {
