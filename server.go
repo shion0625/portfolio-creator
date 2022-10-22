@@ -16,11 +16,13 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	// cors対策
+	// cors設定
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+    AllowCredentials: true,
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
+
 	e.GET("/playground", handler.Playground())
 	e.GET("/login", handler.Login(e))
 	e.GET("/logout", handler.Logout())
@@ -28,7 +30,6 @@ func main() {
 	g := e.Group("/api")
 	// g.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
 	g.POST("/query", handler.QueryPlayground())
-	e.GET("/welcome", handler.Welcome())
 
 	port := os.Getenv("PORT")
 	errPort := e.Start(port)
