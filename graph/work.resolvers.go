@@ -12,8 +12,15 @@ import (
 
 // User is the resolver for the user field.
 func (r *workResolver) User(ctx context.Context, obj *model.Work) (*model.User, error) {
+	// users, err := r.UserLoader.Load(obj.UserID)
+	// user := model.User{}
+	// result := r.DB.Find(&user, users)
+	// 	fmt.Println(user)
+	// fmt.Println(result)
+	// fmt.Println("error")
+	// fmt.Println(err)
 	user := model.User{ID: obj.UserID}
-	r.DB.First(&user)
+	r.DB.Debug().First(&user)
 	return &user, nil
 }
 

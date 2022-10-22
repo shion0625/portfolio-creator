@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 	"github.com/labstack/echo/v4"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -14,6 +15,8 @@ import (
 	"github.com/shion0625/my-portfolio-backend/graph"
 	_"github.com/shion0625/my-portfolio-backend/graph/directives"
 	"github.com/labstack/echo-contrib/session"
+	"github.com/shion0625/my-portfolio-backend/dataloader"
+
 )
 
 func Welcome() echo.HandlerFunc {
@@ -34,10 +37,41 @@ func Playground() echo.HandlerFunc {
 
 func QueryPlayground() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		workLoader := dataloader.NewWorkLoader(dataloader.WorkLoaderConfig{
+			MaxBatch: 100, // 溜める最大数、0を指定すると制限無し
+			Wait:     2 * time.Millisecond, // 溜める時間
+			Fetch: func(keys []string) ([][]*model.Work, []error) {
+				works := make([][]*model.Work, len(keys))
+				errors := make([]error, len(keys))
+				fmt.Println(works)
+
+				// 取得処理を書く SELECT * FROM company WHERE company_id IN (...)
+
+				// 引数のkeysに対応する順番の配列で返す。
+				return works, errors
+			},
+    })
+
+		userLoader := dataloader.NewUserLoader(dataloader.UserLoaderConfig{
+			MaxBatch: 100, // 溜める最大数、0を指定すると制限無し
+			Wait:     2 * time.Millisecond, // 溜める時間
+			Fetch: func(keys []string) ([]*model.User, []error) {
+				users := make([]*model.User, len(keys))
+				errors := make([]error, len(keys))
+
+				for i, key := range keys {
+					users[i] = &model.User{ID: key, Name: "user " + key}
+				}
+				// 引数のkeysに対応する順番の配列で返す。
+				return users, errors
+			},
+    })
 
 		db := db.ConnectGORM()
 		gc:=generated.Config{Resolvers: &graph.Resolver{
 			DB: db,
+			WorkLoader: workLoader,
+			UserLoader: userLoader,
 		}}
 			gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
 				// session, err := session.Get("session", c)
