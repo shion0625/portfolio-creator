@@ -1,0 +1,72 @@
+# schema.graphqlsのQueryの内容に従って定義
+query GetUser($userId: ID!) {
+  user(id: $userId) {
+    id
+    is_admin
+    name
+    email
+    works{
+      pageInfo{
+        page
+        hasNextPage
+        count
+        totalCount
+        paginationLength
+        hasPreviousPage
+      }
+      nodes{
+        title
+        summary
+        image_url
+        duration
+        number_of_people
+        language
+        role
+        url
+        brief_story
+      }
+    }
+  }
+}
+
+query GetUsers($limit: Int!, $offset: Int) {
+  users(limit: $limit, offset: $offset) {
+    pageInfo{
+      page
+      paginationLength
+      hasNextPage
+      hasPreviousPage
+      count
+      totalCount
+    }
+    nodes{
+      name
+      works{
+        nodes{
+          title
+          summary
+          image_url
+          duration
+          number_of_people
+          language
+          role
+          url
+          brief_story
+          user{
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# schema.graphqlsのMutationの内容に従って定義
+mutation CreateUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    id
+    name
+  }
+}

@@ -1,0 +1,48 @@
+# queryに関する処理を記述
+
+query GetWork($id: ID!) {
+  work(id: $id){
+    id
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user{
+      id
+      name
+    }
+  }
+}
+
+query GetWorks($limit: Int!, $offset:Int) {
+  works(limit: $limit, offset: $offset){
+    pageInfo{
+      page,
+      paginationLength,
+      hasPreviousPage,
+      hasNextPage,
+      count,
+      totalCount
+    },
+    nodes{
+      title
+      summary
+      image_url
+      duration
+      number_of_people
+      language
+      role
+      url
+      brief_story
+      user{
+        id
+        name
+      }
+    }
+  }
+}

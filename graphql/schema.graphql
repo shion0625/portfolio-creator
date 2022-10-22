@@ -1,33 +1,123 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
-# type： モデル情報を記述
-# Query： データフェッチのエンドポイントを定義
-# input： Mutationのオブジェクトの定義
-# Mutation： データを修正するエンドポイントを定義
-
-type Todo {
+interface Node {
   id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
 }
 
-type User {
+scalar Timestamp
+
+interface Pagination {
+  pageInfo: PaginationInfo!
+  nodes: [Node!]! # Node型の配列という意味
+}
+
+type PaginationInfo {
+  page: Int!
+  paginationLength: Int!
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  count: Int!
+  totalCount: Int!
+}
+
+# user=========================================================
+type User implements Node{
   id: ID!
+  is_admin: Boolean!
   name: String!
+  password: String!
+  email: String!
+  is_able: Boolean!
+  works: WorkPagination
 }
 
+type UserPagination implements Pagination{
+  pageInfo: PaginationInfo!
+  nodes: [User!]!
+}
+
+#work =====================================================
+type Work implements Node{
+  id: ID!
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+  user: User!
+  }
+
+type WorkPagination implements Pagination {
+  pageInfo: PaginationInfo!
+  nodes: [Work!]!
+}
+
+###  Query(read系)========================================
 type Query {
-  todos: [Todo!]!
+  user(id: ID!): User
+  users(limit: Int!, offset: Int): UserPagination
+  work(id: ID!): Work
+  works(limit: Int!, offset: Int): WorkPagination
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
-}
 
+### Mutation(更新系)の定義====================================
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  createUser(input: CreateUserInput!): User! @hasRole(role: [ADMIN,USER])
+  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER])
+  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
+  createWork(input: CreateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
+  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
+  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
+}
+
+###インプット用のスキーマ定義
+input CreateUserInput {
+  name: String!
+  password: String!
+  email: String!
+  is_admin: Boolean!
+}
+
+input UpdateUserInput {
+  id: ID!
+  is_admin: Boolean
+  name: String
+  email: String
+}
+
+input CreateWorkInput {
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String!
+  brief_story: String
+  user_id: String!
+}
+
+input UpdateWorkInput {
+  id: ID!
+  title: String
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String
+  brief_story: String
+}
+
+directive @hasRole(role: [Role!]!) on FIELD_DEFINITION
+
+enum Role {
+  ADMIN
+  USER
+  VIEWER
 }

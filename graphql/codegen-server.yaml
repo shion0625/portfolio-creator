@@ -1,3 +1,4 @@
+overwrite: true
 schema: ./graphql/schema.graphql
 documents: ./graphql/query/*.graphql
 generates:
@@ -6,3 +7,6 @@ generates:
       - typescript
       - typescript-operations
       - typescript-graphql-request
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

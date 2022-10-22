@@ -1,0 +1,14 @@
+type User implements Node{
+  id: ID!
+  is_admin: Boolean!
+  name: String!
+  password: String!
+  email: String!
+  is_able: Boolean!
+  works: WorkPagination
+}
+
+type UserPagination implements Pagination{
+  pageInfo: PaginationInfo!
+  nodes: [User!]!
+}
