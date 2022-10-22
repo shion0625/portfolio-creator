@@ -1,13 +1,15 @@
 import '../styles/globals.css'
 import type { AppProps } from "next/app";
-import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
-import { ApolloProvider } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink, ApolloProvider } from "@apollo/client";
+// import { ApolloProvider } from 'react-apollo';
 
 function MyApp({ Component, pageProps }: AppProps) {
+
   const link = createHttpLink({
-    uri: "http://localhost:8080/query",
+    uri: "http://localhost:8080/api/query",
     credentials: "include",
   });
+
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: link,
