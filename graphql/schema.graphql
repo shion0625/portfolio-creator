@@ -56,10 +56,11 @@ type WorkPagination implements Pagination {
 
 ###  Query(read系)========================================
 type Query {
-  user(id: ID!): User
-  users(limit: Int!, offset: Int): UserPagination
-  work(id: ID!): Work
-  works(limit: Int!, offset: Int): WorkPagination
+  user(id: ID!): User!
+  users(limit: Int!, offset: Int): UserPagination!
+  work(id: ID!): Work!
+  works(limit: Int!, offset: Int): WorkPagination!
+  todo: User!
 }
 
 

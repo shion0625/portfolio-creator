@@ -30,6 +30,7 @@ query GetWorks($limit: Int!, $offset:Int) {
       totalCount
     },
     nodes{
+      id
       title
       summary
       image_url

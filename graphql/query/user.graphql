@@ -1,4 +1,11 @@
 # schema.graphqlsのQueryの内容に従って定義
+query GetTodo{
+  todo{
+    id
+    name
+	}
+}
+
 query GetUser($userId: ID!) {
   user(id: $userId) {
     id
@@ -15,6 +22,7 @@ query GetUser($userId: ID!) {
         hasPreviousPage
       }
       nodes{
+        id
         title
         summary
         image_url
@@ -40,9 +48,10 @@ query GetUsers($limit: Int!, $offset: Int) {
       totalCount
     }
     nodes{
-      name
+      id
       works{
         nodes{
+          id
           title
           summary
           image_url
@@ -62,6 +71,13 @@ query GetUsers($limit: Int!, $offset: Int) {
   }
 }
 
+query GetUserIds($limit: Int!, $offset: Int) {
+  users(limit: $limit, offset: $offset) {
+    nodes{
+      id
+    }
+  }
+}
 
 # schema.graphqlsのMutationの内容に従って定義
 mutation CreateUser($input: CreateUserInput!) {
