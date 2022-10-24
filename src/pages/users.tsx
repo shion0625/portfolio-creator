@@ -18,11 +18,11 @@ const Users: NextPage<Props> = ({ users }) => {
       {users?.nodes.map((user :User) => {
         return (
           <>
-            <Paper elevation={3} sx={{m: 2, py: 2, fontSize: 18}}>
-              <Link key={user.id} href={`/users/${user.id}`}>
+            <Link key={user.id} href={`/users/${user.id}`}>
+              <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
                 <a>{user.name}</a>
-              </Link>
-            </Paper>
+              </Paper>
+            </Link>
           </>
         )
       })}
@@ -36,8 +36,8 @@ export default Users
 export const getStaticProps: GetStaticProps = async () => {
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
   assertIsDefined(apiBaseUrl);
-  const client = new GraphQLClient(apiBaseUrl)
 
+  const client = new GraphQLClient(apiBaseUrl)
   const sdk = getSdk(client)
   const { users } = await sdk.GetUsersName({limit: 10, offset: 0})
   return {

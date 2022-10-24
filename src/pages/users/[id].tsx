@@ -1,7 +1,6 @@
 import Link from 'next/link' // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import { assertIsDefined } from "../../lib/assert";
-
 import { CircularProgress } from '@mui/material';
 import { User } from "../../graphql/types"
 import { getSdk } from "../../graphql/ssr.generated"
@@ -30,7 +29,9 @@ const UserDetail: NextPage<Props> = ({user}) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const client = new GraphQLClient('http://localhost:8080/api/query')
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  assertIsDefined(apiBaseUrl);
+  const client = new GraphQLClient(apiBaseUrl)
   const sdk = getSdk(client)
   const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
 
@@ -46,7 +47,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
   assertIsDefined(apiBaseUrl);
 
   const client = new GraphQLClient(apiBaseUrl)
