@@ -1,7 +1,6 @@
-import * as Types from '../../src/graphql/types'
-
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+import * as Types from '../../src/graphql/types'
 const defaultOptions = {} as const
 export type GetUserQueryVariables = Types.Exact<{
   id: Types.Scalars['ID']
