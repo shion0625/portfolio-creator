@@ -11,7 +11,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | undefined
 
 const createApolloClient = () => {
   return new ApolloClient({
-    ssrMode: typeof window === 'undefined',
+    ssrMode: true,
     link: new HttpLink({
       uri: 'http://localhost:8080/api/query',
       credentials: "include",
@@ -31,4 +31,3 @@ export const initializeApollo = (initialState = null) => {
 
   return _apolloClient
 }
-

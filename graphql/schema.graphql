@@ -58,11 +58,9 @@ type WorkPagination implements Pagination {
 type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
-  work(id: ID!): Work!
+  work(id: ID!): Work
   works(limit: Int!, offset: Int): WorkPagination!
-  todo: User!
 }
-
 
 ### Mutation(更新系)の定義====================================
 type Mutation {

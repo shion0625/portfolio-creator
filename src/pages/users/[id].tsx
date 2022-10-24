@@ -1,17 +1,15 @@
 import Link from 'next/link' // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
-import { initializeApollo } from '../../lib/apolloClient'
-import { GetUserIdsDocument, GetUserDocument } from "../../../graphql/dist/client";
-import { GetUserQuery, GetUserIdsQuery, User } from "../../../graphql/dist/client";
+import { assertIsDefined } from "../../lib/assert";
+
 import { CircularProgress } from '@mui/material';
+import { User } from "../../graphql/types"
+import { getSdk } from "../../graphql/ssr.generated"
+import { GraphQLClient } from 'graphql-request';
+
 
 type Props = {
   user: User
-}
-type Paths = {
-  params: {
-    id: string;
-  }
 }
 
 const UserDetail: NextPage<Props> = ({user}) => {
@@ -22,7 +20,7 @@ const UserDetail: NextPage<Props> = ({user}) => {
     <div>
       <p>User Detail</p>
       <p>{`ID: ${user.id}` }</p>
-      {/* <p>{user.name}</p> */}
+      <p>{user.name}</p>
       <Link href="/">
         <span>Back to main</span>
       </Link>
@@ -32,33 +30,34 @@ const UserDetail: NextPage<Props> = ({user}) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const apolloClient = initializeApollo()
-  const { data } = await apolloClient.query<GetUserIdsQuery>({
-    query: GetUserIdsDocument,
-    variables: { limit: 100, offset: 0 },
-  })
-  const paths = data.users.nodes.map((user) => ({
+  const client = new GraphQLClient('http://localhost:8080/api/query')
+  const sdk = getSdk(client)
+  const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
+
+  const paths = users.nodes.map((user :User) => ({
     params: {
       id: user.id
     },
   }))
   return {
     paths,
-    fallback: "blocking",
+    fallback: true,
   }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const apolloClient = initializeApollo()
-  const { data } = await apolloClient.query<GetUserQuery>({
-    query: GetUserDocument,
-    variables: {id: params?.id},
-  })
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
+  assertIsDefined(apiBaseUrl);
+
+  const client = new GraphQLClient(apiBaseUrl)
+  const sdk = getSdk(client)
+  const { user } = await sdk.GetUser({ id: params?.id })
+
   return {
     props: {
-      user: data.user
+      user: user
     },
     revalidate: 1,
-    notFound: !data
+    notFound: !user
   }
 }

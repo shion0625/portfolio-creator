@@ -1,13 +1,6 @@
 # schema.graphqlsのQueryの内容に従って定義
-query GetTodo{
-  todo{
-    id
-    name
-	}
-}
-
-query GetUser($userId: ID!) {
-  user(id: $userId) {
+query GetUser($id: ID!) {
+  user(id: $id) {
     id
     is_admin
     name
@@ -49,6 +42,7 @@ query GetUsers($limit: Int!, $offset: Int) {
     }
     nodes{
       id
+      name
       works{
         nodes{
           id
@@ -68,6 +62,23 @@ query GetUsers($limit: Int!, $offset: Int) {
         }
       }
     }
+  }
+}
+
+query GetUsersName($limit: Int!, $offset: Int) {
+  users(limit: $limit, offset: $offset) {
+    pageInfo{
+      page
+      paginationLength
+      hasNextPage
+      hasPreviousPage
+      count
+      totalCount
+    }
+    nodes{
+      id
+      name
+        }
   }
 }
 
