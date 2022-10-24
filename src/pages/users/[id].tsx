@@ -1,26 +1,25 @@
 import Link from 'next/link' // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
-import { assertIsDefined } from "../../lib/assert";
-import { CircularProgress } from '@mui/material';
-import { User } from "../../graphql/types"
-import { getSdk } from "../../graphql/ssr.generated"
-import { GraphQLClient } from 'graphql-request';
-
+import { assertIsDefined } from '../../lib/assert'
+import { CircularProgress } from '@mui/material'
+import { User } from '../../graphql/types'
+import { getSdk } from '../../graphql/ssr.generated'
+import { GraphQLClient } from 'graphql-request'
 
 type Props = {
   user: User
 }
 
-const UserDetail: NextPage<Props> = ({user}) => {
+const UserDetail: NextPage<Props> = ({ user }) => {
   if (!user) {
-    return <CircularProgress color="inherit" />
+    return <CircularProgress color='inherit' />
   }
   return (
     <div>
       <p>User Detail</p>
-      <p>{`ID: ${user.id}` }</p>
+      <p>{`ID: ${user.id}`}</p>
       <p>{user.name}</p>
-      <Link href="/">
+      <Link href='/'>
         <span>Back to main</span>
       </Link>
     </div>
@@ -30,14 +29,14 @@ export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-  assertIsDefined(apiBaseUrl);
+  assertIsDefined(apiBaseUrl)
   const client = new GraphQLClient(apiBaseUrl)
   const sdk = getSdk(client)
   const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
 
-  const paths = users.nodes.map((user :User) => ({
+  const paths = users.nodes.map((user: User) => ({
     params: {
-      id: user.id
+      id: user.id,
     },
   }))
   return {
@@ -48,7 +47,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-  assertIsDefined(apiBaseUrl);
+  assertIsDefined(apiBaseUrl)
 
   const client = new GraphQLClient(apiBaseUrl)
   const sdk = getSdk(client)
@@ -56,9 +55,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      user: user
+      user: user,
     },
     revalidate: 1,
-    notFound: !user
+    notFound: !user,
   }
 }
