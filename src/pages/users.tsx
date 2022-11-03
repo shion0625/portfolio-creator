@@ -6,6 +6,7 @@ import { getSdk } from '../graphql/ssr.generated'
 import { UserPagination, User } from '../graphql/types'
 import { assertIsDefined } from '../lib/assert'
 import { Box, Paper } from '@mui/material'
+import PrimarySearchAppBar from '../components/NavBar'
 
 type Props = {
   users: UserPagination
@@ -13,20 +14,23 @@ type Props = {
 
 const Users: NextPage<Props> = ({ users }) => {
   return (
-    <Box>
-      <p>ユーザの一覧</p>
-      {users?.nodes.map((user: User) => {
-        return (
-          <>
-            <Link key={user.id} href={`/users/${user.id}`}>
-              <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
-                <a>{user.name}</a>
-              </Paper>
-            </Link>
-          </>
-        )
-      })}
-    </Box>
+    <>
+      <PrimarySearchAppBar />
+      <Box>
+        <p>ユーザの一覧</p>
+        {users?.nodes.map((user: User) => {
+          return (
+            <>
+              <Link key={user.id} href={`/users/${user.id}`}>
+                <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
+                  <a>{user.name}</a>
+                </Paper>
+              </Link>
+            </>
+          )
+        })}
+      </Box>
+    </>
   )
 }
 
