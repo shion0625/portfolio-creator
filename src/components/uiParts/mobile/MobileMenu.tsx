@@ -1,12 +1,8 @@
 import React, { memo } from 'react'
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import MailIcon from '@mui/icons-material/Mail';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
+import { Menu, MenuItem, IconButton, Badge } from '@mui/material';
 
 type Props = {
   menuItem?: string[] //メニュー内のアイテム
