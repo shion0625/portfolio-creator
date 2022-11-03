@@ -19,8 +19,8 @@ const UserDetail: NextPage<Props> = ({ user }) => {
       <p>User Detail</p>
       <p>{`ID: ${user.id}`}</p>
       <p>{user.name}</p>
-      <Link href='/'>
-        <span>Back to main</span>
+      <Link href='/users'>
+        <a>Back to users</a>
       </Link>
     </div>
   )
