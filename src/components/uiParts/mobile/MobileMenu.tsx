@@ -5,7 +5,6 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import { Menu, MenuItem, IconButton, Badge } from '@mui/material'
 
 type Props = {
-  menuItem?: string[] //メニュー内のアイテム
   mobileMenuId: string // モバイルメニューに設定するID
   mobileMoreAnchorEl: null | HTMLElement //押されたボタンの位置を取得
   isMobileMenuOpen: boolean // メニューが開いているかを取得
@@ -14,7 +13,6 @@ type Props = {
 }
 
 const MobileMenu: React.FC<Props> = memo(function mobileMenu({
-  menuItem,
   mobileMenuId,
   mobileMoreAnchorEl,
   isMobileMenuOpen,

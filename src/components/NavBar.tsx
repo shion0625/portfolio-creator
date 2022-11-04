@@ -6,10 +6,7 @@ import {
   IconButton,
   Typography,
   Badge,
-  MenuItem,
-  Menu,
 } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import MailIcon from '@mui/icons-material/Mail'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -21,6 +18,7 @@ import ProfileMenu from './uiParts/ProfileMenu'
 export default function PrimarySearchAppBar() {
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
