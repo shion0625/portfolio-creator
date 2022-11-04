@@ -14,17 +14,24 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import SearchArea from './uiParts/SearchArea';
 import MobileMenu from './uiParts/mobile/MobileMenu';
+import ProfileMenu from './uiParts/ProfileMenu';
 
 export default function PrimarySearchAppBar() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const menuId = 'profile-menu';
+  const mobileMenuId = 'menu-mobile';
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); //メニューの表示ボタンを押した場所を取得
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
+    React.useState<null | HTMLElement>(null); //モバイルメニューの表示ボタンを押した場所を取得
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(anchorEl); //メニューの状態を管理
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl); //モバイルメニューの状態を管理
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
@@ -36,40 +43,11 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -77,7 +55,7 @@ export default function PrimarySearchAppBar() {
             sx={{ mr: 2 }}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography
             variant="h6"
             noWrap
@@ -130,7 +108,7 @@ export default function PrimarySearchAppBar() {
         </Toolbar>
       </AppBar>
       <MobileMenu mobileMenuId={mobileMenuId} mobileMoreAnchorEl={mobileMoreAnchorEl} isMobileMenuOpen={isMobileMenuOpen} handleMobileMenuClose={handleMobileMenuClose} handleProfileMenuOpen={handleProfileMenuOpen} />
-      {renderMenu}
+      <ProfileMenu anchorEl={anchorEl} menuId={menuId} isMenuOpen={isMenuOpen} handleMenuClose={handleMenuClose} />
     </Box>
   );
 }
