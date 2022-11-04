@@ -20,13 +20,13 @@ const Users: NextPage<Props> = ({ users }) => {
         <p>ユーザの一覧</p>
         {users?.nodes.map((user: User) => {
           return (
-            <>
-              <Link key={user.id} href={`/users/${user.id}`}>
+            <div key={user.id}>
+              <Link href={`/users/${user.id}`}>
                 <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
                   <a>{user.name}</a>
                 </Paper>
               </Link>
-            </>
+            </div>
           )
         })}
       </Box>
