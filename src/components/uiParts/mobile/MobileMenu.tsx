@@ -1,8 +1,10 @@
 import React, { memo } from 'react'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import MailIcon from '@mui/icons-material/Mail'
-import AccountCircle from '@mui/icons-material/AccountCircle'
 import { Menu, MenuItem, IconButton, Badge } from '@mui/material'
+import {
+  AccountCircle,
+  Mail as MailIcon,
+  Notifications as NotificationsIcon,
+} from '@mui/icons-material'
 
 type Props = {
   mobileMenuId: string // モバイルメニューに設定するID

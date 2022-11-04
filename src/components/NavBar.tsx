@@ -7,10 +7,13 @@ import {
   Typography,
   Badge,
 } from '@mui/material'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import MailIcon from '@mui/icons-material/Mail'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import MoreIcon from '@mui/icons-material/MoreVert'
+import {
+  AccountCircle,
+  Mail as MailIcon,
+  Notifications as NotificationsIcon,
+  MoreVert as MoreIcon,
+} from '@mui/icons-material'
+
 import SearchArea from './uiParts/SearchArea'
 import MobileMenu from './uiParts/mobile/MobileMenu'
 import ProfileMenu from './uiParts/ProfileMenu'
