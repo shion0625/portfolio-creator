@@ -1,6 +1,6 @@
 import React from 'react'
 import type { NextPage } from 'next'
-import { WorkForm } from '../components/WorkForm'
+import { WorkForms } from '../components/WorkForms'
 
 type Props = {
   users: string
@@ -9,7 +9,7 @@ type Props = {
 const myPageEdit: NextPage<Props> = ({ users }) => {
   return (
     <>
-      <WorkForm />
+      <WorkForms />
     </>
   )
 }
