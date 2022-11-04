@@ -1,10 +1,10 @@
 import React from 'react'
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search'
+import { styled, alpha } from '@mui/material/styles'
+import InputBase from '@mui/material/InputBase'
 
 type Props = {
-  design?: "string"
+  design?: 'string'
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -21,7 +21,7 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: 'auto',
   },
-}));
+}))
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -31,7 +31,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+}))
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
@@ -45,7 +45,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
       width: '20ch',
     },
   },
-}));
+}))
 
 const SearchArea: React.FC<Props> = () => {
   return (
@@ -54,7 +54,7 @@ const SearchArea: React.FC<Props> = () => {
         <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
-        placeholder="Search…"
+        placeholder='Search…'
         inputProps={{ 'aria-label': 'search' }}
       />
     </Search>

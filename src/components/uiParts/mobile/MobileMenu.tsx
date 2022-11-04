@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MailIcon from '@mui/icons-material/Mail';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { Menu, MenuItem, IconButton, Badge } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import MailIcon from '@mui/icons-material/Mail'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import { Menu, MenuItem, IconButton, Badge } from '@mui/material'
 
 type Props = {
   menuItem?: string[] //メニュー内のアイテム
@@ -13,7 +13,14 @@ type Props = {
   handleMobileMenuClose: (event: React.MouseEvent<HTMLElement>) => void //モバイルメニューを閉じる
 }
 
-const MobileMenu: React.FC<Props> = memo(function mobileMenu({ menuItem, mobileMenuId, mobileMoreAnchorEl, isMobileMenuOpen, handleProfileMenuOpen, handleMobileMenuClose }) {
+const MobileMenu: React.FC<Props> = memo(function mobileMenu({
+  menuItem,
+  mobileMenuId,
+  mobileMoreAnchorEl,
+  isMobileMenuOpen,
+  handleProfileMenuOpen,
+  handleMobileMenuClose,
+}) {
   return (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -31,8 +38,8 @@ const MobileMenu: React.FC<Props> = memo(function mobileMenu({ menuItem, mobileM
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
+        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+          <Badge badgeContent={4} color='error'>
             <MailIcon />
           </Badge>
         </IconButton>
@@ -40,11 +47,11 @@ const MobileMenu: React.FC<Props> = memo(function mobileMenu({ menuItem, mobileM
       </MenuItem>
       <MenuItem>
         <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
+          size='large'
+          aria-label='show 17 new notifications'
+          color='inherit'
         >
-          <Badge badgeContent={17} color="error">
+          <Badge badgeContent={17} color='error'>
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -52,11 +59,11 @@ const MobileMenu: React.FC<Props> = memo(function mobileMenu({ menuItem, mobileM
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
+          size='large'
+          aria-label='account of current user'
+          aria-controls='primary-search-account-menu'
+          aria-haspopup='true'
+          color='inherit'
         >
           <AccountCircle />
         </IconButton>
