@@ -1,8 +1,5 @@
 import React, { memo } from 'react'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import MailIcon from '@mui/icons-material/Mail'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import { Menu, MenuItem, IconButton, Badge } from '@mui/material'
+import { Menu, MenuItem } from '@mui/material'
 
 type Props = {
   anchorEl: null | HTMLElement //押されたボタンの位置を取得
