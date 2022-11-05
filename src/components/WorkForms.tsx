@@ -8,9 +8,13 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon} from '@mui/icons-material'
 import { CreateWorkInput } from '../graphql/types'
 import WorkFormItem from './uiParts/WorkFormItem'
-// 計算結果を表示させる TotalAmount コンポーネントをimport
+import { Weaken } from '../lib/extendType';
+interface GetWorkInput extends Weaken<CreateWorkInput, 'language'> {
+  language?: string[]
+}
+
 export type WorkForm = {
-  works: CreateWorkInput[]
+  works: GetWorkInput[]
 }
 
 const newWork = {
@@ -19,12 +23,13 @@ const newWork = {
   summary: '',
   duration: '',
   number_of_people: 0,
-  language: '',
+  language: [''],
   role: '',
   brief_story: '',
   image_url: '',
   user_id: ''
 }
+
 const newWorks = {
   works: [
     {
@@ -33,7 +38,7 @@ const newWorks = {
       summary: '',
       duration: '',
       number_of_people: 0,
-      language: '',
+      language: [''],
       role: '',
       brief_story: '',
       image_url: '',
@@ -66,10 +71,11 @@ export const WorkForms = (): JSX.Element => {
           summary: 'ko',
           duration: 'wgaea',
           number_of_people: 1,
-          language: 'awea',
+          language: ['awea','ffa'],
           role: 'gawea',
           brief_story: 'wagea',
           image_url: 'bawea',
+          user_id:'awea',
         }
       ],
     },
@@ -106,6 +112,7 @@ export const WorkForms = (): JSX.Element => {
               key={field.id}
               register={register}
               removeWork={removeWork}
+              control={control}
               workIndex={index}
               errors={errors}
             />
