@@ -37,9 +37,13 @@ const WorkFormItem: React.FC<Props> = ({
       <input
         type='hidden'
         disabled
+        {...register(`works.${workIndex}.id` as const)}
+      />
+      <input
+        type='hidden'
+        disabled
         {...register(`works.${workIndex}.user_id` as const)}
       />
-
       <TextField
         fullWidth
         size='small'

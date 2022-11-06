@@ -15,12 +15,16 @@ interface GetChangeInput extends Weaken<CreateWorkInput, 'language'> {
 interface GetWorkInput extends Weaken<GetChangeInput, 'url'> {
   url: string[]
 }
-
-export type WorkForm = {
-  works: GetWorkInput[]
+interface workFormInput extends GetWorkInput{
+  id: string
 }
 
-const newWork = {
+export type WorkForm = {
+  works: workFormInput[]
+}
+
+const addNewWork = {
+  id: '',
   title: '',
   url: [''],
   summary: '',
@@ -33,9 +37,10 @@ const newWork = {
   user_id: '',
 }
 
-const newWorks = {
+const resetNewWorks = {
   works: [
     {
+      id:'',
       title: '',
       url: [''],
       summary: '',
@@ -69,6 +74,7 @@ export const WorkForms = (): JSX.Element => {
     defaultValues: {
       works: [
         {
+          id:'LLL',
           title: 'kaito',
           url: ['ff','ff'],
           summary: 'ko',
@@ -94,17 +100,19 @@ export const WorkForms = (): JSX.Element => {
   })
 
   const addWork = () => {
-    append(newWork)
+    append(addNewWork)
   }
 
   const resetWorks = () => {
-    reset(newWorks)
+    reset(resetNewWorks)
   }
   const removeWork = (index: number) => {
     remove(index)
   }
 
-  const onSubmit = (data: WorkForm) => console.log(data)
+  const onSubmit = (data: WorkForm) => {
+    console.log(data)
+  }
 
   return (
     <Container maxWidth='sm' sx={{ pt: 5, bgcolor: 'yellow' }}>
