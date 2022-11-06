@@ -22,7 +22,6 @@ func main() {
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
-
 	e.GET("/playground", handler.Playground())
 	e.GET("/login", handler.Login(e))
 	e.GET("/logout", handler.Logout())

@@ -5,9 +5,10 @@ package graph
 
 import (
 	"context"
+	"math"
+
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
-	"math"
 )
 
 // User is the resolver for the user field.

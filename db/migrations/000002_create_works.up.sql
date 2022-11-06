@@ -8,7 +8,7 @@ BEGIN;
     number_of_people integer,
     language text,
     role text,
-    url text NOT NULL,
+    url text,
     brief_story text,
     user_id VARCHAR (255) NOT NULL
   );

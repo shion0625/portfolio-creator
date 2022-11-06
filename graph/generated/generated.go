@@ -612,10 +612,10 @@ enum Role {
 `, BuiltIn: false},
 	{Name: "../query.graphqls", Input: `###  Query(read系)
 type Query {
-  user(id: ID!): User
-  users(limit: Int!, offset: Int): UserPagination
+  user(id: ID!): User!
+  users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
-  works(limit: Int!, offset: Int): WorkPagination
+  works(limit: Int!, offset: Int): WorkPagination!
 }
 `, BuiltIn: false},
 	{Name: "../user.graphqls", Input: `type User implements Node{
@@ -642,7 +642,7 @@ type UserPagination implements Pagination{
   number_of_people: Int
   language: String
   role: String
-  url: String!
+  url: String
   brief_story: String
   user: User!
   }
@@ -1728,11 +1728,14 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1796,11 +1799,14 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.UserPagination)
 	fc.Result = res
-	return ec.marshalOUserPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx, field.Selections, res)
+	return ec.marshalNUserPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1930,11 +1936,14 @@ func (ec *executionContext) _Query_works(ctx context.Context, field graphql.Coll
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.WorkPagination)
 	fc.Result = res
-	return ec.marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx, field.Selections, res)
+	return ec.marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2880,14 +2889,11 @@ func (ec *executionContext) _Work_url(ctx context.Context, field graphql.Collect
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Work_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5431,6 +5437,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_user(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -5451,6 +5460,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_users(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -5491,6 +5503,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_works(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -5691,9 +5706,6 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._Work_url(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "brief_story":
 
 			out.Values[i] = ec._Work_brief_story(ctx, field, obj)
@@ -6301,6 +6313,20 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑport
 	return ec._User(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNUserPagination2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v model.UserPagination) graphql.Marshaler {
+	return ec._UserPagination(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUserPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v *model.UserPagination) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UserPagination(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNWork2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWork(ctx context.Context, sel ast.SelectionSet, v model.Work) graphql.Marshaler {
 	return ec._Work(ctx, sel, &v)
 }
@@ -6357,6 +6383,20 @@ func (ec *executionContext) marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋmyᚑport
 		return graphql.Null
 	}
 	return ec._Work(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNWorkPagination2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v model.WorkPagination) graphql.Marshaler {
+	return ec._WorkPagination(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v *model.WorkPagination) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._WorkPagination(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
@@ -6654,6 +6694,16 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
+func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	return res
+}
+
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
 	if v == nil {
 		return nil, nil
@@ -6668,20 +6718,6 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v *model.User) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._User(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUserPagination2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v *model.UserPagination) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UserPagination(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐWork(ctx context.Context, sel ast.SelectionSet, v *model.Work) graphql.Marshaler {
