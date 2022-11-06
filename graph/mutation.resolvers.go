@@ -85,10 +85,6 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWor
 	if input.Title == nil {
 		input.Title = &work.Title
 	}
-	if input.URL == nil {
-		input.URL = &work.URL
-	}
-
 	r.DB.First(&work)
 	r.DB.Model(&work).Updates(model.Work{
 		Title:          *input.Title,
@@ -98,7 +94,7 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWor
 		NumberOfPeople: input.NumberOfPeople,
 		Language:       input.Language,
 		Role:           input.Role,
-		URL:            *input.URL,
+		URL:            input.URL,
 		BriefStory:     input.BriefStory,
 	})
 	result := r.DB.Save(&work)
