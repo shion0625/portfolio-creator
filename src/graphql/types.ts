@@ -29,7 +29,7 @@ export type CreateWorkInput = {
   role?: InputMaybe<Scalars['String']>;
   summary?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
-  url: Scalars['String'];
+  url?: InputMaybe<Scalars['String']>;
   user_id: Scalars['String'];
 };
 
@@ -170,7 +170,7 @@ export type Work = Node & {
   role?: Maybe<Scalars['String']>;
   summary?: Maybe<Scalars['String']>;
   title: Scalars['String'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   user: User;
 };
 

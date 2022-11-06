@@ -32,7 +32,7 @@ export type CreateWorkInput = {
   role?: InputMaybe<Scalars['String']>;
   summary?: InputMaybe<Scalars['String']>;
   title: Scalars['String'];
-  url: Scalars['String'];
+  url?: InputMaybe<Scalars['String']>;
   user_id: Scalars['String'];
 };
 
@@ -173,7 +173,7 @@ export type Work = Node & {
   role?: Maybe<Scalars['String']>;
   summary?: Maybe<Scalars['String']>;
   title: Scalars['String'];
-  url: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
   user: User;
 };
 
@@ -187,7 +187,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { user: { id: string, is_admin: boolean, name: string, email: string, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url: string, brief_story?: string | null }> } | null } };
+export type GetUserQuery = { user: { id: string, is_admin: boolean, name: string, email: string, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null }> } | null } };
 
 export type GetUsersQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -195,7 +195,7 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name: string, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url: string, brief_story?: string | null, user: { id: string, name: string } }> } | null }> } };
+export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name: string, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } }> } | null }> } };
 
 export type GetUsersNameQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -225,7 +225,7 @@ export type GetWorkQueryVariables = Exact<{
 }>;
 
 
-export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url: string, brief_story?: string | null, user: { id: string, name: string } } | null };
+export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } } | null };
 
 export type GetWorksQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -233,7 +233,7 @@ export type GetWorksQueryVariables = Exact<{
 }>;
 
 
-export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url: string, brief_story?: string | null, user: { id: string, name: string } }> } };
+export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } }> } };
 
 
 export const GetUserDocument = gql`

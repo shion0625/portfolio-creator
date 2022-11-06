@@ -8,7 +8,7 @@ export type GetUserQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetUserQuery = { user: { id: string, is_admin: boolean, name: string, email: string, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url: string, brief_story?: string | null }> } | null } };
+export type GetUserQuery = { user: { id: string, is_admin: boolean, name: string, email: string, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null }> } | null } };
 
 export type GetUsersQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
@@ -16,7 +16,7 @@ export type GetUsersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name: string, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url: string, brief_story?: string | null, user: { id: string, name: string } }> } | null }> } };
+export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name: string, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } }> } | null }> } };
 
 export type GetUsersNameQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
