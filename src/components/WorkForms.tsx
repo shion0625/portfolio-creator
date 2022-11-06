@@ -1,16 +1,19 @@
 import React from 'react'
-
 // 利用したい MUI コンポーネントを import
-import {Box, Button, Container, Stack} from '@mui/material'
-
+import { Box, Button, Container, Stack } from '@mui/material'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
-import { Add as AddIcon} from '@mui/icons-material'
+import { Add as AddIcon } from '@mui/icons-material'
 import { CreateWorkInput } from '../graphql/types'
 import WorkFormItem from './uiParts/WorkFormItem'
-import { Weaken } from '../lib/extendType';
-interface GetWorkInput extends Weaken<CreateWorkInput, 'language'> {
+import { Weaken } from '../lib/extendType'
+
+interface GetChangeInput extends Weaken<CreateWorkInput, 'language'> {
   language?: string[]
+}
+
+interface GetWorkInput extends Weaken<GetChangeInput, 'url'> {
+  url: string[]
 }
 
 export type WorkForm = {
@@ -19,7 +22,7 @@ export type WorkForm = {
 
 const newWork = {
   title: '',
-  url: '',
+  url: [''],
   summary: '',
   duration: '',
   number_of_people: 0,
@@ -27,14 +30,14 @@ const newWork = {
   role: '',
   brief_story: '',
   image_url: '',
-  user_id: ''
+  user_id: '',
 }
 
 const newWorks = {
   works: [
     {
       title: '',
-      url: '',
+      url: [''],
       summary: '',
       duration: '',
       number_of_people: 0,
@@ -42,7 +45,7 @@ const newWorks = {
       role: '',
       brief_story: '',
       image_url: '',
-      user_id: ''
+      user_id: '',
     },
   ],
 }
@@ -67,16 +70,16 @@ export const WorkForms = (): JSX.Element => {
       works: [
         {
           title: 'kaito',
-          url: 'tko',
+          url: ['ff','ff'],
           summary: 'ko',
           duration: 'wgaea',
           number_of_people: 1,
-          language: ['awea','ffa'],
+          language: ['awea', 'ffa'],
           role: 'gawea',
           brief_story: 'wagea',
           image_url: 'bawea',
-          user_id:'awea',
-        }
+          user_id: 'awea',
+        },
       ],
     },
 
@@ -104,7 +107,7 @@ export const WorkForms = (): JSX.Element => {
   const onSubmit = (data: WorkForm) => console.log(data)
 
   return (
-    <Container maxWidth='sm' sx={{ pt: 5, bgcolor: '#fff' }}>
+    <Container maxWidth='sm' sx={{ pt: 5, bgcolor: 'yellow' }}>
       <Stack spacing={2}>
         {fields.map((field, index) => {
           return (
@@ -128,11 +131,7 @@ export const WorkForms = (): JSX.Element => {
         行を追加する
       </Button>
       <Box textAlign='center' mt={2}>
-        <Button
-          variant='outlined'
-          sx={{ mr: 1 }}
-          onClick={resetWorks}
-        >
+        <Button variant='outlined' sx={{ mr: 1 }} onClick={resetWorks}>
           リセット
         </Button>
         <Button

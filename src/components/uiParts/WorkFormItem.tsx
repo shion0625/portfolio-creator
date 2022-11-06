@@ -1,19 +1,13 @@
-import React from "react";
-import { Control, useFieldArray, UseFormRegister, useWatch } from "react-hook-form";
-import { WorkForm } from "../WorkForms";
-import {
-  Box,
-  TextField,
-  IconButton,
-} from '@mui/material'
-
-import {
-  DeleteOutline as DeleteOutlineIcon,
-} from '@mui/icons-material'
+import React from 'react'
+import { Control, UseFormRegister } from 'react-hook-form'
+import { WorkForm } from '../WorkForms'
+import { Box, TextField, IconButton, Paper } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
 
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
 import { ErrorMessage } from '@hookform/error-message'
-import LanguageFieldArray from './LanguageFieldArray'
+import NestedFieldArray from './NestedFieldArray'
 
 type Props = {
   register: UseFormRegister<WorkForm>
@@ -23,25 +17,38 @@ type Props = {
   errors: any
 }
 
-const WorkFormItem: React.FC<Props> = ({ register, removeWork, control, workIndex, errors }) => {
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}))
 
+const WorkFormItem: React.FC<Props> = ({
+  register,
+  removeWork,
+  control,
+  workIndex,
+  errors,
+}) => {
   return (
-    <>
+    <Item>
       <input
-        type="hidden"
+        type='hidden'
         disabled
         {...register(`works.${workIndex}.user_id` as const)}
       />
 
       <TextField
-        sx={{ mr: 2, flex: 3 }}
+        fullWidth
         size='small'
         label='タイトル'
         {...register(`works.${workIndex}.title` as const, {
           required: true,
         })}
       />
-      <Box color='error.main' fontSize={12}>
+      <Box color='error.main' fontSize={12} sx={{ mb: 2 }}>
         <ErrorMessage
           errors={errors}
           name={`works.${workIndex}.title`}
@@ -51,14 +58,25 @@ const WorkFormItem: React.FC<Props> = ({ register, removeWork, control, workInde
       </Box>
 
       <TextField
-        sx={{ mr: 2, flex: 3 }}
+        sx={{ mb: 2 }}
+        multiline
+        rows={2}
+        fullWidth
+        size='small'
+        label='概要'
+        {...register(`works.${workIndex}.summary` as const)}
+      />
+
+      <TextField
+        sx={{ mb: 2 }}
+        fullWidth
         size='small'
         label='開発期間'
         {...register(`works.${workIndex}.duration` as const)}
       />
 
       <TextField
-        sx={{ mr: 1, flex: 1 }}
+        fullWidth
         size='small'
         type='number'
         label='開発人数'
@@ -68,50 +86,53 @@ const WorkFormItem: React.FC<Props> = ({ register, removeWork, control, workInde
           max: 100,
         })}
       />
-      <Box color='error.main' fontSize={12}>
+      <Box color='error.main' fontSize={12} sx={{ mb: 2 }}>
         <ErrorMessage
           errors={errors}
-          name={`works.${workIndex}.image_url`}
+          name={`works.${workIndex}.number_of_people`}
           as='p'
           message='⚠ 数量欄に1~100の数字を入力してください'
         />
       </Box>
-      <Box>
-        <LanguageFieldArray register={register} control={control} nestIndex={ workIndex } />
-      </Box>
+
+      <NestedFieldArray
+        register={register}
+        control={control}
+        nestIndex={workIndex}
+        label='開発言語・技術'
+        choiceItem='language'
+      />
 
       <TextField
-        sx={{ mr: 2, flex: 3 }}
+        sx={{ mb: 2 }}
+        fullWidth
         size='small'
         label='役割'
         {...register(`works.${workIndex}.role` as const)}
       />
 
-      <TextField
-        sx={{ mr: 2, flex: 3 }}
-        size='small'
+      <NestedFieldArray
+        register={register}
+        control={control}
+        nestIndex={workIndex}
         label='URL'
-        {...register(`works.${workIndex}.url` as const, {
-          required: true,
-        })}
+        choiceItem='url'
+        type="url"
+        placeholder='https://example.com'
       />
-      <Box color='error.main' fontSize={12}>
-        <ErrorMessage
-          errors={errors}
-          name={`works.${workIndex}.image_url`}
-          as='p'
-          message='⚠ URLを入力してください'
-        />
-      </Box>
+
       <TextField
-        sx={{ mr: 2, flex: 3 }}
+        sx={{ mb: 2 }}
+        multiline
+        rows={2}
+        fullWidth
         size='small'
         label='小話'
         {...register(`works.${workIndex}.brief_story` as const)}
       />
 
       <TextField
-        sx={{ mr: 2, flex: 3 }}
+        fullWidth
         size='small'
         label='画像'
         {...register(`works.${workIndex}.image_url` as const)}
@@ -121,7 +142,7 @@ const WorkFormItem: React.FC<Props> = ({ register, removeWork, control, workInde
       <IconButton aria-label='delete' onClick={() => removeWork(workIndex)}>
         <DeleteOutlineIcon />
       </IconButton>
-    </>
+    </Item>
   )
 }
 
