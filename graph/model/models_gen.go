@@ -34,7 +34,7 @@ type CreateWorkInput struct {
 	NumberOfPeople *int    `json:"number_of_people"`
 	Language       *string `json:"language"`
 	Role           *string `json:"role"`
-	URL            string  `json:"url"`
+	URL            *string `json:"url"`
 	BriefStory     *string `json:"brief_story"`
 	UserID         string  `json:"user_id"`
 }

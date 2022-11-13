@@ -1,7 +1,7 @@
 gqlgen:
 	go run github.com/99designs/gqlgen generate
 run:
-	go run main.go
+	go run server.go
 db:
 	docker compose exec db sh
 sql:

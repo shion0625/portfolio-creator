@@ -31,7 +31,7 @@ input CreateWorkInput {
   number_of_people: Int
   language: String
   role: String
-  url: String!
+  url: String
   brief_story: String
   user_id: String!
 }
