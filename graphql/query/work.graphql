@@ -47,3 +47,43 @@ query GetWorks($limit: Int!, $offset:Int) {
     }
   }
 }
+
+mutation CreateWork($input: CreateWorkInput!) {
+  createWork(input: $input) {
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user{
+      id
+      name
+    }
+  }
+}
+
+mutation UpdateWork($input: UpdateWorkInput!) {
+  updateWork(input: $input) {
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user{
+      id
+      name
+    }
+  }
+}
+
+mutation DeleteWork($id: ID!) {
+  deleteWork(id: $id)
+}
