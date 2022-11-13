@@ -1,6 +1,6 @@
 import React from 'react'
 import { Control, UseFormRegister } from 'react-hook-form'
-import { WorkForm } from '../WorkForms'
+import { WorkForm } from '../../interfaces/WorkForm'
 import { Box, TextField, IconButton, Paper } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'

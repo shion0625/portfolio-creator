@@ -4,58 +4,14 @@ import { Box, Button, Container, Stack } from '@mui/material'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon } from '@mui/icons-material'
-import { CreateWorkInput } from '../graphql/types'
 import WorkFormItem from './uiParts/WorkFormItem'
-import { Weaken } from '../lib/extendType'
+import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
 
-interface GetChangeInput extends Weaken<CreateWorkInput, 'language'> {
-  language?: string[]
+type Props = {
+  onSubmit: (data: WorkForm)=> void
 }
 
-interface GetWorkInput extends Weaken<GetChangeInput, 'url'> {
-  url: string[]
-}
-interface workFormInput extends GetWorkInput{
-  id: string
-}
-
-export type WorkForm = {
-  works: workFormInput[]
-}
-
-const addNewWork = {
-  id: '',
-  title: '',
-  url: [''],
-  summary: '',
-  duration: '',
-  number_of_people: 0,
-  language: [''],
-  role: '',
-  brief_story: '',
-  image_url: '',
-  user_id: '',
-}
-
-const resetNewWorks = {
-  works: [
-    {
-      id:'',
-      title: '',
-      url: [''],
-      summary: '',
-      duration: '',
-      number_of_people: 0,
-      language: [''],
-      role: '',
-      brief_story: '',
-      image_url: '',
-      user_id: '',
-    },
-  ],
-}
-
-export const WorkForms = (): JSX.Element => {
+export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   const {
     // register 関数はinput/select の Ref とバリデーションルールを React Hook Form に登録 (register)
     register,
@@ -108,10 +64,6 @@ export const WorkForms = (): JSX.Element => {
   }
   const removeWork = (index: number) => {
     remove(index)
-  }
-
-  const onSubmit = (data: WorkForm) => {
-    console.log(data)
   }
 
   return (
