@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { useQuery } from '@apollo/client'
-import { GetUsersDocument, GetUserDocument } from '../graphql/client'
-import { GetUsersQuery, GetUserQuery } from '../graphql/client'
+import {GetUserDocument } from '../graphql/client'
+import { GetUserQuery } from '../graphql/client'
 
 const Home: NextPage = () => {
   const { data } = useQuery<GetUserQuery>(GetUserDocument, {
