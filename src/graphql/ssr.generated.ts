@@ -56,6 +56,27 @@ export type GetWorksQueryVariables = Types.Exact<{
 
 export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } }> } };
 
+export type CreateWorkMutationVariables = Types.Exact<{
+  input: Types.CreateWorkInput;
+}>;
+
+
+export type CreateWorkMutation = { createWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } } };
+
+export type UpdateWorkMutationVariables = Types.Exact<{
+  input: Types.UpdateWorkInput;
+}>;
+
+
+export type UpdateWorkMutation = { updateWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } } };
+
+export type DeleteWorkMutationVariables = Types.Exact<{
+  id: Types.Scalars['ID'];
+}>;
+
+
+export type DeleteWorkMutation = { deleteWork?: boolean | null };
+
 
 export const GetUserDocument = gql`
     query GetUser($id: ID!) {
@@ -210,6 +231,49 @@ export const GetWorksDocument = gql`
   }
 }
     `;
+export const CreateWorkDocument = gql`
+    mutation CreateWork($input: CreateWorkInput!) {
+  createWork(input: $input) {
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user {
+      id
+      name
+    }
+  }
+}
+    `;
+export const UpdateWorkDocument = gql`
+    mutation UpdateWork($input: UpdateWorkInput!) {
+  updateWork(input: $input) {
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user {
+      id
+      name
+    }
+  }
+}
+    `;
+export const DeleteWorkDocument = gql`
+    mutation DeleteWork($id: ID!) {
+  deleteWork(id: $id)
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -238,6 +302,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetWorks(variables: Types.GetWorksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Types.GetWorksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<Types.GetWorksQuery>(GetWorksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetWorks', 'query');
+    },
+    CreateWork(variables: Types.CreateWorkMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Types.CreateWorkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.CreateWorkMutation>(CreateWorkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateWork', 'mutation');
+    },
+    UpdateWork(variables: Types.UpdateWorkMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Types.UpdateWorkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.UpdateWorkMutation>(UpdateWorkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateWork', 'mutation');
+    },
+    DeleteWork(variables: Types.DeleteWorkMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Types.DeleteWorkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.DeleteWorkMutation>(DeleteWorkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteWork', 'mutation');
     }
   };
 }
