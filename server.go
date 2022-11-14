@@ -5,6 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/shion0625/my-portfolio-backend/middlewares"
 	"github.com/shion0625/my-portfolio-backend/handler"
 	"log"
 	"net/http"
@@ -22,12 +23,12 @@ func main() {
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
-	e.GET("/playground", handler.Playground())
-	e.GET("/login", handler.Login(e))
+	e.GET("/", handler.Playground())
+	e.POST("/login", handler.Login(e))
 	e.GET("/logout", handler.Logout())
 
 	g := e.Group("/api")
-	// g.Use(middleware.JWT([]byte(os.Getenv("TOKEN_KEY"))))
+	g.Use(echo.WrapMiddleware(middlewares.AuthMiddleware))
 	g.POST("/query", handler.QueryPlayground())
 
 	port := os.Getenv("PORT")

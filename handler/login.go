@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/shion0625/my-portfolio-backend/db"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
-	"github.com/shion0625/my-portfolio-backend/middleware"
+	"github.com/shion0625/my-portfolio-backend/middlewares"
 )
 
 func Login(e *echo.Echo) echo.HandlerFunc {
@@ -24,7 +24,7 @@ func Login(e *echo.Echo) echo.HandlerFunc {
 		db.Find(&user, "name=? and password=?", username, password)
 		if len(user) > 0 && username == user[0].Name {
 
-			middleware.LoginSession(c, user)
+			middlewares.LoginSession(c, user)
 			// トークンの作成
 			token := jwt.New(jwt.SigningMethodHS256)
 			// Set claims
@@ -45,7 +45,7 @@ func Login(e *echo.Echo) echo.HandlerFunc {
 
 func Logout() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		middleware.LogoutSession(c)
+		middlewares.LogoutSession(c)
 		return c.NoContent(http.StatusOK)
 	}
 }

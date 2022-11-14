@@ -1,9 +1,11 @@
 package handler
 
 import (
-	"context"
+	_"context"
 	"fmt"
-	"github.com/99designs/gqlgen/graphql"
+	"net/http"
+
+	_"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/labstack/echo-contrib/session"
@@ -11,10 +13,10 @@ import (
 	"github.com/shion0625/my-portfolio-backend/dataloader"
 	"github.com/shion0625/my-portfolio-backend/db"
 	"github.com/shion0625/my-portfolio-backend/graph"
+	"github.com/shion0625/my-portfolio-backend/graph/directives"
 	_ "github.com/shion0625/my-portfolio-backend/graph/directives"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
-	"github.com/shion0625/my-portfolio-backend/graph/model"
-	"net/http"
+	_"github.com/shion0625/my-portfolio-backend/graph/model"
 )
 
 func Welcome() echo.HandlerFunc {
@@ -43,22 +45,25 @@ func QueryPlayground() echo.HandlerFunc {
 			UserLoader: userLoader,
 			WorkLoader: workLoader,
 		}}
-		gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
-			// session, err := session.Get("session", c)
-			// if err!=nil {
-			//     return nil, c.String(http.StatusInternalServerError, "Error")
-			// }
-			// //ログインしているか
-			// if b, _:=session.Values["auth"];b!=true{
-			//     return nil, c.String(http.StatusUnauthorized, "401")
-			// }else {
-			// 	if !directives.HasRole(session.Values["role"].(string), role) {
-			// 		return nil, fmt.Errorf("Access denied")
-			// 	}
-			// 	return next(ctx)
-			// }
-			return next(ctx)
-		}
+		gc.Directives.Auth = directives.Auth
+				fmt.Println(gc)
+
+		// gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
+		// 	// session, err := session.Get("session", c)
+		// 	// if err!=nil {
+		// 	//     return nil, c.String(http.StatusInternalServerError, "Error")
+		// 	// }
+		// 	// //ログインしているか
+		// 	// if b, _:=session.Values["auth"];b!=true{
+		// 	//     return nil, c.String(http.StatusUnauthorized, "401")
+		// 	// }else {
+		// 	// 	if !directives.HasRole(session.Values["role"].(string), role) {
+		// 	// 		return nil, fmt.Errorf("Access denied")
+		// 	// 	}
+		// 	// 	return next(ctx)
+		// 	// }
+		// 	return next(ctx)
+		// }
 		graphqlHandler := handler.NewDefaultServer(
 			generated.NewExecutableSchema(
 				gc,
@@ -68,19 +73,3 @@ func QueryPlayground() echo.HandlerFunc {
 		return nil
 	}
 }
-
-// func Restricted() echo.HandlerFunc  {
-//   return func(c echo.Context) error {
-// 		db := db.ConnectGORM()
-//     user := c.Get("user").(*jwt.Token)
-// 		_ = user.Claims.(jwt.MapClaims)
-// 		bufBody := new(bytes.Buffer)
-//     bufBody.ReadFrom(c.Request().Body)
-// 		query := bufBody.String()
-//     log.Printf(query)
-//     result := &graph.Resolver{DB: db}
-//     // claims := user.Claims.(jwt.MapClaims)
-//     // name := claims["name"].(string)
-//     return c.String(http.StatusOK, result)
-//   }
-// }
