@@ -16,20 +16,7 @@ import (
 
 // UpdateUser is the resolver for the updateUser field.
 func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUserInput) (*model.User, error) {
-	user := model.User{ID: input.ID}
-	r.DB.First(&user)
-	if input.IsAdmin == nil {
-		input.IsAdmin = &user.IsAdmin
-	}
-	if input.Name == nil {
-		input.Name = &user.Name
-	}
-	if input.Email == nil {
-		input.Email = &user.Email
-	}
-	r.DB.Model(&user).Updates(model.User{IsAdmin: *input.IsAdmin, Name: *input.Name, Email: *input.Email})
-	result := r.DB.Save(&user)
-	return &user, result.Error
+	return service.UserUpdateByID(ctx, input)
 }
 
 // DeleteUser is the resolver for the deleteUser field.

@@ -1,10 +1,10 @@
 ### Mutation(更新系)の定義
 type Mutation {
-  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER]) @auth
-  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER]) @auth
+  updateUser(input: UpdateUserInput!): User! @auth
+  deleteUser(id: ID!): Boolean @auth
   createWork(input: CreateWorkInput!): Work!  @auth
-  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER]) @auth
-  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER]) @auth
+  updateWork(input: UpdateWorkInput!): Work! @auth
+  deleteWork(id: ID!): Boolean @auth
   login(email: String!, password: String!): Any!
   register(input: CreateUserInput!): Any!
 }

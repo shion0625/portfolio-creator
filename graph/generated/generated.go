@@ -572,11 +572,11 @@ type PaginationInfo {
 `, BuiltIn: false},
 	{Name: "../mutation.graphqls", Input: `### Mutation(更新系)の定義
 type Mutation {
-  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER]) @auth
-  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER]) @auth
+  updateUser(input: UpdateUserInput!): User! @auth
+  deleteUser(id: ID!): Boolean @auth
   createWork(input: CreateWorkInput!): Work!  @auth
-  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER]) @auth
-  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER]) @auth
+  updateWork(input: UpdateWorkInput!): Work! @auth
+  deleteWork(id: ID!): Boolean @auth
   login(email: String!, password: String!): Any!
   register(input: CreateUserInput!): Any!
 }
@@ -957,23 +957,13 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 			return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["input"].(model.UpdateUserInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-		directive2 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
 				return nil, errors.New("directive auth is not implemented")
 			}
-			return ec.directives.Auth(ctx, nil, directive1)
+			return ec.directives.Auth(ctx, nil, directive0)
 		}
 
-		tmp, err := directive2(rctx)
+		tmp, err := directive1(rctx)
 		if err != nil {
 			return nil, graphql.ErrorOnPath(ctx, err)
 		}
@@ -1058,23 +1048,13 @@ func (ec *executionContext) _Mutation_deleteUser(ctx context.Context, field grap
 			return ec.resolvers.Mutation().DeleteUser(rctx, fc.Args["id"].(string))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-		directive2 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
 				return nil, errors.New("directive auth is not implemented")
 			}
-			return ec.directives.Auth(ctx, nil, directive1)
+			return ec.directives.Auth(ctx, nil, directive0)
 		}
 
-		tmp, err := directive2(rctx)
+		tmp, err := directive1(rctx)
 		if err != nil {
 			return nil, graphql.ErrorOnPath(ctx, err)
 		}
@@ -1239,23 +1219,13 @@ func (ec *executionContext) _Mutation_updateWork(ctx context.Context, field grap
 			return ec.resolvers.Mutation().UpdateWork(rctx, fc.Args["input"].(model.UpdateWorkInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-		directive2 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
 				return nil, errors.New("directive auth is not implemented")
 			}
-			return ec.directives.Auth(ctx, nil, directive1)
+			return ec.directives.Auth(ctx, nil, directive0)
 		}
 
-		tmp, err := directive2(rctx)
+		tmp, err := directive1(rctx)
 		if err != nil {
 			return nil, graphql.ErrorOnPath(ctx, err)
 		}
@@ -1348,23 +1318,13 @@ func (ec *executionContext) _Mutation_deleteWork(ctx context.Context, field grap
 			return ec.resolvers.Mutation().DeleteWork(rctx, fc.Args["id"].(string))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐRoleᚄ(ctx, []interface{}{"ADMIN", "USER"})
-			if err != nil {
-				return nil, err
-			}
-			if ec.directives.HasRole == nil {
-				return nil, errors.New("directive hasRole is not implemented")
-			}
-			return ec.directives.HasRole(ctx, nil, directive0, role)
-		}
-		directive2 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
 				return nil, errors.New("directive auth is not implemented")
 			}
-			return ec.directives.Auth(ctx, nil, directive1)
+			return ec.directives.Auth(ctx, nil, directive0)
 		}
 
-		tmp, err := directive2(rctx)
+		tmp, err := directive1(rctx)
 		if err != nil {
 			return nil, graphql.ErrorOnPath(ctx, err)
 		}
