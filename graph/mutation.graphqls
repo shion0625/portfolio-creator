@@ -1,11 +1,12 @@
 ### Mutation(更新系)の定義
 type Mutation {
-  createUser(input: CreateUserInput!): User! @hasRole(role: [ADMIN,USER])
-  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER])
-  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
-  createWork(input: CreateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
-  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
-  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
+  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER]) @auth
+  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER]) @auth
+  createWork(input: CreateWorkInput!): Work!  @auth
+  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER]) @auth
+  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER]) @auth
+  login(email: String!, password: String!): Any!
+  register(input: CreateUserInput!): Any!
 }
 
 ###インプット用のスキーマ定義
