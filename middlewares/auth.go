@@ -17,7 +17,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		fmt.Println("==================")
 
 		bearer := "Bearer "
 		auth = auth[len(bearer):]
@@ -27,8 +26,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			http.Error(w, "Invalid token", http.StatusForbidden)
 			return
 		}
-		fmt.Println("+++++++++++++++++++++")
-
 		customClaim, _ := validate.Claims.(*service.JwtCustomClaim)
 
 		ctx := context.WithValue(r.Context(), authString("auth"), customClaim)
