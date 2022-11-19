@@ -11,8 +11,8 @@ const environmentVariables = fs
 
 Object.entries(environmentVariables).forEach(([envName, env]) => {
   describe(`${envName}`, () => {
-    it('NEXT_PUBLIC_API_BASE_URL が必ずセットされている。', () => {
-      expect(env['NEXT_PUBLIC_API_BASE_URL']).toBeDefined()
+    it('NEXT_PUBLIC_API_URL が必ずセットされている。', () => {
+      expect(env['NEXT_PUBLIC_API_URL']).toBeDefined()
     })
   })
 })

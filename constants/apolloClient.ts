@@ -5,16 +5,19 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client'
 import 'cross-fetch/polyfill'
+import { API_URL } from './urls'
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined
+
+const httpLink = new HttpLink({
+  uri: API_URL,
+  credentials: 'same-origin',
+})
 
 const createApolloClient = () => {
   return new ApolloClient({
     ssrMode: true,
-    link: new HttpLink({
-      uri: 'http://localhost:8080/api/query',
-      credentials: 'include',
-    }),
+    link: httpLink,
     cache: new InMemoryCache(),
   })
 }
