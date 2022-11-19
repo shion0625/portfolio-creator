@@ -6,10 +6,14 @@ import TwitterProvider from "next-auth/providers/twitter"
 import Auth0Provider from "next-auth/providers/auth0"
 // import AppleProvider from "next-auth/providers/apple"
 // import EmailProvider from "next-auth/providers/email"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
+  adapter: PrismaAdapter(prisma),
   // https://next-auth.js.org/configuration/providers
   providers: [
     /* EmailProvider({
@@ -28,6 +32,7 @@ export default NextAuth({
         keyId: process.env.APPLE_KEY_ID,
       },
     }),
+
     */
     // FacebookProvider({
     //   clientId: process.env.FACEBOOK_ID,
@@ -59,18 +64,17 @@ export default NextAuth({
   secret: process.env.SECRET,
 
   session: {
+    strategy: "database",
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
     // Note: `strategy` should be set to 'jwt' if no database is used.
-    strategy: "jwt",
-
+    // strategy: "jwt",
     // Seconds - How long until an idle session expires and is no longer valid.
     maxAge: 30 * 24 * 60 * 60, // 30 days
-
     // Seconds - Throttle how frequently to write to database to extend a session.
     // Use it to limit write operations. Set to 0 to always update the database.
     // Note: This option is ignored if using JSON Web Tokens
-    // updateAge: 24 * 60 * 60, // 24 hours
+    updateAge: 24 * 60 * 60, // 24 hours
   },
 
   // JSON Web tokens are only used for sessions if the `jwt: true` session
@@ -100,9 +104,12 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
+    async session({ session, user, token }) {
+      if (session?.user) { session.user.id = user.id }
+      return session;
+    }
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
-    // async session({ session, token, user }) { return session },
     // async jwt({ token, user, account, profile, isNewUser }) { return token }
   },
 
