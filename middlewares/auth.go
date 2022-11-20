@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/shion0625/my-portfolio-backend/service"
 	"net/http"
-	"fmt"
+	// "fmt"
 )
 
 type authString string
@@ -12,7 +12,7 @@ type authString string
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		auth := r.Header.Get("Authorization")
-		fmt.Println(auth)
+		// fmt.Println(auth)
 		if auth == "" {
 			next.ServeHTTP(w, r)
 			return
