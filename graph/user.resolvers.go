@@ -11,16 +11,6 @@ import (
 	"github.com/shion0625/my-portfolio-backend/graph/model"
 )
 
-// EmailVerified is the resolver for the emailVerified field.
-func (r *userResolver) EmailVerified(ctx context.Context, obj *model.User) ([]*string, error) {
-	panic(fmt.Errorf("not implemented: EmailVerified - emailVerified"))
-}
-
-// Image is the resolver for the image field.
-func (r *userResolver) Image(ctx context.Context, obj *model.User) (*string, error) {
-	panic(fmt.Errorf("not implemented: Image - image"))
-}
-
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error) {
 	works, err := r.WorkLoader.Load(obj.ID)

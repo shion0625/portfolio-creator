@@ -48,10 +48,10 @@ type Profile struct {
 	User     *User   `json:"user"`
 }
 
-type UpdateUserInput struct {
-	ID    string  `json:"id"`
-	Name  *string `json:"name"`
-	Email *string `json:"email"`
+type UpdateProfileInput struct {
+	ID       string  `json:"id"`
+	Birthday *string `json:"birthday"`
+	Comment  *string `json:"comment"`
 }
 
 type UpdateWorkInput struct {
