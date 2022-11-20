@@ -13,7 +13,7 @@ migrate-up:
 migrate-down:
 	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path db/migrations down
 migrate-force:
-	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path db/migrations force 2
+	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path db/migrations force 3
 graphql:
 	go run github.com/99designs/gqlgen
 gen:
