@@ -128,6 +128,8 @@ type QueryResolver interface {
 	Works(ctx context.Context, limit int, offset *int) (*model.WorkPagination, error)
 }
 type UserResolver interface {
+	EmailVerified(ctx context.Context, obj *model.User) ([]*string, error)
+
 	Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error)
 	Profile(ctx context.Context, obj *model.User) (*model.Profile, error)
 }
@@ -2317,7 +2319,7 @@ func (ec *executionContext) _User_emailVerified(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.EmailVerified, nil
+		return ec.resolvers.User().EmailVerified(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2335,8 +2337,8 @@ func (ec *executionContext) fieldContext_User_emailVerified(ctx context.Context,
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Timestamp does not have child fields")
 		},
@@ -5609,9 +5611,22 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._User_email(ctx, field, obj)
 
 		case "emailVerified":
+			field := field
 
-			out.Values[i] = ec._User_emailVerified(ctx, field, obj)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._User_emailVerified(ctx, field, obj)
+				return res
+			}
 
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "image":
 
 			out.Values[i] = ec._User_image(ctx, field, obj)

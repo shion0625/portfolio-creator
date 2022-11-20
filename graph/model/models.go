@@ -20,9 +20,8 @@ type User struct {
 	ID            string          `json:"id"`
 	Name          *string         `json:"name"`
 	Email         *string         `json:"email"`
-	EmailVerified []*string       `json:"emailVerified"`
+	EmailVerified *string       `json:"emailVerified"`
 	Image         *string         `json:"image"`
-	ProfileID       *Profile        `json:"profile"`
 }
 
 func (User) IsNode()            {}

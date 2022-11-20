@@ -46,8 +46,6 @@ func QueryPlayground() echo.HandlerFunc {
 			WorkLoader: workLoader,
 		}}
 		gc.Directives.Auth = directives.Auth
-				fmt.Println(gc)
-
 		// gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
 		// 	// session, err := session.Get("session", c)
 		// 	// if err!=nil {
