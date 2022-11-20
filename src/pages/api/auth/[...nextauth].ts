@@ -81,6 +81,7 @@ export default NextAuth({
   // option is set - or by default if no database is specified.
   // https://next-auth.js.org/configuration/options#jwt
   jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
     // encode: async ({ secret, token, maxAge }) => {},
@@ -106,11 +107,21 @@ export default NextAuth({
   callbacks: {
     async session({ session, user, token }) {
       if (session?.user) { session.user.id = user.id }
+      // session.accessToken = token.accessToken;
+      // console.log(`token: ${token}`)
+      // console.log(session)
       return session;
-    }
+    },
+    // async jwt({ token, user, account, profile, isNewUser }) {
+    //   console.log('hfaiowea')
+    //   if (account?.accessToken) {
+    //     token.accessToken = account.accessToken;
+    //   }
+    //   return token
+    // }
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
-    // async jwt({ token, user, account, profile, isNewUser }) { return token }
+
   },
 
   // Events are useful for logging
