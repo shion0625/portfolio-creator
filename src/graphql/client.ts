@@ -13,14 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Any: any;
   Timestamp: any;
-};
-
-export type CreateUserInput = {
-  email: Scalars['String'];
-  is_admin: Scalars['Boolean'];
-  name: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type CreateWorkInput = {
@@ -37,17 +31,11 @@ export type CreateWorkInput = {
 };
 
 export type Mutation = {
-  createUser: User;
   createWork: Work;
-  deleteUser?: Maybe<Scalars['Boolean']>;
   deleteWork?: Maybe<Scalars['Boolean']>;
-  updateUser: User;
+  login: Scalars['Any'];
+  updateProfile: User;
   updateWork: Work;
-};
-
-
-export type MutationCreateUserArgs = {
-  input: CreateUserInput;
 };
 
 
@@ -56,18 +44,19 @@ export type MutationCreateWorkArgs = {
 };
 
 
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationDeleteWorkArgs = {
   id: Scalars['ID'];
 };
 
 
-export type MutationUpdateUserArgs = {
-  input: UpdateUserInput;
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  id: Scalars['String'];
+};
+
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
 };
 
 
@@ -91,6 +80,13 @@ export type PaginationInfo = {
   page: Scalars['Int'];
   paginationLength: Scalars['Int'];
   totalCount: Scalars['Int'];
+};
+
+export type Profile = {
+  birthday?: Maybe<Scalars['Timestamp']>;
+  comment?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  user: User;
 };
 
 export type Query = {
@@ -128,11 +124,10 @@ export enum Role {
   Viewer = 'VIEWER'
 }
 
-export type UpdateUserInput = {
-  email?: InputMaybe<Scalars['String']>;
+export type UpdateProfileInput = {
+  birthday?: InputMaybe<Scalars['String']>;
+  comment?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  is_admin?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateWorkInput = {
@@ -149,12 +144,12 @@ export type UpdateWorkInput = {
 };
 
 export type User = Node & {
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  emailVerified?: Maybe<Array<Maybe<Scalars['Timestamp']>>>;
   id: Scalars['ID'];
-  is_able: Scalars['Boolean'];
-  is_admin: Scalars['Boolean'];
-  name: Scalars['String'];
-  password: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  profile?: Maybe<Profile>;
   works?: Maybe<WorkPagination>;
 };
 
@@ -187,7 +182,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { user: { id: string, is_admin: boolean, name: string, email: string, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null }> } | null } };
+export type GetUserQuery = { user: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null }> } | null } };
 
 export type GetUsersQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -195,7 +190,7 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name: string, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } }> } | null }> } };
+export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name?: string | null, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } }> } | null }> } };
 
 export type GetUsersNameQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -203,7 +198,7 @@ export type GetUsersNameQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersNameQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name: string }> } };
+export type GetUsersNameQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name?: string | null }> } };
 
 export type GetUserIdsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -213,19 +208,20 @@ export type GetUserIdsQueryVariables = Exact<{
 
 export type GetUserIdsQuery = { users: { nodes: Array<{ id: string }> } };
 
-export type CreateUserMutationVariables = Exact<{
-  input: CreateUserInput;
+export type LoginMutationVariables = Exact<{
+  id: Scalars['String'];
+  email: Scalars['String'];
 }>;
 
 
-export type CreateUserMutation = { createUser: { id: string, name: string } };
+export type LoginMutation = { login: any };
 
 export type GetWorkQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } } | null };
+export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } } | null };
 
 export type GetWorksQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -233,21 +229,21 @@ export type GetWorksQueryVariables = Exact<{
 }>;
 
 
-export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } }> } };
+export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } }> } };
 
 export type CreateWorkMutationVariables = Exact<{
   input: CreateWorkInput;
 }>;
 
 
-export type CreateWorkMutation = { createWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } } };
+export type CreateWorkMutation = { createWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } } };
 
 export type UpdateWorkMutationVariables = Exact<{
   input: UpdateWorkInput;
 }>;
 
 
-export type UpdateWorkMutation = { updateWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name: string } } };
+export type UpdateWorkMutation = { updateWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } } };
 
 export type DeleteWorkMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -261,7 +257,6 @@ export const GetUserDocument = gql`
     query GetUser($id: ID!) {
   user(id: $id) {
     id
-    is_admin
     name
     email
     works {
@@ -352,12 +347,9 @@ export const GetUserIdsDocument = gql`
   }
 }
     `;
-export const CreateUserDocument = gql`
-    mutation CreateUser($input: CreateUserInput!) {
-  createUser(input: $input) {
-    id
-    name
-  }
+export const LoginDocument = gql`
+    mutation Login($id: String!, $email: String!) {
+  login(id: $id, email: $email)
 }
     `;
 export const GetWorkDocument = gql`
@@ -473,8 +465,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetUserIds(variables: GetUserIdsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserIdsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserIdsQuery>(GetUserIdsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserIds', 'query');
     },
-    CreateUser(variables: CreateUserMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateUserMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateUserMutation>(CreateUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateUser', 'mutation');
+    Login(variables: LoginMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LoginMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<LoginMutation>(LoginDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Login', 'mutation');
     },
     GetWork(variables: GetWorkQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetWorkQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetWorkQuery>(GetWorkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetWork', 'query');

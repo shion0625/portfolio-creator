@@ -2,7 +2,6 @@
 query GetUser($id: ID!) {
   user(id: $id) {
     id
-    is_admin
     name
     email
     works{
@@ -90,10 +89,6 @@ query GetUserIds($limit: Int!, $offset: Int) {
   }
 }
 
-# schema.graphqlsのMutationの内容に従って定義
-mutation CreateUser($input: CreateUserInput!) {
-  createUser(input: $input) {
-    id
-    name
-  }
+mutation Login($id: String!, $email: String!) {
+  login(id: $id, email: $email)
 }
