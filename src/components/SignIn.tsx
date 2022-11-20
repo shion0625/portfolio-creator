@@ -9,6 +9,7 @@ const SignIn: NextPage = () => {
   const { data: session, status } = useSession()
 
   const [Login, { data, loading, error }] = useMutation<LoginMutation>(LoginDocument)
+
   useEffect(() => {
     (async () => {
       if (status === 'authenticated' && session && session.user && session.user.email) {
@@ -17,9 +18,6 @@ const SignIn: NextPage = () => {
       }
     })();
   }, [status]);
-
-  console.log(session)
-
 
   const signInClick = (e: any) => {
     signIn('google', { callbackUrl: 'http://localhost:3000' })
