@@ -10,6 +10,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
+
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
 export default NextAuth({
@@ -107,18 +108,20 @@ export default NextAuth({
   callbacks: {
     async session({ session, user, token }) {
       if (session?.user) { session.user.id = user.id }
-      // session.accessToken = token.accessToken;
-      // console.log(`token: ${token}`)
-      // console.log(session)
+      session.accessToken = user;
       return session;
     },
     // async jwt({ token, user, account, profile, isNewUser }) {
-    //   console.log('hfaiowea')
-    //   if (account?.accessToken) {
-    //     token.accessToken = account.accessToken;
+    //   console.log('jwt')
+    //   console.log(`account:${JSON.stringify(account)}`);
+    //   if (user) {
+    //     token.id = user.id;
     //   }
-    //   return token
-    // }
+    //   if (account) {
+    //     token.accessToken = account.access_token;
+    //   }
+    //   return token;
+    // },
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
 
