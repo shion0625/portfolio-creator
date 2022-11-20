@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { LoginDocument } from '../graphql/client'
 import { LoginMutation } from '../graphql/client'
 import { signIn, signOut, useSession } from 'next-auth/react';
+import { setCookieToken, destroyCookieToken, printCookie } from '../lib/setCookie';
 
 const SignIn: NextPage = () => {
   const { data: session, status } = useSession()
@@ -15,6 +16,7 @@ const SignIn: NextPage = () => {
       if (status === 'authenticated' && session && session.user && session.user.email) {
         let jwtToken = await Login({ variables: { id: session.user.id, email: session.user.email } })
         session.accessToken = jwtToken?.data?.login.token
+        setCookieToken(session.accessToken)
       }
     })();
   }, [status]);
@@ -27,6 +29,7 @@ const SignIn: NextPage = () => {
 
   const signOutClick = (e: any) => {
     signOut()
+    destroyCookieToken()
     return
   }
 

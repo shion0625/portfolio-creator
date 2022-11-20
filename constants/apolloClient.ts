@@ -3,9 +3,11 @@ import {
   HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
+  ApolloLink,
 } from '@apollo/client'
 import 'cross-fetch/polyfill'
 import { API_URL } from './urls'
+import { printCookie } from '../src/lib/setCookie';
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined
 
@@ -14,16 +16,30 @@ const httpLink = new HttpLink({
   credentials: 'same-origin',
 })
 
-const createApolloClient = () => {
+const authMiddleware = new ApolloLink((operation, forward) => {
+  // add the authorization to the headers
+  let cookie = printCookie()
+  operation.setContext(({ headers = {} }) => ({
+    headers: {
+      ...headers,
+      authorization: 'Bearer ' +  cookie.accessToken ,
+    },
+  }))
+  return forward(operation)
+})
+
+const createApolloClient = (ctx: { req: any }) => {
+  printCookie()
   return new ApolloClient({
     ssrMode: true,
-    link: httpLink,
+    link: authMiddleware.concat(httpLink),
+    // link: httpLink,
     cache: new InMemoryCache(),
   })
 }
 
-export const initializeApollo = (initialState = null) => {
-  const _apolloClient = apolloClient ?? createApolloClient()
+export const initializeApollo = (initialState = null, ctx: any) => {
+  const _apolloClient = apolloClient ?? createApolloClient(ctx)
 
   // For SSG and SSR always create a new Apollo Client
   if (typeof window === 'undefined') {
