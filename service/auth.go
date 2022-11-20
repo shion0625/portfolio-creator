@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	// "fmt"
 	// "github.com/shion0625/my-portfolio-backend/graph/model"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
@@ -44,11 +45,11 @@ func UserLogin(ctx context.Context, id string, email string) (interface{}, error
 		return nil, err
 	}
 
+
 	token, err := JwtGenerate(ctx, getUser.ID)
 	if err != nil {
 		return nil, err
 	}
-
 	return map[string]interface{}{
 		"token": token,
 	}, nil

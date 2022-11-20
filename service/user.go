@@ -12,7 +12,7 @@ import (
 func UserGetByID(ctx context.Context, id string) (*model.User, error) {
 	db := db.ConnectGORM()
 	var user model.User
-	if err := db.Model(user).Where("id = ?", id).Take(&user).Error; err != nil {
+	if err := db.Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
 		return nil, err
 	}
 
@@ -22,7 +22,7 @@ func UserGetByID(ctx context.Context, id string) (*model.User, error) {
 func UserGetByEmail(ctx context.Context, email string) (*model.User, error) {
 	db := db.ConnectGORM()
 	var user model.User
-	if err := db.Model(user).Where("email LIKE ?", email).Take(&user).Error; err != nil {
+	if err := db.Table("users").Where("email LIKE ?", email).Take(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
