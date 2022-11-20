@@ -16,11 +16,11 @@ func LoginSession(c echo.Context, user []model.User) error {
 		HttpOnly: true,
 	}
 	session.Values["auth"] = true
-	if user[0].IsAdmin {
-		session.Values["role"] = "ADMIN"
-	} else {
-		session.Values["role"] = "USER"
-	}
+	// if user[0].IsAdmin {
+	// 	session.Values["role"] = "ADMIN"
+	// } else {
+	// 	session.Values["role"] = "USER"
+	// }
 	//状態保存
 	if err := session.Save(c.Request(), c.Response()); err != nil {
 		return c.NoContent(http.StatusInternalServerError)

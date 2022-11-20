@@ -24,8 +24,6 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 	e.GET("/", handler.Playground())
-	e.POST("/login", handler.Login(e))
-	e.GET("/logout", handler.Logout())
 
 	g := e.Group("/api")
 	g.Use(echo.WrapMiddleware(middlewares.AuthMiddleware))

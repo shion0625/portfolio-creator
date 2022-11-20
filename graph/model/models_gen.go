@@ -19,13 +19,6 @@ type Pagination interface {
 	GetNodes() []Node
 }
 
-type CreateUserInput struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	IsAdmin  bool   `json:"is_admin"`
-}
-
 type CreateWorkInput struct {
 	Title          string  `json:"title"`
 	Summary        *string `json:"summary"`
@@ -48,11 +41,17 @@ type PaginationInfo struct {
 	TotalCount       int  `json:"totalCount"`
 }
 
+type Profile struct {
+	ID       string  `json:"id"`
+	Birthday *string `json:"birthday"`
+	Comment  *string `json:"comment"`
+	User     *User   `json:"user"`
+}
+
 type UpdateUserInput struct {
-	ID      string  `json:"id"`
-	IsAdmin *bool   `json:"is_admin"`
-	Name    *string `json:"name"`
-	Email   *string `json:"email"`
+	ID    string  `json:"id"`
+	Name  *string `json:"name"`
+	Email *string `json:"email"`
 }
 
 type UpdateWorkInput struct {

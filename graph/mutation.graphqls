@@ -1,25 +1,15 @@
 ### Mutation(更新系)の定義
 type Mutation {
   updateUser(input: UpdateUserInput!): User! @auth
-  deleteUser(id: ID!): Boolean @auth
   createWork(input: CreateWorkInput!): Work!  @auth
   updateWork(input: UpdateWorkInput!): Work! @auth
   deleteWork(id: ID!): Boolean @auth
-  login(email: String!, password: String!): Any!
-  register(input: CreateUserInput!): Any!
+  login(id: String!, email: String!): Any!
 }
 
 ###インプット用のスキーマ定義
-input CreateUserInput {
-  name: String!
-  password: String!
-  email: String!
-  is_admin: Boolean!
-}
-
 input UpdateUserInput {
   id: ID!
-  is_admin: Boolean
   name: String
   email: String
 }
