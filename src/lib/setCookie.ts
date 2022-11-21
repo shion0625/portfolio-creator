@@ -11,7 +11,7 @@ export function setCookieToken(token: string, ctx?: NextPageContext) {
 
 export function printCookie(ctx?: NextPageContext): any {
   const cookie = parseCookies(ctx);
-  console.log(cookie) // { accessToken: 'test1234' }
+  // console.log(cookie) // { accessToken: 'test1234' }
   return cookie
 }
 

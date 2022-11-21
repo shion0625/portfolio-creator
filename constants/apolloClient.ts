@@ -19,17 +19,18 @@ const httpLink = new HttpLink({
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   let cookie = printCookie()
-  operation.setContext(({ headers = {} }) => ({
-    headers: {
-      ...headers,
-      authorization: 'Bearer ' +  cookie.accessToken ,
-    },
-  }))
+  if (cookie.accessToken) {
+    operation.setContext(({ headers = {} }) => ({
+      headers: {
+        ...headers,
+        authorization: 'Bearer ' + cookie.accessToken,
+      },
+    }))
+  }
   return forward(operation)
 })
 
 const createApolloClient = (ctx: { req: any }) => {
-  printCookie()
   return new ApolloClient({
     ssrMode: true,
     link: authMiddleware.concat(httpLink),
