@@ -37,7 +37,7 @@ const Users: NextPage<Props> = ({ users }) => {
 export default Users
 
 export const getStaticProps: GetStaticProps = async () => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
   assertIsDefined(apiBaseUrl)
 
   const client = new GraphQLClient(apiBaseUrl)

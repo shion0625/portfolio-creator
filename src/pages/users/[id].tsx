@@ -28,7 +28,7 @@ const UserDetail: NextPage<Props> = ({ user }) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
   assertIsDefined(apiBaseUrl)
   const client = new GraphQLClient(apiBaseUrl)
   const sdk = getSdk(client)
@@ -46,7 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
   assertIsDefined(apiBaseUrl)
 
   const client = new GraphQLClient(apiBaseUrl)

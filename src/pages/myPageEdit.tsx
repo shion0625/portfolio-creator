@@ -15,7 +15,7 @@ const MyPageEdit: NextPage<Props> = ({ users }) => {
   const [CreateWork, { data, loading, error }] = useMutation<CreateWorkMutation>(CreateWorkDocument)
 
   const OnSubmit = (input: WorkForm) => {
-    input.works.map((work, index) => {
+    input.works.map((work) => {
       let language, url
       if (work.language != undefined) {
         language = work.language.join('*&*')
@@ -24,7 +24,7 @@ const MyPageEdit: NextPage<Props> = ({ users }) => {
         url = work.url.join('*&*')
       }
 
-    if (work.id === null) {
+    if (work.id != null) {
       let createWorkInput: CreateWorkInput = {
         brief_story: work.brief_story,
         duration: work.duration,

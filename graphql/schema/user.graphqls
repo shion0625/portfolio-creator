@@ -1,11 +1,11 @@
 type User implements Node{
   id: ID!
-  is_admin: Boolean!
-  name: String!
-  password: String!
-  email: String!
-  is_able: Boolean!
+  name: String
+  email: String
+  emailVerified: [Timestamp]
+  image: String
   works: WorkPagination
+  profile: Profile
 }
 
 type UserPagination implements Pagination{

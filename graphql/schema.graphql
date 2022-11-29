@@ -3,6 +3,10 @@ interface Node {
 }
 
 scalar Timestamp
+scalar Any
+
+directive @auth on FIELD_DEFINITION
+
 
 interface Pagination {
   pageInfo: PaginationInfo!
@@ -18,21 +22,31 @@ type PaginationInfo {
   totalCount: Int!
 }
 
-# user=========================================================
+## profile ========================================
+
+type Profile {
+  id: ID!
+  birthday: Timestamp
+  comment: String
+  user: User!
+  }
+
+## user ======================================================
 type User implements Node{
   id: ID!
-  is_admin: Boolean!
-  name: String!
-  password: String!
-  email: String!
-  is_able: Boolean!
+  name: String
+  email: String
+  emailVerified: [Timestamp]
+  image: String
   works: WorkPagination
+  profile: Profile
 }
 
 type UserPagination implements Pagination{
   pageInfo: PaginationInfo!
   nodes: [User!]!
 }
+
 
 #work =====================================================
 type Work implements Node{
@@ -64,27 +78,18 @@ type Query {
 
 ### Mutation(更新系)の定義====================================
 type Mutation {
-  createUser(input: CreateUserInput!): User! @hasRole(role: [ADMIN,USER])
-  updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER])
-  deleteUser(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
-  createWork(input: CreateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
-  updateWork(input: UpdateWorkInput!): Work! @hasRole(role: [ADMIN,USER])
-  deleteWork(id: ID!): Boolean @hasRole(role: [ADMIN,USER])
+  updateProfile(input: UpdateProfileInput!): User! @auth
+  createWork(input: CreateWorkInput!): Work!  @auth
+  updateWork(input: UpdateWorkInput!): Work! @auth
+  deleteWork(id: ID!): Boolean @auth
+  login(id: String!, email: String!): Any!
 }
 
 ###インプット用のスキーマ定義
-input CreateUserInput {
-  name: String!
-  password: String!
-  email: String!
-  is_admin: Boolean!
-}
-
-input UpdateUserInput {
+input UpdateProfileInput {
   id: ID!
-  is_admin: Boolean
-  name: String
-  email: String
+  birthday: String
+  comment: String
 }
 
 input CreateWorkInput {

@@ -10,14 +10,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Any: any;
   Timestamp: any;
-};
-
-export type CreateUserInput = {
-  email: Scalars['String'];
-  is_admin: Scalars['Boolean'];
-  name: Scalars['String'];
-  password: Scalars['String'];
 };
 
 export type CreateWorkInput = {
@@ -34,17 +28,11 @@ export type CreateWorkInput = {
 };
 
 export type Mutation = {
-  createUser: User;
   createWork: Work;
-  deleteUser?: Maybe<Scalars['Boolean']>;
   deleteWork?: Maybe<Scalars['Boolean']>;
-  updateUser: User;
+  login: Scalars['Any'];
+  updateProfile: User;
   updateWork: Work;
-};
-
-
-export type MutationCreateUserArgs = {
-  input: CreateUserInput;
 };
 
 
@@ -53,18 +41,19 @@ export type MutationCreateWorkArgs = {
 };
 
 
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
-};
-
-
 export type MutationDeleteWorkArgs = {
   id: Scalars['ID'];
 };
 
 
-export type MutationUpdateUserArgs = {
-  input: UpdateUserInput;
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  id: Scalars['String'];
+};
+
+
+export type MutationUpdateProfileArgs = {
+  input: UpdateProfileInput;
 };
 
 
@@ -88,6 +77,13 @@ export type PaginationInfo = {
   page: Scalars['Int'];
   paginationLength: Scalars['Int'];
   totalCount: Scalars['Int'];
+};
+
+export type Profile = {
+  birthday?: Maybe<Scalars['Timestamp']>;
+  comment?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  user: User;
 };
 
 export type Query = {
@@ -125,11 +121,10 @@ export enum Role {
   Viewer = 'VIEWER'
 }
 
-export type UpdateUserInput = {
-  email?: InputMaybe<Scalars['String']>;
+export type UpdateProfileInput = {
+  birthday?: InputMaybe<Scalars['String']>;
+  comment?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
-  is_admin?: InputMaybe<Scalars['Boolean']>;
-  name?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateWorkInput = {
@@ -146,12 +141,12 @@ export type UpdateWorkInput = {
 };
 
 export type User = Node & {
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  emailVerified?: Maybe<Array<Maybe<Scalars['Timestamp']>>>;
   id: Scalars['ID'];
-  is_able: Scalars['Boolean'];
-  is_admin: Scalars['Boolean'];
-  name: Scalars['String'];
-  password: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  profile?: Maybe<Profile>;
   works?: Maybe<WorkPagination>;
 };
 

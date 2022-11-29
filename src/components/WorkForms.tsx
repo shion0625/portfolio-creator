@@ -40,7 +40,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
           role: 'gawea',
           brief_story: 'wagea',
           image_url: 'bawea',
-          user_id: 'awea',
+          user_id: 'clao23geb0000ssu3qbzn58aq',
         },
       ],
     },

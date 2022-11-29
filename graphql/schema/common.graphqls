@@ -3,6 +3,10 @@ interface Node {
 }
 
 scalar Timestamp
+scalar Any
+
+directive @auth on FIELD_DEFINITION
+
 
 interface Pagination {
   pageInfo: PaginationInfo!
