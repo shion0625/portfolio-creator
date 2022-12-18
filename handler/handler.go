@@ -11,7 +11,7 @@ import (
 	"github.com/shion0625/my-portfolio-backend/graph/model"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
-	"github.com/shion0625/my-portfolio-backend/graph"
+	"github.com/shion0625/my-portfolio-backend/graph/resolver"
 	_"github.com/shion0625/my-portfolio-backend/graph/directives"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/shion0625/my-portfolio-backend/dataloader"
@@ -40,7 +40,7 @@ func QueryPlayground() echo.HandlerFunc {
 		workLoader := dataloader.NewWorkLoader()
 
 		db := db.ConnectGORM()
-		gc:=generated.Config{Resolvers: &graph.Resolver{
+		gc:=generated.Config{Resolvers: &resolver.Resolver{
 			DB: db,
 			UserLoader: userLoader,
 			WorkLoader: workLoader,

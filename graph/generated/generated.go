@@ -531,7 +531,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../common.graphqls", Input: `interface Node {
+	{Name: "../schema/common.graphqls", Input: `interface Node {
     id: ID!
 }
 
@@ -551,7 +551,7 @@ type PaginationInfo {
     totalCount: Int!
 }
 `, BuiltIn: false},
-	{Name: "../mutation.graphqls", Input: `### Mutation(更新系)の定義
+	{Name: "../schema/mutation.graphqls", Input: `### Mutation(更新系)の定義
 type Mutation {
   createUser(input: CreateUserInput!): User! @hasRole(role: [ADMIN,USER])
   updateUser(input: UpdateUserInput!): User! @hasRole(role: [ADMIN,USER])
@@ -610,7 +610,7 @@ enum Role {
   VIEWER
 }
 `, BuiltIn: false},
-	{Name: "../query.graphqls", Input: `###  Query(read系)
+	{Name: "../schema/query.graphqls", Input: `###  Query(read系)
 type Query {
   user(id: ID!): User
   users(limit: Int!, offset: Int): UserPagination
@@ -618,7 +618,7 @@ type Query {
   works(limit: Int!, offset: Int): WorkPagination
 }
 `, BuiltIn: false},
-	{Name: "../user.graphqls", Input: `type User implements Node{
+	{Name: "../schema/user.graphqls", Input: `type User implements Node{
   id: ID!
   is_admin: Boolean!
   name: String!
@@ -633,7 +633,7 @@ type UserPagination implements Pagination{
     nodes: [User!]!
 }
 `, BuiltIn: false},
-	{Name: "../work.graphqls", Input: `type Work implements Node{
+	{Name: "../schema/work.graphqls", Input: `type Work implements Node{
   id: ID!
   title: String!
   summary: String
