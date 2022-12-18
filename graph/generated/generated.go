@@ -556,7 +556,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "../schema/common.graphqls", Input: `interface Node {
-    id: ID!
+  id: ID!
 }
 
 scalar Timestamp
@@ -628,6 +628,13 @@ enum Role {
   USER
   VIEWER
 }
+`, BuiltIn: false},
+	{Name: "../schema/profile.graphqls", Input: `type Profile {
+  id: ID!
+  birthday: Timestamp
+  comment: String
+  user: User!
+  }
 `, BuiltIn: false},
 	{Name: "../schema/query.graphqls", Input: `###  Query(read系)
 type Query {
