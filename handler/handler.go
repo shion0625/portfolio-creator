@@ -1,22 +1,20 @@
 package handler
 
 import (
-	_"context"
 	"fmt"
 	"net/http"
 
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo-contrib/session"
 	_"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/labstack/echo-contrib/session"
-	"github.com/labstack/echo/v4"
-	"github.com/shion0625/my-portfolio-backend/dataloader"
 	"github.com/shion0625/my-portfolio-backend/db"
-	"github.com/shion0625/my-portfolio-backend/graph"
-	"github.com/shion0625/my-portfolio-backend/graph/directives"
-	_ "github.com/shion0625/my-portfolio-backend/graph/directives"
+	"github.com/shion0625/my-portfolio-backend/dataloader"
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
-	_"github.com/shion0625/my-portfolio-backend/graph/model"
+	"github.com/shion0625/my-portfolio-backend/graph/resolver"
+	_"github.com/shion0625/my-portfolio-backend/graph/directives"
+	"github.com/shion0625/my-portfolio-backend/graph/directives"
 )
 
 func Welcome() echo.HandlerFunc {
@@ -40,7 +38,7 @@ func QueryPlayground() echo.HandlerFunc {
 		db := db.ConnectGORM()
 		userLoader := dataloader.UsersByIDs(db)
 		workLoader := dataloader.WorksByIDs(db)
-		gc := generated.Config{Resolvers: &graph.Resolver{
+		gc := generated.Config{Resolvers: &resolver.Resolver{
 			DB:         db,
 			UserLoader: userLoader,
 			WorkLoader: workLoader,
