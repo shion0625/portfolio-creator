@@ -77,14 +77,14 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
               <ImageCard
                 workIndex={index}
                 watch={watch} />
-              <WorkFormItem
+              {/* <WorkFormItem
                 key={field.id}
                 register={register}
                 removeWork={removeWork}
                 control={control}
                 workIndex={index}
                 errors={errors}
-              />
+              /> */}
             </>
           )
         })}

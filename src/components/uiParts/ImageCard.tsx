@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
+import BasicModal from './modal'
 
 type Props = {
   workIndex: number
@@ -35,9 +36,7 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, watch}) => {
         <Button size="small" color="primary">
           画像の追加
         </Button>
-        <Button size="small" color="primary">
-          編集
-        </Button>
+        <BasicModal buttonText='編集' />
       </CardActions>
     </Card>
   );
