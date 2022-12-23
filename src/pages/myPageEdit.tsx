@@ -41,6 +41,7 @@ const MyPageEdit: NextPage<Props> = ({ users }) => {
           user_id: work.user_id,
         }
         CreateWork({ variables: { input: createWorkInput } })
+        console.log(work)
         console.log(data)
         console.log(error)
         console.log(loading)

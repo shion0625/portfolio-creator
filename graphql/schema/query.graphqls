@@ -1,3 +1,5 @@
+## query.graphqls ===============================================
+
 ###  Query(read系)
 type Query {
   user(id: ID!): User!

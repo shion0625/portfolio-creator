@@ -1,3 +1,5 @@
+## common.graphqls ===============================================
+
 interface Node {
   id: ID!
 }

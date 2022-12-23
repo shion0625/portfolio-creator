@@ -1,3 +1,5 @@
+## mutation.graphqls ===============================================
+
 ### Mutation(更新系)の定義
 type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth

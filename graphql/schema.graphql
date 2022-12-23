@@ -1,3 +1,5 @@
+## common.graphqls ===============================================
+
 interface Node {
   id: ID!
 }
@@ -21,62 +23,9 @@ type PaginationInfo {
   count: Int!
   totalCount: Int!
 }
+## mutation.graphqls ===============================================
 
-## profile ========================================
-
-type Profile {
-  id: ID!
-  birthday: Timestamp
-  comment: String
-  user: User!
-  }
-
-## user ======================================================
-type User implements Node{
-  id: ID!
-  name: String
-  email: String
-  emailVerified: [Timestamp]
-  image: String
-  works: WorkPagination
-  profile: Profile
-}
-
-type UserPagination implements Pagination{
-  pageInfo: PaginationInfo!
-  nodes: [User!]!
-}
-
-
-#work =====================================================
-type Work implements Node{
-  id: ID!
-  title: String!
-  summary: String
-  image_url: String
-  duration: String
-  number_of_people: Int
-  language: String
-  role: String
-  url: String
-  brief_story: String
-  user: User!
-  }
-
-type WorkPagination implements Pagination {
-  pageInfo: PaginationInfo!
-  nodes: [Work!]!
-}
-
-###  Query(read系)========================================
-type Query {
-  user(id: ID!): User!
-  users(limit: Int!, offset: Int): UserPagination!
-  work(id: ID!): Work
-  works(limit: Int!, offset: Int): WorkPagination!
-}
-
-### Mutation(更新系)の定義====================================
+### Mutation(更新系)の定義
 type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth
   createWork(input: CreateWorkInput!): Work!  @auth
@@ -124,4 +73,57 @@ enum Role {
   ADMIN
   USER
   VIEWER
+}
+## profile.graphqls ===============================================
+
+type Profile {
+  id: ID!
+  birthday: Timestamp
+  comment: String
+  user: User!
+  }
+## query.graphqls ===============================================
+
+###  Query(read系)
+type Query {
+  user(id: ID!): User!
+  users(limit: Int!, offset: Int): UserPagination!
+  work(id: ID!): Work
+  works(limit: Int!, offset: Int): WorkPagination!
+}
+## user.graphqls ===============================================
+
+type User implements Node{
+  id: ID!
+  name: String
+  email: String
+  emailVerified: [Timestamp]
+  image: String
+  works: WorkPagination
+  profile: Profile
+}
+
+type UserPagination implements Pagination{
+  pageInfo: PaginationInfo!
+  nodes: [User!]!
+}
+## work.graphqls ===============================================
+
+type Work implements Node{
+  id: ID!
+  title: String!
+  summary: String
+  image_url: String
+  duration: String
+  number_of_people: Int
+  language: String
+  role: String
+  url: String
+  brief_story: String
+  user: User!
+  }
+
+type WorkPagination implements Pagination {
+  pageInfo: PaginationInfo!
+  nodes: [Work!]!
 }
