@@ -27,10 +27,21 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, watch }) => {
           alt='green iguana'
         />
         <CardContent>
-          <Typography gutterBottom variant='h5' component='div'>
+          <Typography gutterBottom variant='h5' component='div'
+            sx={{
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2, // 行数指定
+              overflow: "hidden",
+            }}>
             {watchFields[0]}
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant='body2' color='text.secondary' sx={{
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 3, // 行数指定
+            overflow: "hidden",
+          }}>
             {watchFields[1]}
           </Typography>
         </CardContent>
