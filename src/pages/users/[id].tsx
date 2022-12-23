@@ -19,7 +19,7 @@ const UserDetail: NextPage<Props> = ({ user }) => {
   return (
     <>
       <PrimarySearchAppBar />
-      <Box component="main" sx={{ m: 2 }}>
+      <Box component='main' sx={{ m: 2 }}>
         <p>User Detail</p>
         <p>{`ID: ${user.id}`}</p>
         <p>{user.name}</p>

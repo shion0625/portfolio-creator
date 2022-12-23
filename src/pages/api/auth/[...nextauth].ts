@@ -1,15 +1,14 @@
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import FacebookProvider from "next-auth/providers/facebook"
-import GithubProvider from "next-auth/providers/github"
-import TwitterProvider from "next-auth/providers/twitter"
-import Auth0Provider from "next-auth/providers/auth0"
+import NextAuth from 'next-auth'
+import GoogleProvider from 'next-auth/providers/google'
+import FacebookProvider from 'next-auth/providers/facebook'
+import GithubProvider from 'next-auth/providers/github'
+import TwitterProvider from 'next-auth/providers/twitter'
+import Auth0Provider from 'next-auth/providers/auth0'
 // import AppleProvider from "next-auth/providers/apple"
 // import EmailProvider from "next-auth/providers/email"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -65,7 +64,7 @@ export default NextAuth({
   secret: process.env.SECRET,
 
   session: {
-    strategy: "database",
+    strategy: 'database',
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
     // Note: `strategy` should be set to 'jwt' if no database is used.
@@ -107,8 +106,10 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
     async session({ session, user, token }) {
-      if (session?.user) { session.user.id = user.id }
-      return session;
+      if (session?.user) {
+        session.user.id = user.id
+      }
+      return session
     },
     // async jwt({ token, user, account, profile, isNewUser }) {
     //   console.log('jwt')
@@ -123,7 +124,6 @@ export default NextAuth({
     // },
     // async signIn({ user, account, profile, email, credentials }) { return true },
     // async redirect({ url, baseUrl }) { return baseUrl },
-
   },
 
   // Events are useful for logging
@@ -133,7 +133,7 @@ export default NextAuth({
   // You can set the theme to 'light', 'dark' or use 'auto' to default to the
   // whatever prefers-color-scheme is set to in the browser. Default is 'auto'
   theme: {
-    colorScheme: "light",
+    colorScheme: 'light',
   },
 
   // Enable debug messages in the console if you are having problems

@@ -7,12 +7,12 @@ import { Add as AddIcon } from '@mui/icons-material'
 import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
 import ImageCard from './uiParts/ImageCard'
 import { Control, UseFormRegister } from 'react-hook-form'
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid'
 
-import { createContext } from "react";
+import { createContext } from 'react'
 
 type Props = {
-  onSubmit: (data: WorkForm)=> void
+  onSubmit: (data: WorkForm) => void
 }
 
 type TWorkFormContext = {
@@ -21,7 +21,7 @@ type TWorkFormContext = {
   removeWork: (index: number) => void
   workIndex: number
   errors: any
-};
+}
 
 export const WorkFormContext = createContext({} as TWorkFormContext)
 
@@ -45,9 +45,9 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
     defaultValues: {
       works: [
         {
-          id:'LLL',
+          id: 'LLL',
           title: 'kaito',
-          url: ['ff','ff'],
+          url: ['ff', 'ff'],
           summary: 'ko',
           duration: 'wgaea',
           number_of_people: 1,
@@ -65,7 +65,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   })
 
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
-  const {fields, append, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: 'works',
     control,
   })
@@ -83,16 +83,16 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   }
 
   return (
-    <Container maxWidth='lg' sx={{ pt: 5,bgcolor: 'yellow' }}>
+    <Container maxWidth='lg' sx={{ pt: 5, bgcolor: 'yellow' }}>
       <Grid container spacing={2}>
         {fields.map((field, workIndex) => {
           return (
-            <WorkFormContext.Provider value={{ workIndex, register, control, removeWork, errors }} key={field.id}>
+            <WorkFormContext.Provider
+              value={{ workIndex, register, control, removeWork, errors }}
+              key={field.id}
+            >
               <Grid item xs={3}>
-                <ImageCard
-                  workIndex={workIndex}
-                  watch={watch}
-                />
+                <ImageCard workIndex={workIndex} watch={watch} />
               </Grid>
             </WorkFormContext.Provider>
           )

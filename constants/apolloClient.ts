@@ -7,7 +7,7 @@ import {
 } from '@apollo/client'
 import 'cross-fetch/polyfill'
 import { API_URL } from './urls'
-import { printCookie } from '../src/lib/setCookie';
+import { printCookie } from '../src/lib/setCookie'
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined
 

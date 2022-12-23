@@ -18,11 +18,12 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   width: 500,
   height: 500,
-  overflowY: 'auto'
+  overflowY: 'auto',
 }))
 
 const WorkFormItem: React.FC = () => {
-  const { register, removeWork, control, workIndex, errors } = useContext(WorkFormContext)
+  const { register, removeWork, control, workIndex, errors } =
+    useContext(WorkFormContext)
 
   return (
     <Item>
@@ -113,7 +114,7 @@ const WorkFormItem: React.FC = () => {
         nestIndex={workIndex}
         label='URL'
         choiceItem='url'
-        type="url"
+        type='url'
         placeholder='https://example.com'
       />
 
