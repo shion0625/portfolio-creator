@@ -6,6 +6,7 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon } from '@mui/icons-material'
 import WorkFormItem from './uiParts/WorkFormItem'
 import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
+import ImageCard from './uiParts/ImageCard'
 
 type Props = {
   onSubmit: (data: WorkForm)=> void
@@ -19,6 +20,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
     // reset 関数はフォーム内のフィールドの値とエラーをリセットできる
     reset,
     control,
+    watch,
 
     // handleSubmit 関数はバリデーションに成功するとフォームデータを渡す
     handleSubmit,
@@ -50,7 +52,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   })
 
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
-  const { fields, append, remove } = useFieldArray({
+  const {fields, append, remove } = useFieldArray({
     name: 'works',
     control,
   })
@@ -71,14 +73,19 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
       <Stack spacing={2}>
         {fields.map((field, index) => {
           return (
-            <WorkFormItem
-              key={field.id}
-              register={register}
-              removeWork={removeWork}
-              control={control}
-              workIndex={index}
-              errors={errors}
-            />
+            <>
+              <ImageCard
+                workIndex={index}
+                watch={watch} />
+              <WorkFormItem
+                key={field.id}
+                register={register}
+                removeWork={removeWork}
+                control={control}
+                workIndex={index}
+                errors={errors}
+              />
+            </>
           )
         })}
       </Stack>
