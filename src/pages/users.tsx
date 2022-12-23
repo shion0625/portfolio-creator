@@ -16,7 +16,7 @@ const Users: NextPage<Props> = ({ users }) => {
   return (
     <>
       <PrimarySearchAppBar />
-      <Box>
+      <Box component="main" sx={{ m: 2 }}>
         <p>ユーザの一覧</p>
         {users?.nodes.map((user: User) => {
           return (

@@ -7,8 +7,9 @@ import { Add as AddIcon } from '@mui/icons-material'
 import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
 import ImageCard from './uiParts/ImageCard'
 import { Control, UseFormRegister } from 'react-hook-form'
+import Grid from '@mui/material/Grid';
 
-import { createContext, useContext } from "react";
+import { createContext } from "react";
 
 type Props = {
   onSubmit: (data: WorkForm)=> void
@@ -82,27 +83,21 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   }
 
   return (
-    <Container maxWidth='sm' sx={{ pt: 5, bgcolor: 'yellow' }}>
-      <Stack spacing={2}>
+    <Container maxWidth='lg' sx={{ pt: 5,bgcolor: 'yellow' }}>
+      <Grid container spacing={2}>
         {fields.map((field, workIndex) => {
           return (
             <WorkFormContext.Provider value={{ workIndex, register, control, removeWork, errors }} key={field.id}>
-              <ImageCard
-                workIndex={workIndex}
-                watch={watch}
+              <Grid item xs={3}>
+                <ImageCard
+                  workIndex={workIndex}
+                  watch={watch}
                 />
-              {/* <WorkFormItem
-                key={field.id}
-                register={register}
-                removeWork={removeWork}
-                control={control}
-                workIndex={index}
-                errors={errors}
-              /> */}
+              </Grid>
             </WorkFormContext.Provider>
           )
         })}
-      </Stack>
+      </Grid>
       <Button
         sx={{ mt: 1 }}
         startIcon={<AddIcon />}

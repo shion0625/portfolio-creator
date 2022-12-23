@@ -6,6 +6,8 @@ import { useMutation } from '@apollo/client';
 import { CreateWorkDocument } from '../graphql/client'
 import { CreateWorkMutation } from '../graphql/client'
 import { CreateWorkInput } from '../graphql/types'
+import Box from '@mui/material/Box';
+import PrimarySearchAppBar from '../components/NavBar'
 
 type Props = {
   users: string
@@ -48,7 +50,10 @@ const MyPageEdit: NextPage<Props> = ({ users }) => {
   }
   return (
     <>
-      <WorkForms onSubmit={OnSubmit} />
+      <PrimarySearchAppBar />
+      <Box component="main" sx={{ m: 2 }}>
+        <WorkForms onSubmit={OnSubmit} />
+      </Box>
     </>
   )
 }
