@@ -4,13 +4,25 @@ import { Box, Button, Container, Stack } from '@mui/material'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon } from '@mui/icons-material'
-import WorkFormItem from './uiParts/WorkFormItem'
 import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
 import ImageCard from './uiParts/ImageCard'
+import { Control, UseFormRegister } from 'react-hook-form'
+
+import { createContext, useContext } from "react";
 
 type Props = {
   onSubmit: (data: WorkForm)=> void
 }
+
+type TWorkFormContext = {
+  register: UseFormRegister<WorkForm>
+  control: Control<WorkForm>
+  removeWork: (index: number) => void
+  workIndex: number
+  errors: any
+};
+
+export const WorkFormContext = createContext({} as TWorkFormContext)
 
 export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   const {
@@ -64,6 +76,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   const resetWorks = () => {
     reset(resetNewWorks)
   }
+
   const removeWork = (index: number) => {
     remove(index)
   }
@@ -71,12 +84,13 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   return (
     <Container maxWidth='sm' sx={{ pt: 5, bgcolor: 'yellow' }}>
       <Stack spacing={2}>
-        {fields.map((field, index) => {
+        {fields.map((field, workIndex) => {
           return (
-            <>
+            <WorkFormContext.Provider value={{ workIndex, register, control, removeWork, errors }} key={field.id}>
               <ImageCard
-                workIndex={index}
-                watch={watch} />
+                workIndex={workIndex}
+                watch={watch}
+                />
               {/* <WorkFormItem
                 key={field.id}
                 register={register}
@@ -85,7 +99,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
                 workIndex={index}
                 errors={errors}
               /> */}
-            </>
+            </WorkFormContext.Provider>
           )
         })}
       </Stack>
