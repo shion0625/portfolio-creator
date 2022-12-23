@@ -1,123 +1,65 @@
-import * as Types from '../../src/graphql/types'
+import * as Types from '../../src/graphql/types';
 
-import { gql } from '@apollo/client'
-import * as Apollo from '@apollo/client'
-const defaultOptions = {} as const
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+const defaultOptions = {} as const;
 export type GetWorkQueryVariables = Types.Exact<{
-  id: Types.Scalars['ID']
-}>
+  id: Types.Scalars['ID'];
+}>;
 
-export type GetWorkQuery = {
-  work?: {
-    id: string
-    title: string
-    summary?: string | null
-    image_url?: string | null
-    duration?: string | null
-    number_of_people?: number | null
-    language?: string | null
-    role?: string | null
-    url?: string | null
-    brief_story?: string | null
-    user: { id: string; name?: string | null }
-  } | null
-}
+
+export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } } | null };
 
 export type GetWorksQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
-  offset?: Types.InputMaybe<Types.Scalars['Int']>
-}>
+  limit: Types.Scalars['Int'];
+  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+}>;
 
-export type GetWorksQuery = {
-  works: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasPreviousPage: boolean
-      hasNextPage: boolean
-      count: number
-      totalCount: number
-    }
-    nodes: Array<{
-      id: string
-      title: string
-      summary?: string | null
-      image_url?: string | null
-      duration?: string | null
-      number_of_people?: number | null
-      language?: string | null
-      role?: string | null
-      url?: string | null
-      brief_story?: string | null
-      user: { id: string; name?: string | null }
-    }>
-  }
-}
+
+export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } }> } };
 
 export type CreateWorkMutationVariables = Types.Exact<{
-  input: Types.CreateWorkInput
-}>
+  input: Types.CreateWorkInput;
+}>;
 
-export type CreateWorkMutation = {
-  createWork: {
-    title: string
-    summary?: string | null
-    image_url?: string | null
-    duration?: string | null
-    number_of_people?: number | null
-    language?: string | null
-    role?: string | null
-    url?: string | null
-    brief_story?: string | null
-    user: { id: string; name?: string | null }
-  }
-}
+
+export type CreateWorkMutation = { createWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } } };
 
 export type UpdateWorkMutationVariables = Types.Exact<{
-  input: Types.UpdateWorkInput
-}>
+  input: Types.UpdateWorkInput;
+}>;
 
-export type UpdateWorkMutation = {
-  updateWork: {
-    title: string
-    summary?: string | null
-    image_url?: string | null
-    duration?: string | null
-    number_of_people?: number | null
-    language?: string | null
-    role?: string | null
-    url?: string | null
-    brief_story?: string | null
-    user: { id: string; name?: string | null }
-  }
-}
+
+export type UpdateWorkMutation = { updateWork: { title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } } };
 
 export type DeleteWorkMutationVariables = Types.Exact<{
-  id: Types.Scalars['ID']
-}>
+  id: Types.Scalars['ID'];
+}>;
 
-export type DeleteWorkMutation = { deleteWork?: boolean | null }
+
+export type DeleteWorkMutation = { deleteWork?: boolean | null };
+
 
 export const GetWorkDocument = gql`
-  query GetWork($id: ID!) {
-    work(id: $id) {
+    query GetWork($id: ID!) {
+  work(id: $id) {
+    id
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user {
       id
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
-      }
+      name
     }
   }
-`
+}
+    `;
 
 /**
  * __useGetWorkQuery__
@@ -135,63 +77,47 @@ export const GetWorkDocument = gql`
  *   },
  * });
  */
-export function useGetWorkQuery(
-  baseOptions: Apollo.QueryHookOptions<GetWorkQuery, GetWorkQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetWorkQuery, GetWorkQueryVariables>(
-    GetWorkDocument,
-    options,
-  )
-}
-export function useGetWorkLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetWorkQuery,
-    GetWorkQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetWorkQuery, GetWorkQueryVariables>(
-    GetWorkDocument,
-    options,
-  )
-}
-export type GetWorkQueryHookResult = ReturnType<typeof useGetWorkQuery>
-export type GetWorkLazyQueryHookResult = ReturnType<typeof useGetWorkLazyQuery>
-export type GetWorkQueryResult = Apollo.QueryResult<
-  GetWorkQuery,
-  GetWorkQueryVariables
->
-export const GetWorksDocument = gql`
-  query GetWorks($limit: Int!, $offset: Int) {
-    works(limit: $limit, offset: $offset) {
-      pageInfo {
-        page
-        paginationLength
-        hasPreviousPage
-        hasNextPage
-        count
-        totalCount
+export function useGetWorkQuery(baseOptions: Apollo.QueryHookOptions<GetWorkQuery, GetWorkQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWorkQuery, GetWorkQueryVariables>(GetWorkDocument, options);
       }
-      nodes {
-        id
-        title
-        summary
-        image_url
-        duration
-        number_of_people
-        language
-        role
-        url
-        brief_story
-        user {
-          id
-          name
+export function useGetWorkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWorkQuery, GetWorkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWorkQuery, GetWorkQueryVariables>(GetWorkDocument, options);
         }
+export type GetWorkQueryHookResult = ReturnType<typeof useGetWorkQuery>;
+export type GetWorkLazyQueryHookResult = ReturnType<typeof useGetWorkLazyQuery>;
+export type GetWorkQueryResult = Apollo.QueryResult<GetWorkQuery, GetWorkQueryVariables>;
+export const GetWorksDocument = gql`
+    query GetWorks($limit: Int!, $offset: Int) {
+  works(limit: $limit, offset: $offset) {
+    pageInfo {
+      page
+      paginationLength
+      hasPreviousPage
+      hasNextPage
+      count
+      totalCount
+    }
+    nodes {
+      id
+      title
+      summary
+      image_url
+      duration
+      number_of_people
+      language
+      role
+      url
+      brief_story
+      user {
+        id
+        name
       }
     }
   }
-`
+}
+    `;
 
 /**
  * __useGetWorksQuery__
@@ -210,58 +136,37 @@ export const GetWorksDocument = gql`
  *   },
  * });
  */
-export function useGetWorksQuery(
-  baseOptions: Apollo.QueryHookOptions<GetWorksQuery, GetWorksQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetWorksQuery, GetWorksQueryVariables>(
-    GetWorksDocument,
-    options,
-  )
-}
-export function useGetWorksLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetWorksQuery,
-    GetWorksQueryVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetWorksQuery, GetWorksQueryVariables>(
-    GetWorksDocument,
-    options,
-  )
-}
-export type GetWorksQueryHookResult = ReturnType<typeof useGetWorksQuery>
-export type GetWorksLazyQueryHookResult = ReturnType<
-  typeof useGetWorksLazyQuery
->
-export type GetWorksQueryResult = Apollo.QueryResult<
-  GetWorksQuery,
-  GetWorksQueryVariables
->
-export const CreateWorkDocument = gql`
-  mutation CreateWork($input: CreateWorkInput!) {
-    createWork(input: $input) {
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
+export function useGetWorksQuery(baseOptions: Apollo.QueryHookOptions<GetWorksQuery, GetWorksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetWorksQuery, GetWorksQueryVariables>(GetWorksDocument, options);
       }
+export function useGetWorksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetWorksQuery, GetWorksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetWorksQuery, GetWorksQueryVariables>(GetWorksDocument, options);
+        }
+export type GetWorksQueryHookResult = ReturnType<typeof useGetWorksQuery>;
+export type GetWorksLazyQueryHookResult = ReturnType<typeof useGetWorksLazyQuery>;
+export type GetWorksQueryResult = Apollo.QueryResult<GetWorksQuery, GetWorksQueryVariables>;
+export const CreateWorkDocument = gql`
+    mutation CreateWork($input: CreateWorkInput!) {
+  createWork(input: $input) {
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user {
+      id
+      name
     }
   }
-`
-export type CreateWorkMutationFn = Apollo.MutationFunction<
-  CreateWorkMutation,
-  CreateWorkMutationVariables
->
+}
+    `;
+export type CreateWorkMutationFn = Apollo.MutationFunction<CreateWorkMutation, CreateWorkMutationVariables>;
 
 /**
  * __useCreateWorkMutation__
@@ -280,49 +185,33 @@ export type CreateWorkMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateWorkMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateWorkMutation,
-    CreateWorkMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<CreateWorkMutation, CreateWorkMutationVariables>(
-    CreateWorkDocument,
-    options,
-  )
-}
-export type CreateWorkMutationHookResult = ReturnType<
-  typeof useCreateWorkMutation
->
-export type CreateWorkMutationResult = Apollo.MutationResult<CreateWorkMutation>
-export type CreateWorkMutationOptions = Apollo.BaseMutationOptions<
-  CreateWorkMutation,
-  CreateWorkMutationVariables
->
-export const UpdateWorkDocument = gql`
-  mutation UpdateWork($input: UpdateWorkInput!) {
-    updateWork(input: $input) {
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
+export function useCreateWorkMutation(baseOptions?: Apollo.MutationHookOptions<CreateWorkMutation, CreateWorkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateWorkMutation, CreateWorkMutationVariables>(CreateWorkDocument, options);
       }
+export type CreateWorkMutationHookResult = ReturnType<typeof useCreateWorkMutation>;
+export type CreateWorkMutationResult = Apollo.MutationResult<CreateWorkMutation>;
+export type CreateWorkMutationOptions = Apollo.BaseMutationOptions<CreateWorkMutation, CreateWorkMutationVariables>;
+export const UpdateWorkDocument = gql`
+    mutation UpdateWork($input: UpdateWorkInput!) {
+  updateWork(input: $input) {
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+    user {
+      id
+      name
     }
   }
-`
-export type UpdateWorkMutationFn = Apollo.MutationFunction<
-  UpdateWorkMutation,
-  UpdateWorkMutationVariables
->
+}
+    `;
+export type UpdateWorkMutationFn = Apollo.MutationFunction<UpdateWorkMutation, UpdateWorkMutationVariables>;
 
 /**
  * __useUpdateWorkMutation__
@@ -341,35 +230,19 @@ export type UpdateWorkMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateWorkMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateWorkMutation,
-    UpdateWorkMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateWorkMutation, UpdateWorkMutationVariables>(
-    UpdateWorkDocument,
-    options,
-  )
-}
-export type UpdateWorkMutationHookResult = ReturnType<
-  typeof useUpdateWorkMutation
->
-export type UpdateWorkMutationResult = Apollo.MutationResult<UpdateWorkMutation>
-export type UpdateWorkMutationOptions = Apollo.BaseMutationOptions<
-  UpdateWorkMutation,
-  UpdateWorkMutationVariables
->
+export function useUpdateWorkMutation(baseOptions?: Apollo.MutationHookOptions<UpdateWorkMutation, UpdateWorkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateWorkMutation, UpdateWorkMutationVariables>(UpdateWorkDocument, options);
+      }
+export type UpdateWorkMutationHookResult = ReturnType<typeof useUpdateWorkMutation>;
+export type UpdateWorkMutationResult = Apollo.MutationResult<UpdateWorkMutation>;
+export type UpdateWorkMutationOptions = Apollo.BaseMutationOptions<UpdateWorkMutation, UpdateWorkMutationVariables>;
 export const DeleteWorkDocument = gql`
-  mutation DeleteWork($id: ID!) {
-    deleteWork(id: $id)
-  }
-`
-export type DeleteWorkMutationFn = Apollo.MutationFunction<
-  DeleteWorkMutation,
-  DeleteWorkMutationVariables
->
+    mutation DeleteWork($id: ID!) {
+  deleteWork(id: $id)
+}
+    `;
+export type DeleteWorkMutationFn = Apollo.MutationFunction<DeleteWorkMutation, DeleteWorkMutationVariables>;
 
 /**
  * __useDeleteWorkMutation__
@@ -388,23 +261,10 @@ export type DeleteWorkMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useDeleteWorkMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    DeleteWorkMutation,
-    DeleteWorkMutationVariables
-  >,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<DeleteWorkMutation, DeleteWorkMutationVariables>(
-    DeleteWorkDocument,
-    options,
-  )
-}
-export type DeleteWorkMutationHookResult = ReturnType<
-  typeof useDeleteWorkMutation
->
-export type DeleteWorkMutationResult = Apollo.MutationResult<DeleteWorkMutation>
-export type DeleteWorkMutationOptions = Apollo.BaseMutationOptions<
-  DeleteWorkMutation,
-  DeleteWorkMutationVariables
->
+export function useDeleteWorkMutation(baseOptions?: Apollo.MutationHookOptions<DeleteWorkMutation, DeleteWorkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteWorkMutation, DeleteWorkMutationVariables>(DeleteWorkDocument, options);
+      }
+export type DeleteWorkMutationHookResult = ReturnType<typeof useDeleteWorkMutation>;
+export type DeleteWorkMutationResult = Apollo.MutationResult<DeleteWorkMutation>;
+export type DeleteWorkMutationOptions = Apollo.BaseMutationOptions<DeleteWorkMutation, DeleteWorkMutationVariables>;
