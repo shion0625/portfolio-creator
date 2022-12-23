@@ -3,15 +3,17 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import { Button, CardActionArea, CardActions } from '@mui/material'
+import { Button, CardActionArea, CardActions, IconButton } from '@mui/material'
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
 import BasicModal from './modal'
 
 type Props = {
   workIndex: number
+  removeWork: (index: number) => void
   watch: any
 }
 
-const MultiActionAreaCard: React.FC<Props> = ({ workIndex, watch }) => {
+const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, watch }) => {
   const watchFields = watch([
     `works.${workIndex}.title`,
     `works.${workIndex}.summary`,
@@ -51,6 +53,10 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, watch }) => {
           画像の追加
         </Button>
         <BasicModal buttonText='編集' />
+        {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
+        <IconButton aria-label='delete' onClick={() => removeWork(workIndex)}>
+          <DeleteOutlineIcon />
+        </IconButton>
       </CardActions>
     </Card>
   )

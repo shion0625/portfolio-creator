@@ -22,7 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 const WorkFormItem: React.FC = () => {
-  const { register, removeWork, control, workIndex, errors } =
+  const { register, control, workIndex, errors } =
     useContext(WorkFormContext)
 
   return (
@@ -134,11 +134,6 @@ const WorkFormItem: React.FC = () => {
         label='画像'
         {...register(`works.${workIndex}.image_url` as const)}
       />
-
-      {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
-      <IconButton aria-label='delete' onClick={() => removeWork(workIndex)}>
-        <DeleteOutlineIcon />
-      </IconButton>
     </Item>
   )
 }

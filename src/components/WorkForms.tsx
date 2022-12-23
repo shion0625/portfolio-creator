@@ -18,7 +18,6 @@ type Props = {
 type TWorkFormContext = {
   register: UseFormRegister<WorkForm>
   control: Control<WorkForm>
-  removeWork: (index: number) => void
   workIndex: number
   errors: any
 }
@@ -88,11 +87,14 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
         {fields.map((field, workIndex) => {
           return (
             <WorkFormContext.Provider
-              value={{ workIndex, register, control, removeWork, errors }}
+              value={{ workIndex, register, control, errors }}
               key={field.id}
             >
               <Grid item xs={3}>
-                <ImageCard workIndex={workIndex} watch={watch} />
+                <ImageCard
+                  workIndex={workIndex}
+                  removeWork={removeWork}
+                  watch={watch} />
               </Grid>
             </WorkFormContext.Provider>
           )
@@ -108,7 +110,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
       </Button>
       <Box textAlign='center' mt={2}>
         <Button variant='outlined' sx={{ mr: 1 }} onClick={resetWorks}>
-          リセット
+          全削除
         </Button>
         <Button
           color='primary'
