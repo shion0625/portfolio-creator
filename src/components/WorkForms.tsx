@@ -90,7 +90,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
               value={{ workIndex, register, control, errors }}
               key={field.id}
             >
-              <Grid item xs={3}>
+              <Grid item xs={6} md={4} lg={3}>
                 <ImageCard
                   workIndex={workIndex}
                   removeWork={removeWork}
