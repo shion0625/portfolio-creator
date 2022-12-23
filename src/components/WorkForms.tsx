@@ -13,6 +13,7 @@ import { createContext } from 'react'
 
 type Props = {
   onSubmit: (data: WorkForm) => void
+  userInfo: any
 }
 
 type TWorkFormContext = {
@@ -24,7 +25,7 @@ type TWorkFormContext = {
 
 export const WorkFormContext = createContext({} as TWorkFormContext)
 
-export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
+export const WorkForms: React.FC<Props> = ({ onSubmit, userInfo }): JSX.Element => {
   const {
     // register 関数はinput/select の Ref とバリデーションルールを React Hook Form に登録 (register)
     register,
@@ -42,21 +43,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
     formState: { errors },
   } = useForm<WorkForm>({
     defaultValues: {
-      works: [
-        {
-          id: 'LLL',
-          title: 'kaito',
-          url: ['ff', 'ff'],
-          summary: 'ko',
-          duration: 'wgaea',
-          number_of_people: 1,
-          language: ['awea', 'ffa'],
-          role: 'gawea',
-          brief_story: 'wagea',
-          image_url: 'bawea',
-          user_id: 'clao23geb0000ssu3qbzn58aq',
-        },
-      ],
+      works: userInfo.works.nodes
     },
 
     // blur イベントからバリデーションがトリガーされる

@@ -59,7 +59,7 @@ const SignIn: NextPage = () => {
       )}
       {session && (
         <>
-          Signed in as {session?.user?.name} <br />
+          Signed in as {session?.user?.id} <br />
           <button onClick={signOutClick}>Sign out</button>
         </>
       )}

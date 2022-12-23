@@ -1,9 +1,6 @@
 import React, { useContext } from 'react'
-import { Control, UseFormRegister } from 'react-hook-form'
-import { WorkForm } from '../../interfaces/WorkForm'
 import { Box, TextField, IconButton, Paper } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
 
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
 import { ErrorMessage } from '@hookform/error-message'
@@ -24,7 +21,6 @@ const Item = styled(Paper)(({ theme }) => ({
 const WorkFormItem: React.FC = () => {
   const { register, control, workIndex, errors } =
     useContext(WorkFormContext)
-
   return (
     <Item>
       <input
