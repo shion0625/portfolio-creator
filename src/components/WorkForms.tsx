@@ -30,7 +30,6 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
     workItem.urls = JSON.parse(workItem.url)
   })
 
-  console.log(user.works)
   const {
     // register 関数はinput/select の Ref とバリデーションルールを React Hook Form に登録 (register)
     register,
