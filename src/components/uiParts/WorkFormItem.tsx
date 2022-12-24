@@ -19,8 +19,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 const WorkFormItem: React.FC = () => {
-  const { register, control, workIndex, errors } =
-    useContext(WorkFormContext)
+  const { register, control, workIndex, errors } = useContext(WorkFormContext)
   return (
     <Item>
       <input

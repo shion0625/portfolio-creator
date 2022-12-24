@@ -4,7 +4,11 @@ import { Box, Button, Container, Stack } from '@mui/material'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon } from '@mui/icons-material'
-import { WorkFormInterface, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
+import {
+  WorkFormInterface,
+  addNewWork,
+  resetNewWorks,
+} from '../interfaces/WorkForm'
 import ImageCard from './uiParts/ImageCard'
 import { Control, UseFormRegister } from 'react-hook-form'
 import Grid from '@mui/material/Grid'
@@ -24,7 +28,6 @@ type TWorkFormContext = {
 }
 
 export const WorkFormContext = createContext({} as TWorkFormContext)
-
 
 export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
   user.works?.nodes.forEach((workItem: any) => {
@@ -50,7 +53,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
     formState: { errors },
   } = useForm<WorkFormInterface>({
     defaultValues: {
-      works: user.works?.nodes
+      works: user.works?.nodes,
     },
 
     // blur イベントからバリデーションがトリガーされる
@@ -88,7 +91,8 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
                 <ImageCard
                   workIndex={workIndex}
                   removeWork={removeWork}
-                  watch={watch} />
+                  watch={watch}
+                />
               </Grid>
             </WorkFormContext.Provider>
           )

@@ -52,7 +52,7 @@ const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
     <>
       <PrimarySearchAppBar />
       <Box component='main' sx={{ m: 2 }}>
-        <WorkForms onSubmit={OnSubmit} user={ user } />
+        <WorkForms onSubmit={OnSubmit} user={user} />
       </Box>
     </>
   )
