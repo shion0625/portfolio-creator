@@ -1,12 +1,12 @@
-import React from 'react'
-import Link from 'next/link'
-import { GetStaticProps, NextPage } from 'next'
-import { GraphQLClient } from 'graphql-request'
-import { getSdk } from '../graphql/ssr.generated'
-import { UserPagination, User } from '../graphql/types'
 import { assertIsDefined } from '../lib/assert'
 import { Box, Paper } from '@mui/material'
-import PrimarySearchAppBar from '../components/NavBar'
+import { GraphQLClient } from 'graphql-request'
+import { GetStaticProps, NextPage } from 'next'
+import Link from 'next/link'
+import React from 'react'
+import PrimarySearchAppBar from '~/components/NavBar'
+import { getSdk } from '~/models/ssr.generated'
+import { UserPagination, User } from '~/models/types'
 
 type Props = {
   users: UserPagination

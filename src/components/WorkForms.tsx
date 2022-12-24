@@ -1,20 +1,15 @@
-import React from 'react'
+import { Add as AddIcon } from '@mui/icons-material'
 // 利用したい MUI コンポーネントを import
 import { Box, Button, Container, Stack } from '@mui/material'
+import Grid from '@mui/material/Grid'
+import React from 'react'
+import { createContext } from 'react'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
-import { Add as AddIcon } from '@mui/icons-material'
-import {
-  WorkFormInterface,
-  addNewWork,
-  resetNewWorks,
-} from '../interfaces/WorkForm'
-import ImageCard from './uiParts/ImageCard'
 import { Control, UseFormRegister } from 'react-hook-form'
-import Grid from '@mui/material/Grid'
-import { GetUserQuery } from '../graphql/client'
-
-import { createContext } from 'react'
+import ImageCard from '~/components/uiParts/ImageCard'
+import { WorkFormInterface, addNewWork, resetNewWorks } from '~/interfaces/WorkForm'
+import { GetUserQuery } from '~/models/client'
 
 type Props = GetUserQuery & {
   onSubmit: (data: WorkFormInterface) => void
@@ -83,16 +78,9 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
       <Grid container spacing={2}>
         {fields.map((field, workIndex) => {
           return (
-            <WorkFormContext.Provider
-              value={{ workIndex, register, control, errors }}
-              key={field.id}
-            >
+            <WorkFormContext.Provider value={{ workIndex, register, control, errors }} key={field.id}>
               <Grid item xs={6} md={4} lg={3}>
-                <ImageCard
-                  workIndex={workIndex}
-                  removeWork={removeWork}
-                  watch={watch}
-                />
+                <ImageCard workIndex={workIndex} removeWork={removeWork} watch={watch} />
               </Grid>
             </WorkFormContext.Provider>
           )

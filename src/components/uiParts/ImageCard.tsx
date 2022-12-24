@@ -1,11 +1,11 @@
-import * as React from 'react'
+import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
+import { Button, CardActionArea, CardActions, IconButton } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import { Button, CardActionArea, CardActions, IconButton } from '@mui/material'
-import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
-import BasicModal from './modal'
+import * as React from 'react'
+import BasicModal from '~/components/uiParts/modal'
 
 type Props = {
   workIndex: number
@@ -13,25 +13,13 @@ type Props = {
   watch: any
 }
 
-const MultiActionAreaCard: React.FC<Props> = ({
-  workIndex,
-  removeWork,
-  watch,
-}) => {
-  const watchFields = watch([
-    `works.${workIndex}.title`,
-    `works.${workIndex}.summary`,
-  ])
+const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, watch }) => {
+  const watchFields = watch([`works.${workIndex}.title`, `works.${workIndex}.summary`])
 
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-        <CardMedia
-          component='img'
-          height='140'
-          image='/static/images/cards/contemplative-reptile.jpg'
-          alt='green iguana'
-        />
+        <CardMedia component='img' height='140' image='/static/images/cards/contemplative-reptile.jpg' alt='green iguana' />
         <CardContent>
           <Typography
             gutterBottom

@@ -1,12 +1,13 @@
-import Link from 'next/link' // 一覧ページへリンクするので
-import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
-import { assertIsDefined } from '../../../lib/assert'
 import { CircularProgress } from '@mui/material'
-import { User } from '../../../graphql/types'
-import { getSdk } from '../../../graphql/ssr.generated'
-import { GraphQLClient } from 'graphql-request'
 import { Box } from '@mui/material'
-import PrimarySearchAppBar from '../../../components/NavBar'
+import { GraphQLClient } from 'graphql-request'
+// 一覧ページへリンクするので
+import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
+import Link from 'next/link'
+import PrimarySearchAppBar from '~/components/NavBar'
+import { assertIsDefined } from '~/lib/assert'
+import { getSdk } from '~/models/ssr.generated'
+import { User } from '~/models/types'
 
 type Props = {
   user: User

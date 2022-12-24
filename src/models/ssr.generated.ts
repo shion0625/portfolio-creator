@@ -1,181 +1,10 @@
+import * as Types from './types'
 import { GraphQLClient } from 'graphql-request'
 import * as Dom from 'graphql-request/dist/types.dom'
 import gql from 'graphql-tag'
-export type Maybe<T> = T | null
-export type InputMaybe<T> = Maybe<T>
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>
-}
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>
-}
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
-  Any: any
-  Timestamp: any
-}
 
-export type CreateWorkInput = {
-  brief_story?: InputMaybe<Scalars['String']>
-  duration?: InputMaybe<Scalars['String']>
-  image_url?: InputMaybe<Scalars['String']>
-  language?: InputMaybe<Scalars['String']>
-  number_of_people?: InputMaybe<Scalars['Int']>
-  role?: InputMaybe<Scalars['String']>
-  summary?: InputMaybe<Scalars['String']>
-  title: Scalars['String']
-  url?: InputMaybe<Scalars['String']>
-  user_id: Scalars['String']
-}
-
-export type Mutation = {
-  createWork: Work
-  deleteWork?: Maybe<Scalars['Boolean']>
-  login: Scalars['Any']
-  updateProfile: User
-  updateWork: Work
-}
-
-export type MutationCreateWorkArgs = {
-  input: CreateWorkInput
-}
-
-export type MutationDeleteWorkArgs = {
-  id: Scalars['ID']
-}
-
-export type MutationLoginArgs = {
-  email: Scalars['String']
-  id: Scalars['String']
-}
-
-export type MutationUpdateProfileArgs = {
-  input: UpdateProfileInput
-}
-
-export type MutationUpdateWorkArgs = {
-  input: UpdateWorkInput
-}
-
-export type Node = {
-  id: Scalars['ID']
-}
-
-export type Pagination = {
-  nodes: Array<Node>
-  pageInfo: PaginationInfo
-}
-
-export type PaginationInfo = {
-  count: Scalars['Int']
-  hasNextPage: Scalars['Boolean']
-  hasPreviousPage: Scalars['Boolean']
-  page: Scalars['Int']
-  paginationLength: Scalars['Int']
-  totalCount: Scalars['Int']
-}
-
-export type Profile = {
-  birthday?: Maybe<Scalars['Timestamp']>
-  comment?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  user: User
-}
-
-export type Query = {
-  user: User
-  users: UserPagination
-  work?: Maybe<Work>
-  works: WorkPagination
-}
-
-export type QueryUserArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryUsersArgs = {
-  limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
-}
-
-export type QueryWorkArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryWorksArgs = {
-  limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
-}
-
-export enum Role {
-  Admin = 'ADMIN',
-  User = 'USER',
-  Viewer = 'VIEWER',
-}
-
-export type UpdateProfileInput = {
-  birthday?: InputMaybe<Scalars['String']>
-  comment?: InputMaybe<Scalars['String']>
-  id: Scalars['ID']
-}
-
-export type UpdateWorkInput = {
-  brief_story?: InputMaybe<Scalars['String']>
-  duration?: InputMaybe<Scalars['String']>
-  id: Scalars['ID']
-  image_url?: InputMaybe<Scalars['String']>
-  language?: InputMaybe<Scalars['String']>
-  number_of_people?: InputMaybe<Scalars['Int']>
-  role?: InputMaybe<Scalars['String']>
-  summary?: InputMaybe<Scalars['String']>
-  title?: InputMaybe<Scalars['String']>
-  url?: InputMaybe<Scalars['String']>
-}
-
-export type User = Node & {
-  email?: Maybe<Scalars['String']>
-  emailVerified?: Maybe<Array<Maybe<Scalars['Timestamp']>>>
-  id: Scalars['ID']
-  image?: Maybe<Scalars['String']>
-  name?: Maybe<Scalars['String']>
-  profile?: Maybe<Profile>
-  works?: Maybe<WorkPagination>
-}
-
-export type UserPagination = Pagination & {
-  nodes: Array<User>
-  pageInfo: PaginationInfo
-}
-
-export type Work = Node & {
-  brief_story?: Maybe<Scalars['String']>
-  duration?: Maybe<Scalars['String']>
-  id: Scalars['ID']
-  image_url?: Maybe<Scalars['String']>
-  language?: Maybe<Scalars['String']>
-  number_of_people?: Maybe<Scalars['Int']>
-  role?: Maybe<Scalars['String']>
-  summary?: Maybe<Scalars['String']>
-  title: Scalars['String']
-  url?: Maybe<Scalars['String']>
-  user: User
-}
-
-export type WorkPagination = Pagination & {
-  nodes: Array<Work>
-  pageInfo: PaginationInfo
-}
-
-export type GetUserQueryVariables = Exact<{
-  id: Scalars['ID']
+export type GetUserQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID']
 }>
 
 export type GetUserQuery = {
@@ -208,9 +37,9 @@ export type GetUserQuery = {
   }
 }
 
-export type GetUsersQueryVariables = Exact<{
-  limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
+export type GetUsersQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
 export type GetUsersQuery = {
@@ -245,9 +74,9 @@ export type GetUsersQuery = {
   }
 }
 
-export type GetUsersNameQueryVariables = Exact<{
-  limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
+export type GetUsersNameQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
 export type GetUsersNameQuery = {
@@ -264,22 +93,22 @@ export type GetUsersNameQuery = {
   }
 }
 
-export type GetUserIdsQueryVariables = Exact<{
-  limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
+export type GetUserIdsQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
 export type GetUserIdsQuery = { users: { nodes: Array<{ id: string }> } }
 
-export type LoginMutationVariables = Exact<{
-  id: Scalars['String']
-  email: Scalars['String']
+export type LoginMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']
+  email: Types.Scalars['String']
 }>
 
 export type LoginMutation = { login: any }
 
-export type GetWorkQueryVariables = Exact<{
-  id: Scalars['ID']
+export type GetWorkQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID']
 }>
 
 export type GetWorkQuery = {
@@ -298,9 +127,9 @@ export type GetWorkQuery = {
   } | null
 }
 
-export type GetWorksQueryVariables = Exact<{
-  limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
+export type GetWorksQueryVariables = Types.Exact<{
+  limit: Types.Scalars['Int']
+  offset?: Types.InputMaybe<Types.Scalars['Int']>
 }>
 
 export type GetWorksQuery = {
@@ -329,8 +158,8 @@ export type GetWorksQuery = {
   }
 }
 
-export type CreateWorkMutationVariables = Exact<{
-  input: CreateWorkInput
+export type CreateWorkMutationVariables = Types.Exact<{
+  input: Types.CreateWorkInput
 }>
 
 export type CreateWorkMutation = {
@@ -348,8 +177,8 @@ export type CreateWorkMutation = {
   }
 }
 
-export type UpdateWorkMutationVariables = Exact<{
-  input: UpdateWorkInput
+export type UpdateWorkMutationVariables = Types.Exact<{
+  input: Types.UpdateWorkInput
 }>
 
 export type UpdateWorkMutation = {
@@ -367,8 +196,8 @@ export type UpdateWorkMutation = {
   }
 }
 
-export type DeleteWorkMutationVariables = Exact<{
-  id: Scalars['ID']
+export type DeleteWorkMutationVariables = Types.Exact<{
+  id: Types.Scalars['ID']
 }>
 
 export type DeleteWorkMutation = { deleteWork?: boolean | null }
@@ -566,30 +395,16 @@ export const DeleteWorkDocument = gql`
   }
 `
 
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-  operationType?: string,
-) => Promise<T>
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?: Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>
 
-const defaultWrapper: SdkFunctionWrapper = (
-  action,
-  _operationName,
-  _operationType,
-) => action()
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action()
 
-export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper,
-) {
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetUser(
-      variables: GetUserQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetUserQuery> {
+    GetUser(variables: Types.GetUserQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.GetUserQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetUserQuery>(GetUserDocument, variables, {
+          client.request<Types.GetUserQuery>(GetUserDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
@@ -597,13 +412,10 @@ export function getSdk(
         'query',
       )
     },
-    GetUsers(
-      variables: GetUsersQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetUsersQuery> {
+    GetUsers(variables: Types.GetUsersQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.GetUsersQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetUsersQuery>(GetUsersDocument, variables, {
+          client.request<Types.GetUsersQuery>(GetUsersDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
@@ -611,27 +423,13 @@ export function getSdk(
         'query',
       )
     },
-    GetUsersName(
-      variables: GetUsersNameQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetUsersNameQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetUsersNameQuery>(GetUsersNameDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetUsersName',
-        'query',
-      )
+    GetUsersName(variables: Types.GetUsersNameQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.GetUsersNameQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.GetUsersNameQuery>(GetUsersNameDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetUsersName', 'query')
     },
-    GetUserIds(
-      variables: GetUserIdsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetUserIdsQuery> {
+    GetUserIds(variables: Types.GetUserIdsQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.GetUserIdsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetUserIdsQuery>(GetUserIdsDocument, variables, {
+          client.request<Types.GetUserIdsQuery>(GetUserIdsDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
@@ -639,13 +437,10 @@ export function getSdk(
         'query',
       )
     },
-    Login(
-      variables: LoginMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<LoginMutation> {
+    Login(variables: Types.LoginMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.LoginMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<LoginMutation>(LoginDocument, variables, {
+          client.request<Types.LoginMutation>(LoginDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
@@ -653,13 +448,10 @@ export function getSdk(
         'mutation',
       )
     },
-    GetWork(
-      variables: GetWorkQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetWorkQuery> {
+    GetWork(variables: Types.GetWorkQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.GetWorkQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetWorkQuery>(GetWorkDocument, variables, {
+          client.request<Types.GetWorkQuery>(GetWorkDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
@@ -667,13 +459,10 @@ export function getSdk(
         'query',
       )
     },
-    GetWorks(
-      variables: GetWorksQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetWorksQuery> {
+    GetWorks(variables: Types.GetWorksQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.GetWorksQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetWorksQuery>(GetWorksDocument, variables, {
+          client.request<Types.GetWorksQuery>(GetWorksDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
@@ -681,47 +470,14 @@ export function getSdk(
         'query',
       )
     },
-    CreateWork(
-      variables: CreateWorkMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<CreateWorkMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CreateWorkMutation>(CreateWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'CreateWork',
-        'mutation',
-      )
+    CreateWork(variables: Types.CreateWorkMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.CreateWorkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.CreateWorkMutation>(CreateWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'CreateWork', 'mutation')
     },
-    UpdateWork(
-      variables: UpdateWorkMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<UpdateWorkMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<UpdateWorkMutation>(UpdateWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'UpdateWork',
-        'mutation',
-      )
+    UpdateWork(variables: Types.UpdateWorkMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.UpdateWorkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.UpdateWorkMutation>(UpdateWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'UpdateWork', 'mutation')
     },
-    DeleteWork(
-      variables: DeleteWorkMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<DeleteWorkMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<DeleteWorkMutation>(DeleteWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'DeleteWork',
-        'mutation',
-      )
+    DeleteWork(variables: Types.DeleteWorkMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<Types.DeleteWorkMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<Types.DeleteWorkMutation>(DeleteWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'DeleteWork', 'mutation')
     },
   }
 }

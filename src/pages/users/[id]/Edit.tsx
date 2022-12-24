@@ -1,19 +1,19 @@
-import React from 'react'
+import { useMutation } from '@apollo/client'
+import Box from '@mui/material/Box'
+import { GraphQLClient } from 'graphql-request'
 import type { NextPage } from 'next'
 import { GetStaticProps, GetStaticPaths } from 'next'
-import { GraphQLClient } from 'graphql-request'
-import { assertIsDefined } from '../../../lib/assert'
-import { getSdk } from '../../../graphql/ssr.generated'
-import { WorkForms } from '../../../components/WorkForms'
-import { WorkFormInterface } from '../../../interfaces/WorkForm'
-import { useMutation } from '@apollo/client'
-import { CreateWorkDocument, GetUserQuery, UpdateWorkDocument } from '../../../graphql/client'
-import { CreateWorkMutation, UpdateWorkMutation } from '../../../graphql/client'
-import { CreateWorkInput, UpdateWorkInput } from '../../../graphql/types'
-import Box from '@mui/material/Box'
-import PrimarySearchAppBar from '../../../components/NavBar'
 import { useSession } from 'next-auth/react'
-import { User } from '../../../graphql/types'
+import React from 'react'
+import { WorkFormInterface } from 'src/interfaces/WorkForm'
+import { assertIsDefined } from 'src/lib/assert'
+import PrimarySearchAppBar from '~/components/NavBar'
+import { WorkForms } from '~/components/WorkForms'
+import { CreateWorkDocument, GetUserQuery, UpdateWorkDocument } from '~/models/client'
+import { CreateWorkMutation, UpdateWorkMutation } from '~/models/client'
+import { getSdk } from '~/models/ssr.generated'
+import { CreateWorkInput, UpdateWorkInput } from '~/models/types'
+import { User } from '~/models/types'
 
 const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()
@@ -45,7 +45,6 @@ const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
             title: work.title,
             url: work.url,
           }
-          console.log('update')
           UpdateWork({ variables: { input: updateWorkInput } })
         }
         //新規作成
@@ -62,9 +61,8 @@ const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
             url: work.url,
             user_id: session.user.id,
           }
-          console.log('create')
           CreateWork({
-            variables: { input: createWorkInput }
+            variables: { input: createWorkInput },
           })
         }
       }

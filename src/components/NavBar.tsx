@@ -1,30 +1,16 @@
+import { AccountCircle, Mail as MailIcon, Notifications as NotificationsIcon, MoreVert as MoreIcon } from '@mui/icons-material'
+import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import * as React from 'react'
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Badge,
-} from '@mui/material'
-import {
-  AccountCircle,
-  Mail as MailIcon,
-  Notifications as NotificationsIcon,
-  MoreVert as MoreIcon,
-} from '@mui/icons-material'
-
-import SearchArea from './uiParts/SearchArea'
-import MobileMenu from './uiParts/mobile/MobileMenu'
-import ProfileMenu from './uiParts/ProfileMenu'
+import ProfileMenu from '~/components/uiParts/ProfileMenu'
+import SearchArea from '~/components/uiParts/SearchArea'
+import MobileMenu from '~/components/uiParts/mobile/MobileMenu'
 
 export default function PrimarySearchAppBar() {
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
 
   const isMenuOpen = Boolean(anchorEl) //メニューの状態を管理
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl) //モバイルメニューの状態を管理
@@ -59,56 +45,28 @@ export default function PrimarySearchAppBar() {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography
-            variant='h6'
-            noWrap
-            component='div'
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
+          <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
             portfolio
           </Typography>
           <SearchArea />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size='large'
-              aria-label='show 4 new mails'
-              color='inherit'
-            >
+            <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
               <Badge badgeContent={4} color='error'>
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton
-              size='large'
-              aria-label='show 17 new notifications'
-              color='inherit'
-            >
+            <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
               <Badge badgeContent={17} color='error'>
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton
-              size='large'
-              edge='end'
-              aria-label='account of current user'
-              aria-controls={menuId}
-              aria-haspopup='true'
-              onClick={handleProfileMenuOpen}
-              color='inherit'
-            >
+            <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' onClick={handleProfileMenuOpen} color='inherit'>
               <AccountCircle />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size='large'
-              aria-label='show more'
-              aria-controls={mobileMenuId}
-              aria-haspopup='true'
-              onClick={handleMobileMenuOpen}
-              color='inherit'
-            >
+            <IconButton size='large' aria-label='show more' aria-controls={mobileMenuId} aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
               <MoreIcon />
             </IconButton>
           </Box>
@@ -121,12 +79,7 @@ export default function PrimarySearchAppBar() {
         handleMobileMenuClose={handleMobileMenuClose}
         handleProfileMenuOpen={handleProfileMenuOpen}
       />
-      <ProfileMenu
-        anchorEl={anchorEl}
-        menuId={menuId}
-        isMenuOpen={isMenuOpen}
-        handleMenuClose={handleMenuClose}
-      />
+      <ProfileMenu anchorEl={anchorEl} menuId={menuId} isMenuOpen={isMenuOpen} handleMenuClose={handleMenuClose} />
     </Box>
   )
 }

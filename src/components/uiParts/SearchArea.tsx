@@ -1,7 +1,7 @@
-import React from 'react'
 import SearchIcon from '@mui/icons-material/Search'
-import { styled, alpha } from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
+import { styled, alpha } from '@mui/material/styles'
+import React from 'react'
 
 type Props = {
   design?: 'string'
@@ -53,10 +53,7 @@ const SearchArea: React.FC<Props> = () => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <StyledInputBase
-        placeholder='Search…'
-        inputProps={{ 'aria-label': 'search' }}
-      />
+      <StyledInputBase placeholder='Search…' inputProps={{ 'aria-label': 'search' }} />
     </Search>
   )
 }

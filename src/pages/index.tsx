@@ -1,9 +1,10 @@
+import { useQuery } from '@apollo/client'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import { useQuery } from '@apollo/client'
-import { GetUserDocument } from '../graphql/client'
-import { GetUserQuery } from '../graphql/client'
-import SignIn from '../components/SignIn'
+import SignIn from '~/components/SignIn'
+import { GetUserDocument } from '~/models/client'
+import { GetUserQuery } from '~/models/client'
+
 const Home: NextPage = () => {
   // const { data } = useQuery<GetUserQuery>(GetUserDocument, {
   //   variables: { id: 'eW9kb2dhd2E6MzM4MjYxNDc4MjQ3NjA4MTcxMA==' },
