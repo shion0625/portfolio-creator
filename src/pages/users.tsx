@@ -1,4 +1,4 @@
-import { assertIsDefined } from '../lib/assert'
+import { assertIsDefined } from '~/lib/assert'
 import { Box, Paper } from '@mui/material'
 import { GraphQLClient } from 'graphql-request'
 import { GetStaticProps, NextPage } from 'next'
