@@ -7,9 +7,9 @@ import { getSdk } from '../../../graphql/ssr.generated'
 import { WorkForms } from '../../../components/WorkForms'
 import { WorkFormInterface } from '../../../interfaces/WorkForm'
 import { useMutation } from '@apollo/client'
-import { CreateWorkDocument, GetUserQuery } from '../../../graphql/client'
-import { CreateWorkMutation } from '../../../graphql/client'
-import { CreateWorkInput } from '../../../graphql/types'
+import { CreateWorkDocument, GetUserQuery, UpdateWorkDocument } from '../../../graphql/client'
+import { CreateWorkMutation, UpdateWorkMutation } from '../../../graphql/client'
+import { CreateWorkInput, UpdateWorkInput } from '../../../graphql/types'
 import Box from '@mui/material/Box'
 import PrimarySearchAppBar from '../../../components/NavBar'
 import { useSession } from 'next-auth/react'
@@ -17,34 +17,56 @@ import { User } from '../../../graphql/types'
 
 const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()
-  const [CreateWork, { data, loading, error }] =
-    useMutation<CreateWorkMutation>(CreateWorkDocument)
+
+  const [CreateWork] = useMutation<CreateWorkMutation>(CreateWorkDocument)
+
+  const [UpdateWork] = useMutation<UpdateWorkMutation>(UpdateWorkDocument)
+
   const OnSubmit = (input: WorkFormInterface) => {
     input.works?.map((work) => {
-      if (work.id != null && session && session.user) {
+      if (session && session.user) {
         if (work.languages != undefined) {
           work.language = JSON.stringify(work.languages)
         }
         if (work.urls != undefined) {
           work.url = JSON.stringify(work.urls)
         }
-        let createWorkInput: CreateWorkInput = {
-          brief_story: work.brief_story,
-          duration: work.duration,
-          image_url: work.image_url,
-          language: work.language,
-          number_of_people: work.number_of_people,
-          role: work.role,
-          summary: work.summary,
-          title: work.title,
-          url: work.url,
-          user_id: session.user.id,
+        //データの更新
+        if (work.id) {
+          let updateWorkInput: UpdateWorkInput = {
+            id: work.id,
+            brief_story: work.brief_story,
+            duration: work.duration,
+            image_url: work.image_url,
+            language: work.language,
+            number_of_people: work.number_of_people,
+            role: work.role,
+            summary: work.summary,
+            title: work.title,
+            url: work.url,
+          }
+          console.log('update')
+          UpdateWork({ variables: { input: updateWorkInput } })
         }
-        CreateWork({ variables: { input: createWorkInput } })
-        console.log(work)
-        console.log(data)
-        console.log(error)
-        console.log(loading)
+        //新規作成
+        if (!work.id) {
+          let createWorkInput: CreateWorkInput = {
+            brief_story: work.brief_story,
+            duration: work.duration,
+            image_url: work.image_url,
+            language: work.language,
+            number_of_people: work.number_of_people,
+            role: work.role,
+            summary: work.summary,
+            title: work.title,
+            url: work.url,
+            user_id: session.user.id,
+          }
+          console.log('create')
+          CreateWork({
+            variables: { input: createWorkInput }
+          })
+        }
       }
     })
   }
@@ -65,7 +87,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   assertIsDefined(apiBaseUrl)
   const client = new GraphQLClient(apiBaseUrl)
   const sdk = getSdk(client)
-  const { users } = await sdk.GetUserIds({ limit: 100, offset: 0 })
+  const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
 
   const paths = users.nodes.map((user: User) => ({
     params: {
