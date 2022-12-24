@@ -1,7 +1,7 @@
-import { printCookie } from '../src/lib/setCookie'
 import { API_URL } from './urls'
 import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject, ApolloLink } from '@apollo/client'
 import 'cross-fetch/polyfill'
+import { printCookie } from '~/libs/setCookie'
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined
 

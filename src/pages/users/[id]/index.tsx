@@ -5,7 +5,7 @@ import { GraphQLClient } from 'graphql-request'
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import Link from 'next/link'
 import PrimarySearchAppBar from '~/components/NavBar'
-import { assertIsDefined } from '~/lib/assert'
+import { assertIsDefined } from '~/libs/assert'
 import { getSdk } from '~/models/ssr.generated'
 import { User } from '~/models/types'
 

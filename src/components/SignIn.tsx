@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client'
 import type { NextPage } from 'next'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import React, { useCallback, useEffect } from 'react'
-import { setCookieToken, destroyCookieToken, printCookie } from '~/lib/setCookie'
+import { setCookieToken, destroyCookieToken, printCookie } from '~/libs/setCookie'
 import { LoginDocument } from '~/models/client'
 import { LoginMutation } from '~/models/client'
 

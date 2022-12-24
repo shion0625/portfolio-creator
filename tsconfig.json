@@ -22,8 +22,7 @@
       "~/repositories/*": ["src/repositories/*"],
       "~/styles/*": ["src/styles/*"],
       "~/apollo/*": ["apollo/*"],
-      "~/lib/*": ["src/lib/*"],
-      "~/interfaces/*": ["src/interfaces/*"]
+      "~/libs/*": ["src/libs/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

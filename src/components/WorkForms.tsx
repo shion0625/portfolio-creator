@@ -8,7 +8,7 @@ import { createContext } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Control, UseFormRegister } from 'react-hook-form'
 import ImageCard from '~/components/uiParts/ImageCard'
-import { WorkFormInterface, addNewWork, resetNewWorks } from '~/interfaces/WorkForm'
+import { WorkFormInterface, addNewWork, resetNewWorks } from '~/models/WorkForm'
 import { GetUserQuery } from '~/models/client'
 
 type Props = GetUserQuery & {

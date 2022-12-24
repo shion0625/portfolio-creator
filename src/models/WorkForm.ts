@@ -1,4 +1,4 @@
-import { Weaken } from '~/lib/extendType'
+import { Weaken } from 'src/libs/extendType'
 import { CreateWorkInput } from '~/models/types'
 
 export interface WorkFormI extends CreateWorkInput {
