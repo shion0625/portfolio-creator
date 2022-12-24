@@ -1,21 +1,17 @@
 import { useMutation } from '@apollo/client'
 import Box from '@mui/material/Box'
-import { GraphQLClient } from 'graphql-request'
 import type { NextPage } from 'next'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useSession } from 'next-auth/react'
 import React from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { WorkForms } from '~/components/WorkForms'
-import { assertIsDefined } from '~/utils/assert'
 import { WorkFormInterface } from '~/models/WorkForm'
-import { CreateWorkDocument, GetUserQuery, UpdateWorkDocument } from '~/models/client'
-import { CreateWorkMutation, UpdateWorkMutation } from '~/models/client'
-import { getSdk } from '~/models/ssr.generated'
-import { CreateWorkInput, UpdateWorkInput } from '~/models/types'
-import { User } from '~/models/types'
+import { CreateWorkMutation, UpdateWorkMutation, CreateWorkDocument, UpdateWorkDocument } from '~/models/client'
+import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
+import { GetUser, GetUserIds } from '~/repositories/user'
 
-const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
+const MyPageEdit: NextPage<User> = (user) => {
   const { data: session, status } = useSession()
 
   const [CreateWork] = useMutation<CreateWorkMutation>(CreateWorkDocument)
@@ -81,13 +77,8 @@ const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
 export default MyPageEdit
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
-
-  const paths = users.nodes.map((user: User) => ({
+  const { users } = await GetUserIds(10,0)
+  const paths = users.nodes.map((user: {id: string}) => ({
     params: {
       id: user.id,
     },
@@ -99,16 +90,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  const { user } = await sdk.GetUser({ id: params?.id })
-
+  const { user } = await GetUser(params?.id)
   return {
     props: {
-      user: user,
+      user,
     },
     revalidate: 1,
     notFound: !user,

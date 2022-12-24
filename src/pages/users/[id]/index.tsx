@@ -7,11 +7,8 @@ import PrimarySearchAppBar from '~/components/NavBar'
 import { User } from '~/models/types'
 import { GetUser, GetUserIds } from '~/repositories/user'
 
-type Props = {
-  user: User
-}
 
-const UserDetail: NextPage<Props> = ({ user }) => {
+const UserDetail: NextPage<User> = (user) => {
   if (!user) {
     return <CircularProgress color='inherit' />
   }
@@ -49,7 +46,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      user: user,
+      user,
     },
     revalidate: 1,
     notFound: !user,
