@@ -1,7 +1,7 @@
 import { Weaken } from '../lib/extendType'
 import { CreateWorkInput } from '../graphql/types'
 
-interface WorkFormI extends CreateWorkInput {
+export interface WorkFormI extends CreateWorkInput {
   id: string
   urls?: string[]
   languages?: string[]
