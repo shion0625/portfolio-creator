@@ -4,14 +4,38 @@ import { Box, Button, Container, Stack } from '@mui/material'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon } from '@mui/icons-material'
-import WorkFormItem from './uiParts/WorkFormItem'
-import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
+import {
+  WorkFormInterface,
+  addNewWork,
+  resetNewWorks,
+} from '../interfaces/WorkForm'
+import ImageCard from './uiParts/ImageCard'
+import { Control, UseFormRegister } from 'react-hook-form'
+import Grid from '@mui/material/Grid'
+import { GetUserQuery } from '../graphql/client'
 
-type Props = {
-  onSubmit: (data: WorkForm)=> void
+import { createContext } from 'react'
+
+type Props = GetUserQuery & {
+  onSubmit: (data: WorkFormInterface) => void
 }
 
-export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
+type TWorkFormContext = {
+  register: UseFormRegister<WorkFormInterface>
+  control: Control<WorkFormInterface>
+  workIndex: number
+  errors: any
+}
+
+export const WorkFormContext = createContext({} as TWorkFormContext)
+
+export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
+  user.works?.nodes.forEach((workItem: any) => {
+    workItem.languages = JSON.parse(workItem.language)
+    workItem.urls = JSON.parse(workItem.url)
+  })
+
+  console.log(user.works)
   const {
     // register 関数はinput/select の Ref とバリデーションルールを React Hook Form に登録 (register)
     register,
@@ -19,6 +43,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
     // reset 関数はフォーム内のフィールドの値とエラーをリセットできる
     reset,
     control,
+    watch,
 
     // handleSubmit 関数はバリデーションに成功するとフォームデータを渡す
     handleSubmit,
@@ -26,23 +51,9 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
     // errors オブジェクトには、各 input のフォームのエラーまたはエラーメッセージが含まれる
     // バリデーションとエラーメッセージで登録するとエラーメッセージが返される
     formState: { errors },
-  } = useForm<WorkForm>({
+  } = useForm<WorkFormInterface>({
     defaultValues: {
-      works: [
-        {
-          id:'LLL',
-          title: 'kaito',
-          url: ['ff','ff'],
-          summary: 'ko',
-          duration: 'wgaea',
-          number_of_people: 1,
-          language: ['awea', 'ffa'],
-          role: 'gawea',
-          brief_story: 'wagea',
-          image_url: 'bawea',
-          user_id: 'clao23geb0000ssu3qbzn58aq',
-        },
-      ],
+      works: user.works?.nodes,
     },
 
     // blur イベントからバリデーションがトリガーされる
@@ -62,26 +73,31 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
   const resetWorks = () => {
     reset(resetNewWorks)
   }
+
   const removeWork = (index: number) => {
     remove(index)
   }
 
   return (
-    <Container maxWidth='sm' sx={{ pt: 5, bgcolor: 'yellow' }}>
-      <Stack spacing={2}>
-        {fields.map((field, index) => {
+    <Container maxWidth='lg' sx={{ pt: 5, bgcolor: 'yellow' }}>
+      <Grid container spacing={2}>
+        {fields.map((field, workIndex) => {
           return (
-            <WorkFormItem
+            <WorkFormContext.Provider
+              value={{ workIndex, register, control, errors }}
               key={field.id}
-              register={register}
-              removeWork={removeWork}
-              control={control}
-              workIndex={index}
-              errors={errors}
-            />
+            >
+              <Grid item xs={6} md={4} lg={3}>
+                <ImageCard
+                  workIndex={workIndex}
+                  removeWork={removeWork}
+                  watch={watch}
+                />
+              </Grid>
+            </WorkFormContext.Provider>
           )
         })}
-      </Stack>
+      </Grid>
       <Button
         sx={{ mt: 1 }}
         startIcon={<AddIcon />}
@@ -92,7 +108,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit }): JSX.Element => {
       </Button>
       <Box textAlign='center' mt={2}>
         <Button variant='outlined' sx={{ mr: 1 }} onClick={resetWorks}>
-          リセット
+          全削除
         </Button>
         <Button
           color='primary'

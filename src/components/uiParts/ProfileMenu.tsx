@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import Link from 'next/link'
 import { Menu, MenuItem } from '@mui/material'
 
 type Props = {
@@ -30,8 +31,21 @@ const ProfileMenu: React.FC<Props> = memo(function profileMenu({
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link href='/'>
+          <a>ホーム</a>
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link href='myPageEdit'>
+          <a>ポートフォリオ編集</a>
+        </Link>
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link href='users'>
+          <a>ユーザ一覧</a>
+        </Link>
+      </MenuItem>
     </Menu>
   )
 })

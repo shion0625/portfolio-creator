@@ -1,29 +1,24 @@
 import { Weaken } from '../lib/extendType'
 import { CreateWorkInput } from '../graphql/types'
 
-interface GetChangeInput extends Weaken<CreateWorkInput, 'language'> {
-  language?: string[]
-}
-
-interface GetWorkInput extends Weaken<GetChangeInput, 'url'> {
-  url: string[]
-}
-interface workFormInput extends GetWorkInput {
+interface WorkFormI extends CreateWorkInput {
   id: string
+  urls?: string[]
+  languages?: string[]
 }
 
-export type WorkForm = {
-  works: workFormInput[]
+export type WorkFormInterface = {
+  works?: WorkFormI[]
 }
 
 export const addNewWork = {
   id: '',
   title: '',
-  url: [''],
+  urls: [''],
   summary: '',
   duration: '',
   number_of_people: 1,
-  language: [''],
+  languages: [''],
   role: '',
   brief_story: '',
   image_url: '',
@@ -35,11 +30,11 @@ export const resetNewWorks = {
     {
       id: '',
       title: '',
-      url: [''],
+      urls: [''],
       summary: '',
       duration: '',
       number_of_people: 1,
-      language: [''],
+      languages: [''],
       role: '',
       brief_story: '',
       image_url: '',

@@ -7,7 +7,7 @@ import {
 } from '@apollo/client'
 import 'cross-fetch/polyfill'
 import { API_URL } from './urls'
-import { printCookie } from '../src/lib/setCookie';
+import { printCookie } from '../src/lib/setCookie'
 
 let apolloClient: ApolloClient<NormalizedCacheObject> | undefined
 
@@ -39,7 +39,7 @@ const createApolloClient = (ctx: { req: any }) => {
   })
 }
 
-export const initializeApollo = (initialState = null, ctx: any) => {
+export const initializeApollo = (initialState = null, ctx?: any) => {
   const _apolloClient = apolloClient ?? createApolloClient(ctx)
 
   // For SSG and SSR always create a new Apollo Client

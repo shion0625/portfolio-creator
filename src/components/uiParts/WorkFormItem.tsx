@@ -1,21 +1,11 @@
-import React from 'react'
-import { Control, UseFormRegister } from 'react-hook-form'
-import { WorkForm } from '../../interfaces/WorkForm'
+import React, { useContext } from 'react'
 import { Box, TextField, IconButton, Paper } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
 
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
 import { ErrorMessage } from '@hookform/error-message'
 import NestedFieldArray from './NestedFieldArray'
-
-type Props = {
-  register: UseFormRegister<WorkForm>
-  control: Control<WorkForm>
-  removeWork: (index: number) => void
-  workIndex: number
-  errors: any
-}
+import { WorkFormContext } from '../WorkForms'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -23,15 +13,13 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: 'center',
   color: theme.palette.text.secondary,
+  width: 500,
+  height: 500,
+  overflowY: 'auto',
 }))
 
-const WorkFormItem: React.FC<Props> = ({
-  register,
-  removeWork,
-  control,
-  workIndex,
-  errors,
-}) => {
+const WorkFormItem: React.FC = () => {
+  const { register, control, workIndex, errors } = useContext(WorkFormContext)
   return (
     <Item>
       <input
@@ -104,7 +92,7 @@ const WorkFormItem: React.FC<Props> = ({
         control={control}
         nestIndex={workIndex}
         label='開発言語・技術'
-        choiceItem='language'
+        choiceItem='languages'
       />
 
       <TextField
@@ -120,9 +108,9 @@ const WorkFormItem: React.FC<Props> = ({
         control={control}
         nestIndex={workIndex}
         label='URL'
-        choiceItem='url'
-        type="url"
+        type='url'
         placeholder='https://example.com'
+        choiceItem='urls'
       />
 
       <TextField
@@ -141,11 +129,6 @@ const WorkFormItem: React.FC<Props> = ({
         label='画像'
         {...register(`works.${workIndex}.image_url` as const)}
       />
-
-      {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
-      <IconButton aria-label='delete' onClick={() => removeWork(workIndex)}>
-        <DeleteOutlineIcon />
-      </IconButton>
     </Item>
   )
 }
