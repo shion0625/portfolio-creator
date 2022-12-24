@@ -4,7 +4,7 @@ import { GetStaticProps, NextPage } from 'next'
 import Link from 'next/link'
 import React from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
-import { assertIsDefined } from '~/libs/assert'
+import { assertIsDefined } from '~/utils/assert'
 import { getSdk } from '~/models/ssr.generated'
 import { UserPagination, User } from '~/models/types'
 
