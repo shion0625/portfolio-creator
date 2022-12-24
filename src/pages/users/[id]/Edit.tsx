@@ -21,25 +21,23 @@ const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
     useMutation<CreateWorkMutation>(CreateWorkDocument)
   const OnSubmit = (input: WorkFormInterface) => {
     input.works?.map((work) => {
-      let language, url
-      if (work.language != undefined) {
-        language = JSON.stringify(work.language)
-      }
-      if (work.url != undefined) {
-        url = JSON.stringify(work.url)
-      }
-
       if (work.id != null && session && session.user) {
+        if (work.languages != undefined) {
+          work.language = JSON.stringify(work.languages)
+        }
+        if (work.urls != undefined) {
+          work.url = JSON.stringify(work.urls)
+        }
         let createWorkInput: CreateWorkInput = {
           brief_story: work.brief_story,
           duration: work.duration,
           image_url: work.image_url,
-          language: language,
+          language: work.language,
           number_of_people: work.number_of_people,
           role: work.role,
           summary: work.summary,
           title: work.title,
-          url: url,
+          url: work.url,
           user_id: session.user.id,
         }
         CreateWork({ variables: { input: createWorkInput } })
