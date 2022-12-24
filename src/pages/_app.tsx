@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app'
 import { ApolloProvider } from '@apollo/client'
 import { SessionProvider } from 'next-auth/react'
 import { Session } from 'next-auth'
-import { initializeApollo } from '../../constants/apolloClient'
+import { initializeApollo } from '../../apollo/apolloClient'
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   const client = initializeApollo()
