@@ -4,28 +4,35 @@ import { Box, Button, Container, Stack } from '@mui/material'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Add as AddIcon } from '@mui/icons-material'
-import { WorkForm, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
+import { WorkFormInterface, addNewWork, resetNewWorks } from '../interfaces/WorkForm'
 import ImageCard from './uiParts/ImageCard'
 import { Control, UseFormRegister } from 'react-hook-form'
 import Grid from '@mui/material/Grid'
+import { GetUserQuery } from '../graphql/client'
 
 import { createContext } from 'react'
 
-type Props = {
-  onSubmit: (data: WorkForm) => void
-  userInfo: any
+type Props = GetUserQuery & {
+  onSubmit: (data: WorkFormInterface) => void
 }
 
 type TWorkFormContext = {
-  register: UseFormRegister<WorkForm>
-  control: Control<WorkForm>
+  register: UseFormRegister<WorkFormInterface>
+  control: Control<WorkFormInterface>
   workIndex: number
   errors: any
 }
 
 export const WorkFormContext = createContext({} as TWorkFormContext)
 
-export const WorkForms: React.FC<Props> = ({ onSubmit, userInfo }): JSX.Element => {
+
+export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
+  user.works?.nodes.forEach((workItem: any) => {
+    workItem.languages = JSON.parse(workItem.language)
+    workItem.urls = JSON.parse(workItem.url)
+  })
+
+  console.log(user.works)
   const {
     // register 関数はinput/select の Ref とバリデーションルールを React Hook Form に登録 (register)
     register,
@@ -41,9 +48,9 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, userInfo }): JSX.Element 
     // errors オブジェクトには、各 input のフォームのエラーまたはエラーメッセージが含まれる
     // バリデーションとエラーメッセージで登録するとエラーメッセージが返される
     formState: { errors },
-  } = useForm<WorkForm>({
+  } = useForm<WorkFormInterface>({
     defaultValues: {
-      works: userInfo.works.nodes
+      works: user.works?.nodes
     },
 
     // blur イベントからバリデーションがトリガーされる

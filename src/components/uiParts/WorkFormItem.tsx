@@ -93,7 +93,7 @@ const WorkFormItem: React.FC = () => {
         control={control}
         nestIndex={workIndex}
         label='開発言語・技術'
-        choiceItem='language'
+        choiceItem='languages'
       />
 
       <TextField
@@ -109,9 +109,9 @@ const WorkFormItem: React.FC = () => {
         control={control}
         nestIndex={workIndex}
         label='URL'
-        choiceItem='url'
         type='url'
         placeholder='https://example.com'
+        choiceItem='urls'
       />
 
       <TextField

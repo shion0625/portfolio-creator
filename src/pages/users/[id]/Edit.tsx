@@ -5,9 +5,9 @@ import { GraphQLClient } from 'graphql-request'
 import { assertIsDefined } from '../../../lib/assert'
 import { getSdk } from '../../../graphql/ssr.generated'
 import { WorkForms } from '../../../components/WorkForms'
-import { WorkForm } from '../../../interfaces/WorkForm'
+import { WorkFormInterface } from '../../../interfaces/WorkForm'
 import { useMutation } from '@apollo/client'
-import { CreateWorkDocument } from '../../../graphql/client'
+import { CreateWorkDocument, GetUserQuery } from '../../../graphql/client'
 import { CreateWorkMutation } from '../../../graphql/client'
 import { CreateWorkInput } from '../../../graphql/types'
 import Box from '@mui/material/Box'
@@ -15,17 +15,12 @@ import PrimarySearchAppBar from '../../../components/NavBar'
 import { useSession } from 'next-auth/react'
 import { User } from '../../../graphql/types'
 
-type Props = {
-  user: string
-}
-
-const MyPageEdit: NextPage<Props> = ({ user }) => {
+const MyPageEdit: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()
   const [CreateWork, { data, loading, error }] =
     useMutation<CreateWorkMutation>(CreateWorkDocument)
-
-  const OnSubmit = (input: WorkForm) => {
-    input.works.map((work) => {
+  const OnSubmit = (input: WorkFormInterface) => {
+    input.works?.map((work) => {
       let language, url
       if (work.language != undefined) {
         language = JSON.stringify(work.language)
@@ -35,8 +30,6 @@ const MyPageEdit: NextPage<Props> = ({ user }) => {
       }
 
       if (work.id != null && session && session.user) {
-        console.log("create")
-        console.log(session.user.id)
         let createWorkInput: CreateWorkInput = {
           brief_story: work.brief_story,
           duration: work.duration,
@@ -61,7 +54,7 @@ const MyPageEdit: NextPage<Props> = ({ user }) => {
     <>
       <PrimarySearchAppBar />
       <Box component='main' sx={{ m: 2 }}>
-        <WorkForms onSubmit={OnSubmit} userInfo={ user } />
+        <WorkForms onSubmit={OnSubmit} user={ user } />
       </Box>
     </>
   )
@@ -103,16 +96,3 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     notFound: !user,
   }
 }
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-//   assertIsDefined(apiBaseUrl)
-
-//   const client = new GraphQLClient(apiBaseUrl)
-//   const sdk = getSdk(client)
-//   const { user } = await sdk.GetUser({ id: session?.user?.id })
-//   return {
-//     props: { user: user },
-//     revalidate: 1,
-//   }
-// }
