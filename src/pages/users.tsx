@@ -1,10 +1,10 @@
-import { assertIsDefined } from '~/lib/assert'
 import { Box, Paper } from '@mui/material'
 import { GraphQLClient } from 'graphql-request'
 import { GetStaticProps, NextPage } from 'next'
 import Link from 'next/link'
 import React from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
+import { assertIsDefined } from '~/lib/assert'
 import { getSdk } from '~/models/ssr.generated'
 import { UserPagination, User } from '~/models/types'
 
