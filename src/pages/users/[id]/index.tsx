@@ -1,13 +1,11 @@
 import { CircularProgress } from '@mui/material'
 import { Box } from '@mui/material'
-import { GraphQLClient } from 'graphql-request'
 // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import Link from 'next/link'
 import PrimarySearchAppBar from '~/components/NavBar'
-import { assertIsDefined } from '~/utils/assert'
-import { getSdk } from '~/models/ssr.generated'
 import { User } from '~/models/types'
+import { GetUser, GetUserIds } from '~/repositories/user'
 
 type Props = {
   user: User
@@ -34,13 +32,8 @@ const UserDetail: NextPage<Props> = ({ user }) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
-
-  const paths = users.nodes.map((user: User) => ({
+  const {users} = await GetUserIds(10, 0)
+  const paths = users.nodes.map((user: {id: string}) => ({
     params: {
       id: user.id,
     },
@@ -52,12 +45,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  const { user } = await sdk.GetUser({ id: params?.id })
+  const { user } = await GetUser(params?.id)
 
   return {
     props: {
