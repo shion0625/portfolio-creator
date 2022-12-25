@@ -4,11 +4,11 @@ import { Box } from '@mui/material'
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import Link from 'next/link'
 import PrimarySearchAppBar from '~/components/NavBar'
-import { User } from '~/models/types'
+import { GetUserQuery } from '~/models/client'
 import { GetUser, GetUserIds } from '~/repositories/user'
 
 
-const UserDetail: NextPage<User> = (user) => {
+const UserDetail: NextPage<GetUserQuery> = ({user}) => {
   if (!user) {
     return <CircularProgress color='inherit' />
   }

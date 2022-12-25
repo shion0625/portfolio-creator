@@ -8,10 +8,11 @@ import PrimarySearchAppBar from '~/components/NavBar'
 import { WorkForms } from '~/components/WorkForms'
 import { WorkFormInterface } from '~/models/WorkForm'
 import { CreateWorkMutation, UpdateWorkMutation, CreateWorkDocument, UpdateWorkDocument } from '~/models/client'
-import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
 import { GetUser, GetUserIds } from '~/repositories/user'
+import { UpdateWorkService, CreateWorkService } from '~/services/work'
+import { GetUserQuery } from '~/models/client'
 
-const MyPageEdit: NextPage<User> = (user) => {
+const MyPageEdit: NextPage<GetUserQuery> = ({user}) => {
   const { data: session, status } = useSession()
 
   const [CreateWork] = useMutation<CreateWorkMutation>(CreateWorkDocument)
@@ -20,47 +21,13 @@ const MyPageEdit: NextPage<User> = (user) => {
 
   const OnSubmit = (input: WorkFormInterface) => {
     input.works?.map((work) => {
-      if (session && session.user) {
-        if (work.languages != undefined) {
-          work.language = JSON.stringify(work.languages)
-        }
-        if (work.urls != undefined) {
-          work.url = JSON.stringify(work.urls)
-        }
-        //データの更新
-        if (work.id) {
-          let updateWorkInput: UpdateWorkInput = {
-            id: work.id,
-            brief_story: work.brief_story,
-            duration: work.duration,
-            image_url: work.image_url,
-            language: work.language,
-            number_of_people: work.number_of_people,
-            role: work.role,
-            summary: work.summary,
-            title: work.title,
-            url: work.url,
-          }
-          UpdateWork({ variables: { input: updateWorkInput } })
-        }
-        //新規作成
-        if (!work.id) {
-          let createWorkInput: CreateWorkInput = {
-            brief_story: work.brief_story,
-            duration: work.duration,
-            image_url: work.image_url,
-            language: work.language,
-            number_of_people: work.number_of_people,
-            role: work.role,
-            summary: work.summary,
-            title: work.title,
-            url: work.url,
-            user_id: session.user.id,
-          }
-          CreateWork({
-            variables: { input: createWorkInput },
-          })
-        }
+      //データの更新
+      if (work.id) {
+        UpdateWorkService(session, work, UpdateWork)
+      }
+      //新規作成
+      if (!work.id) {
+        CreateWorkService(session, work, CreateWork)
       }
     })
   }
