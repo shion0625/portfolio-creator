@@ -1,10 +1,6 @@
-import React, { memo } from 'react'
+import { AccountCircle, Mail as MailIcon, Notifications as NotificationsIcon } from '@mui/icons-material'
 import { Menu, MenuItem, IconButton, Badge } from '@mui/material'
-import {
-  AccountCircle,
-  Mail as MailIcon,
-  Notifications as NotificationsIcon,
-} from '@mui/icons-material'
+import React, { memo } from 'react'
 
 type Props = {
   mobileMenuId: string // モバイルメニューに設定するID
@@ -14,13 +10,7 @@ type Props = {
   handleMobileMenuClose: (event: React.MouseEvent<HTMLElement>) => void //モバイルメニューを閉じる
 }
 
-const MobileMenu: React.FC<Props> = memo(function mobileMenu({
-  mobileMenuId,
-  mobileMoreAnchorEl,
-  isMobileMenuOpen,
-  handleProfileMenuOpen,
-  handleMobileMenuClose,
-}) {
+const MobileMenu: React.FC<Props> = memo(function mobileMenu({ mobileMenuId, mobileMoreAnchorEl, isMobileMenuOpen, handleProfileMenuOpen, handleMobileMenuClose }) {
   return (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -46,11 +36,7 @@ const MobileMenu: React.FC<Props> = memo(function mobileMenu({
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
-        <IconButton
-          size='large'
-          aria-label='show 17 new notifications'
-          color='inherit'
-        >
+        <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
           <Badge badgeContent={17} color='error'>
             <NotificationsIcon />
           </Badge>
@@ -58,13 +44,7 @@ const MobileMenu: React.FC<Props> = memo(function mobileMenu({
         <p>Notifications</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size='large'
-          aria-label='account of current user'
-          aria-controls='primary-search-account-menu'
-          aria-haspopup='true'
-          color='inherit'
-        >
+        <IconButton size='large' aria-label='account of current user' aria-controls='primary-search-account-menu' aria-haspopup='true' color='inherit'>
           <AccountCircle />
         </IconButton>
         <p>Profile</p>

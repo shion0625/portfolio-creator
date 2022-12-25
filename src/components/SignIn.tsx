@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect } from 'react'
-import type { NextPage } from 'next'
 import { useMutation } from '@apollo/client'
-import { LoginDocument } from '../graphql/client'
-import { LoginMutation } from '../graphql/client'
+import type { NextPage } from 'next'
 import { signIn, signOut, useSession } from 'next-auth/react'
-import {
-  setCookieToken,
-  destroyCookieToken,
-  printCookie,
-} from '../lib/setCookie'
+import React, { useCallback, useEffect } from 'react'
+import { setCookieToken, destroyCookieToken, printCookie } from '~/libs/nookies/setCookie'
+import { LoginDocument } from '~/models/client'
+import { LoginMutation } from '~/models/client'
 
 const SignIn: NextPage = () => {
   const { data: session, status } = useSession()
 
-  const [Login, { data, loading, error }] =
-    useMutation<LoginMutation>(LoginDocument)
+  const [Login, { data, loading, error }] = useMutation<LoginMutation>(LoginDocument)
 
   const getJetToken = async (user_id: string, user_email: string) => {
     let jwtToken = await Login({
@@ -25,12 +20,7 @@ const SignIn: NextPage = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (
-        status == 'authenticated' &&
-        session &&
-        session.user &&
-        session.user.email
-      ) {
+      if (status == 'authenticated' && session && session.user && session.user.email) {
         getJetToken(session.user.id, session.user.email)
         console.log('hi')
       }

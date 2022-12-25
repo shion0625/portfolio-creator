@@ -1,5 +1,5 @@
-import { Weaken } from '../lib/extendType'
-import { CreateWorkInput } from '../graphql/types'
+import { Weaken } from '~/utils/extendType'
+import { CreateWorkInput } from '~/models/types'
 
 export interface WorkFormI extends CreateWorkInput {
   id: string

@@ -1,6 +1,6 @@
-import React, { memo } from 'react'
-import Link from 'next/link'
 import { Menu, MenuItem } from '@mui/material'
+import Link from 'next/link'
+import React, { memo } from 'react'
 
 type Props = {
   anchorEl: null | HTMLElement //押されたボタンの位置を取得
@@ -9,12 +9,7 @@ type Props = {
   handleMenuClose: () => void //プロフィールメニューを閉じる
 }
 
-const ProfileMenu: React.FC<Props> = memo(function profileMenu({
-  anchorEl,
-  menuId,
-  isMenuOpen,
-  handleMenuClose,
-}) {
+const ProfileMenu: React.FC<Props> = memo(function profileMenu({ anchorEl, menuId, isMenuOpen, handleMenuClose }) {
   return (
     <Menu
       anchorEl={anchorEl}

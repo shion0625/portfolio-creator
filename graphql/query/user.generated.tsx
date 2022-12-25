@@ -1,7 +1,7 @@
-import * as Types from '../../src/graphql/types'
-
+import * as Types from '../../src/models/types'
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
+
 const defaultOptions = {} as const
 export type GetUserQueryVariables = Types.Exact<{
   id: Types.Scalars['ID']
@@ -13,14 +13,7 @@ export type GetUserQuery = {
     name?: string | null
     email?: string | null
     works?: {
-      pageInfo: {
-        page: number
-        hasNextPage: boolean
-        count: number
-        totalCount: number
-        paginationLength: number
-        hasPreviousPage: boolean
-      }
+      pageInfo: { page: number; hasNextPage: boolean; count: number; totalCount: number; paginationLength: number; hasPreviousPage: boolean }
       nodes: Array<{
         id: string
         title: string
@@ -44,14 +37,7 @@ export type GetUsersQueryVariables = Types.Exact<{
 
 export type GetUsersQuery = {
   users: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      count: number
-      totalCount: number
-    }
+    pageInfo: { page: number; paginationLength: number; hasNextPage: boolean; hasPreviousPage: boolean; count: number; totalCount: number }
     nodes: Array<{
       id: string
       name?: string | null
@@ -80,17 +66,7 @@ export type GetUsersNameQueryVariables = Types.Exact<{
 }>
 
 export type GetUsersNameQuery = {
-  users: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      count: number
-      totalCount: number
-    }
-    nodes: Array<{ id: string; name?: string | null }>
-  }
+  users: { pageInfo: { page: number; paginationLength: number; hasNextPage: boolean; hasPreviousPage: boolean; count: number; totalCount: number }; nodes: Array<{ id: string; name?: string | null }> }
 }
 
 export type GetUserIdsQueryVariables = Types.Exact<{
@@ -155,33 +131,17 @@ export const GetUserDocument = gql`
  *   },
  * });
  */
-export function useGetUserQuery(
-  baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>,
-) {
+export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(
-    GetUserDocument,
-    options,
-  )
+  return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options)
 }
-export function useGetUserLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUserQuery,
-    GetUserQueryVariables
-  >,
-) {
+export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(
-    GetUserDocument,
-    options,
-  )
+  return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options)
 }
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>
-export type GetUserQueryResult = Apollo.QueryResult<
-  GetUserQuery,
-  GetUserQueryVariables
->
+export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>
 export const GetUsersDocument = gql`
   query GetUsers($limit: Int!, $offset: Int) {
     users(limit: $limit, offset: $offset) {
@@ -236,35 +196,17 @@ export const GetUsersDocument = gql`
  *   },
  * });
  */
-export function useGetUsersQuery(
-  baseOptions: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>,
-) {
+export function useGetUsersQuery(baseOptions: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(
-    GetUsersDocument,
-    options,
-  )
+  return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options)
 }
-export function useGetUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUsersQuery,
-    GetUsersQueryVariables
-  >,
-) {
+export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(
-    GetUsersDocument,
-    options,
-  )
+  return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options)
 }
 export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>
-export type GetUsersLazyQueryHookResult = ReturnType<
-  typeof useGetUsersLazyQuery
->
-export type GetUsersQueryResult = Apollo.QueryResult<
-  GetUsersQuery,
-  GetUsersQueryVariables
->
+export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>
+export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>
 export const GetUsersNameDocument = gql`
   query GetUsersName($limit: Int!, $offset: Int) {
     users(limit: $limit, offset: $offset) {
@@ -301,40 +243,17 @@ export const GetUsersNameDocument = gql`
  *   },
  * });
  */
-export function useGetUsersNameQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetUsersNameQuery,
-    GetUsersNameQueryVariables
-  >,
-) {
+export function useGetUsersNameQuery(baseOptions: Apollo.QueryHookOptions<GetUsersNameQuery, GetUsersNameQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetUsersNameQuery, GetUsersNameQueryVariables>(
-    GetUsersNameDocument,
-    options,
-  )
+  return Apollo.useQuery<GetUsersNameQuery, GetUsersNameQueryVariables>(GetUsersNameDocument, options)
 }
-export function useGetUsersNameLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUsersNameQuery,
-    GetUsersNameQueryVariables
-  >,
-) {
+export function useGetUsersNameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersNameQuery, GetUsersNameQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetUsersNameQuery, GetUsersNameQueryVariables>(
-    GetUsersNameDocument,
-    options,
-  )
+  return Apollo.useLazyQuery<GetUsersNameQuery, GetUsersNameQueryVariables>(GetUsersNameDocument, options)
 }
-export type GetUsersNameQueryHookResult = ReturnType<
-  typeof useGetUsersNameQuery
->
-export type GetUsersNameLazyQueryHookResult = ReturnType<
-  typeof useGetUsersNameLazyQuery
->
-export type GetUsersNameQueryResult = Apollo.QueryResult<
-  GetUsersNameQuery,
-  GetUsersNameQueryVariables
->
+export type GetUsersNameQueryHookResult = ReturnType<typeof useGetUsersNameQuery>
+export type GetUsersNameLazyQueryHookResult = ReturnType<typeof useGetUsersNameLazyQuery>
+export type GetUsersNameQueryResult = Apollo.QueryResult<GetUsersNameQuery, GetUsersNameQueryVariables>
 export const GetUserIdsDocument = gql`
   query GetUserIds($limit: Int!, $offset: Int) {
     users(limit: $limit, offset: $offset) {
@@ -362,47 +281,23 @@ export const GetUserIdsDocument = gql`
  *   },
  * });
  */
-export function useGetUserIdsQuery(
-  baseOptions: Apollo.QueryHookOptions<
-    GetUserIdsQuery,
-    GetUserIdsQueryVariables
-  >,
-) {
+export function useGetUserIdsQuery(baseOptions: Apollo.QueryHookOptions<GetUserIdsQuery, GetUserIdsQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetUserIdsQuery, GetUserIdsQueryVariables>(
-    GetUserIdsDocument,
-    options,
-  )
+  return Apollo.useQuery<GetUserIdsQuery, GetUserIdsQueryVariables>(GetUserIdsDocument, options)
 }
-export function useGetUserIdsLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetUserIdsQuery,
-    GetUserIdsQueryVariables
-  >,
-) {
+export function useGetUserIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserIdsQuery, GetUserIdsQueryVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetUserIdsQuery, GetUserIdsQueryVariables>(
-    GetUserIdsDocument,
-    options,
-  )
+  return Apollo.useLazyQuery<GetUserIdsQuery, GetUserIdsQueryVariables>(GetUserIdsDocument, options)
 }
 export type GetUserIdsQueryHookResult = ReturnType<typeof useGetUserIdsQuery>
-export type GetUserIdsLazyQueryHookResult = ReturnType<
-  typeof useGetUserIdsLazyQuery
->
-export type GetUserIdsQueryResult = Apollo.QueryResult<
-  GetUserIdsQuery,
-  GetUserIdsQueryVariables
->
+export type GetUserIdsLazyQueryHookResult = ReturnType<typeof useGetUserIdsLazyQuery>
+export type GetUserIdsQueryResult = Apollo.QueryResult<GetUserIdsQuery, GetUserIdsQueryVariables>
 export const LoginDocument = gql`
   mutation Login($id: String!, $email: String!) {
     login(id: $id, email: $email)
   }
 `
-export type LoginMutationFn = Apollo.MutationFunction<
-  LoginMutation,
-  LoginMutationVariables
->
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>
 
 /**
  * __useLoginMutation__
@@ -422,21 +317,10 @@ export type LoginMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useLoginMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    LoginMutation,
-    LoginMutationVariables
-  >,
-) {
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
-    LoginDocument,
-    options,
-  )
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options)
 }
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>
-export type LoginMutationOptions = Apollo.BaseMutationOptions<
-  LoginMutation,
-  LoginMutationVariables
->
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>

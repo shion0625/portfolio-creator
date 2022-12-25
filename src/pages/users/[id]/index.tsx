@@ -1,18 +1,13 @@
-import Link from 'next/link' // 一覧ページへリンクするので
-import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
-import { assertIsDefined } from '../../../lib/assert'
 import { CircularProgress } from '@mui/material'
-import { User } from '../../../graphql/types'
-import { getSdk } from '../../../graphql/ssr.generated'
-import { GraphQLClient } from 'graphql-request'
 import { Box } from '@mui/material'
-import PrimarySearchAppBar from '../../../components/NavBar'
+// 一覧ページへリンクするので
+import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
+import Link from 'next/link'
+import PrimarySearchAppBar from '~/components/NavBar'
+import { GetUserQuery } from '~/models/client'
+import { GetUser, GetUserIds } from '~/repositories/user'
 
-type Props = {
-  user: User
-}
-
-const UserDetail: NextPage<Props> = ({ user }) => {
+const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   if (!user) {
     return <CircularProgress color='inherit' />
   }
@@ -33,13 +28,8 @@ const UserDetail: NextPage<Props> = ({ user }) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  const { users } = await sdk.GetUserIds({ limit: 10, offset: 0 })
-
-  const paths = users.nodes.map((user: User) => ({
+  const { users } = await GetUserIds(10, 0)
+  const paths = users.nodes.map((user: { id: string }) => ({
     params: {
       id: user.id,
     },
@@ -51,16 +41,21 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  const { user } = await sdk.GetUser({ id: params?.id })
-
+  if (!params || !params.id) {
+    return {
+      props: {
+        user: 'error',
+      },
+    }
+  }
+  //配列として扱われたら連結をする
+  if (Array.isArray(params.id)) {
+    params.id = params.id.join()
+  }
+  const { user } = await GetUser(params.id)
   return {
     props: {
-      user: user,
+      user,
     },
     revalidate: 1,
     notFound: !user,

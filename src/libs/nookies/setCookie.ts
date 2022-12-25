@@ -1,5 +1,5 @@
-import { setCookie, destroyCookie, parseCookies } from 'nookies'
 import { NextPageContext } from 'next'
+import { setCookie, destroyCookie, parseCookies } from 'nookies'
 
 //クライアントサイドの場合ctxを渡さずに、SSRならctxを渡せば、cookieをオブジェクトに整形して返してくれます。
 

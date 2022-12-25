@@ -1,17 +1,23 @@
 # queryに関する処理を記述
 
+# フラグメント名        フラグメントを適用するデータ型
+fragment WorkFragment on Work {
+  # 取得するフィールド
+  id
+  title
+  summary
+  image_url
+  duration
+  number_of_people
+  language
+  role
+  url
+  brief_story
+}
+
 query GetWork($id: ID!) {
   work(id: $id){
-    id
-    title
-    summary
-    image_url
-    duration
-    number_of_people
-    language
-    role
-    url
-    brief_story
+    ...WorkFragment
     user{
       id
       name
@@ -30,16 +36,7 @@ query GetWorks($limit: Int!, $offset:Int) {
       totalCount
     },
     nodes{
-      id
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
+    ...WorkFragment
       user{
         id
         name
@@ -50,37 +47,13 @@ query GetWorks($limit: Int!, $offset:Int) {
 
 mutation CreateWork($input: CreateWorkInput!) {
   createWork(input: $input) {
-    title
-    summary
-    image_url
-    duration
-    number_of_people
-    language
-    role
-    url
-    brief_story
-    user{
-      id
-      name
-    }
+    ...WorkFragment
   }
 }
 
 mutation UpdateWork($input: UpdateWorkInput!) {
   updateWork(input: $input) {
-    title
-    summary
-    image_url
-    duration
-    number_of_people
-    language
-    role
-    url
-    brief_story
-    user{
-      id
-      name
-    }
+    ...WorkFragment
   }
 }
 

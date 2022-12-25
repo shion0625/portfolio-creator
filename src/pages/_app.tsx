@@ -1,9 +1,9 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
 import { ApolloProvider } from '@apollo/client'
-import { SessionProvider } from 'next-auth/react'
 import { Session } from 'next-auth'
-import { initializeApollo } from '../../constants/apolloClient'
+import { SessionProvider } from 'next-auth/react'
+import type { AppProps } from 'next/app'
+import { initializeApollo } from '~/apollo/apolloClient'
+import '~/styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   const client = initializeApollo()

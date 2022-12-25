@@ -2,15 +2,7 @@ overwrite: true
 schema: ./graphql/schema.graphql
 documents: ./graphql/query/*.graphql
 generates:
-  src/graphql/client.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-graphql-request
-  src/graphql/types.ts:
-    plugins:
-      - "typescript"
-  src/graphql/:
+  src/models/:
     preset: near-operation-file
     presetConfig:
       extension: .generated.tsx
@@ -18,12 +10,15 @@ generates:
     plugins:
       - "typescript-operations"
       - "typescript-react-apollo"
-  src/graphql/ssr.generated.ts:
-    preset: import-types
-    presetConfig:
-      typesPath: "./types"
+
+  src/models/client.ts:
     plugins:
-      - "typescript-operations"
-      - "typescript-graphql-request"
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
+
+  src/models/types.ts:
+    plugins:
+      - "typescript"
 config:
   skipTypename: true
