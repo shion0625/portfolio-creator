@@ -41,8 +41,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { user } = await GetUser(params?.id)
-
+  if (!params || !params.id) {
+    return {
+      props: {
+        user: 'error',
+      },
+    }
+  }
+  //配列として扱われたら連結をする
+  if (Array.isArray(params.id)) {
+    params.id = params.id.join()
+  }
+  const { user } = await GetUser(params.id)
   return {
     props: {
       user,

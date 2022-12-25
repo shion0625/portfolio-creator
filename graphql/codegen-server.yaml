@@ -10,20 +10,15 @@ generates:
     plugins:
       - "typescript-operations"
       - "typescript-react-apollo"
+
   src/models/client.ts:
     plugins:
       - typescript
       - typescript-operations
       - typescript-graphql-request
+
   src/models/types.ts:
     plugins:
       - "typescript"
-  src/models/ssr.generated.ts:
-    preset: import-types
-    presetConfig:
-      typesPath: "./types"
-    plugins:
-      - "typescript-operations"
-      - "typescript-graphql-request"
 config:
   skipTypename: true

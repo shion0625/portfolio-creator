@@ -21,7 +21,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   const { id } = router.query
 
   const { data } = useQuery<GetUserQuery>(GetUserDocument, {
-    fetchPolicy: 'cache-and-network', //build時に確認
+    fetchPolicy: 'cache-and-network',
     variables: { id: id },
   })
 
@@ -60,7 +60,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
         CreateWorkService(session, work, CreateWork)
       }
     })
-    // router.reload()
+    router.reload()
   }
   return (
     <>
@@ -88,6 +88,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  if (!params || !params.id) {
+    return {
+      props: {
+        user: 'error',
+      },
+    }
+  }
+  //配列として扱われたら連結をする
+  if (Array.isArray(params.id)) {
+    params.id = params.id.join()
+  }
+
   const { user } = await GetUser(params?.id)
   return {
     props: {

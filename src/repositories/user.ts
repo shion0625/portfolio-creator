@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 import { GetUserQuery, GetUserIdsQuery } from '~/models/client'
-import { getSdk } from '~/models/ssr.generated'
+import { getSdk } from '~/models/client'
 import { assertIsDefined } from '~/utils/assert'
 
 async function fetcherSSG() {
@@ -11,7 +11,7 @@ async function fetcherSSG() {
   return sdk
 }
 
-export async function GetUser(id?: string | string[]): Promise<GetUserQuery> {
+export async function GetUser(id: string): Promise<GetUserQuery> {
   const sdk = await fetcherSSG()
   const user = await sdk.GetUser({ id: id })
   return user
