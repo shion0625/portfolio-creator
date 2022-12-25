@@ -4,15 +4,9 @@ import gql from 'graphql-tag'
 
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>
-}
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>
-}
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string
@@ -185,14 +179,7 @@ export type GetUserQuery = {
     name?: string | null
     email?: string | null
     works?: {
-      pageInfo: {
-        page: number
-        hasNextPage: boolean
-        count: number
-        totalCount: number
-        paginationLength: number
-        hasPreviousPage: boolean
-      }
+      pageInfo: { page: number; hasNextPage: boolean; count: number; totalCount: number; paginationLength: number; hasPreviousPage: boolean }
       nodes: Array<{
         id: string
         title: string
@@ -216,14 +203,7 @@ export type GetUsersQueryVariables = Exact<{
 
 export type GetUsersQuery = {
   users: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      count: number
-      totalCount: number
-    }
+    pageInfo: { page: number; paginationLength: number; hasNextPage: boolean; hasPreviousPage: boolean; count: number; totalCount: number }
     nodes: Array<{
       id: string
       name?: string | null
@@ -252,17 +232,7 @@ export type GetUsersNameQueryVariables = Exact<{
 }>
 
 export type GetUsersNameQuery = {
-  users: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      count: number
-      totalCount: number
-    }
-    nodes: Array<{ id: string; name?: string | null }>
-  }
+  users: { pageInfo: { page: number; paginationLength: number; hasNextPage: boolean; hasPreviousPage: boolean; count: number; totalCount: number }; nodes: Array<{ id: string; name?: string | null }> }
 }
 
 export type GetUserIdsQueryVariables = Exact<{
@@ -278,6 +248,19 @@ export type LoginMutationVariables = Exact<{
 }>
 
 export type LoginMutation = { login: any }
+
+export type WorkFragmentFragment = {
+  id: string
+  title: string
+  summary?: string | null
+  image_url?: string | null
+  duration?: string | null
+  number_of_people?: number | null
+  language?: string | null
+  role?: string | null
+  url?: string | null
+  brief_story?: string | null
+}
 
 export type GetWorkQueryVariables = Exact<{
   id: Scalars['ID']
@@ -306,14 +289,7 @@ export type GetWorksQueryVariables = Exact<{
 
 export type GetWorksQuery = {
   works: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasPreviousPage: boolean
-      hasNextPage: boolean
-      count: number
-      totalCount: number
-    }
+    pageInfo: { page: number; paginationLength: number; hasPreviousPage: boolean; hasNextPage: boolean; count: number; totalCount: number }
     nodes: Array<{
       id: string
       title: string
@@ -336,6 +312,7 @@ export type CreateWorkMutationVariables = Exact<{
 
 export type CreateWorkMutation = {
   createWork: {
+    id: string
     title: string
     summary?: string | null
     image_url?: string | null
@@ -345,7 +322,6 @@ export type CreateWorkMutation = {
     role?: string | null
     url?: string | null
     brief_story?: string | null
-    user: { id: string; name?: string | null }
   }
 }
 
@@ -355,6 +331,7 @@ export type UpdateWorkMutationVariables = Exact<{
 
 export type UpdateWorkMutation = {
   updateWork: {
+    id: string
     title: string
     summary?: string | null
     image_url?: string | null
@@ -364,7 +341,6 @@ export type UpdateWorkMutation = {
     role?: string | null
     url?: string | null
     brief_story?: string | null
-    user: { id: string; name?: string | null }
   }
 }
 
@@ -374,6 +350,20 @@ export type DeleteWorkMutationVariables = Exact<{
 
 export type DeleteWorkMutation = { deleteWork?: boolean | null }
 
+export const WorkFragmentFragmentDoc = gql`
+  fragment WorkFragment on Work {
+    id
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+  }
+`
 export const GetUserDocument = gql`
   query GetUser($id: ID!) {
     user(id: $id) {
@@ -476,22 +466,14 @@ export const LoginDocument = gql`
 export const GetWorkDocument = gql`
   query GetWork($id: ID!) {
     work(id: $id) {
-      id
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
+      ...WorkFragment
       user {
         id
         name
       }
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 export const GetWorksDocument = gql`
   query GetWorks($limit: Int!, $offset: Int) {
@@ -505,16 +487,7 @@ export const GetWorksDocument = gql`
         totalCount
       }
       nodes {
-        id
-        title
-        summary
-        image_url
-        duration
-        number_of_people
-        language
-        role
-        url
-        brief_story
+        ...WorkFragment
         user {
           id
           name
@@ -522,44 +495,23 @@ export const GetWorksDocument = gql`
       }
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 export const CreateWorkDocument = gql`
   mutation CreateWork($input: CreateWorkInput!) {
     createWork(input: $input) {
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
-      }
+      ...WorkFragment
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 export const UpdateWorkDocument = gql`
   mutation UpdateWork($input: UpdateWorkInput!) {
     updateWork(input: $input) {
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
-      }
+      ...WorkFragment
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 export const DeleteWorkDocument = gql`
   mutation DeleteWork($id: ID!) {
@@ -574,114 +526,34 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     GetUser(variables: GetUserQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetUserQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetUserQuery>(GetUserDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetUser',
-        'query',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserQuery>(GetUserDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetUser', 'query')
     },
     GetUsers(variables: GetUsersQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetUsersQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetUsersQuery>(GetUsersDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetUsers',
-        'query',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersQuery>(GetUsersDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetUsers', 'query')
     },
     GetUsersName(variables: GetUsersNameQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetUsersNameQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetUsersNameQuery>(GetUsersNameDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetUsersName',
-        'query',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUsersNameQuery>(GetUsersNameDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetUsersName', 'query')
     },
     GetUserIds(variables: GetUserIdsQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetUserIdsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetUserIdsQuery>(GetUserIdsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetUserIds',
-        'query',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserIdsQuery>(GetUserIdsDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetUserIds', 'query')
     },
     Login(variables: LoginMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<LoginMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<LoginMutation>(LoginDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'Login',
-        'mutation',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<LoginMutation>(LoginDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'Login', 'mutation')
     },
     GetWork(variables: GetWorkQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetWorkQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetWorkQuery>(GetWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetWork',
-        'query',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<GetWorkQuery>(GetWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetWork', 'query')
     },
     GetWorks(variables: GetWorksQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetWorksQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetWorksQuery>(GetWorksDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetWorks',
-        'query',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<GetWorksQuery>(GetWorksDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'GetWorks', 'query')
     },
     CreateWork(variables: CreateWorkMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<CreateWorkMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CreateWorkMutation>(CreateWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'CreateWork',
-        'mutation',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateWorkMutation>(CreateWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'CreateWork', 'mutation')
     },
     UpdateWork(variables: UpdateWorkMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<UpdateWorkMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<UpdateWorkMutation>(UpdateWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'UpdateWork',
-        'mutation',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateWorkMutation>(UpdateWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'UpdateWork', 'mutation')
     },
     DeleteWork(variables: DeleteWorkMutationVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<DeleteWorkMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<DeleteWorkMutation>(DeleteWorkDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'DeleteWork',
-        'mutation',
-      )
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteWorkMutation>(DeleteWorkDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }), 'DeleteWork', 'mutation')
     },
   }
 }

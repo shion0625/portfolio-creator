@@ -13,14 +13,7 @@ export type GetUserQuery = {
     name?: string | null
     email?: string | null
     works?: {
-      pageInfo: {
-        page: number
-        hasNextPage: boolean
-        count: number
-        totalCount: number
-        paginationLength: number
-        hasPreviousPage: boolean
-      }
+      pageInfo: { page: number; hasNextPage: boolean; count: number; totalCount: number; paginationLength: number; hasPreviousPage: boolean }
       nodes: Array<{
         id: string
         title: string
@@ -44,14 +37,7 @@ export type GetUsersQueryVariables = Types.Exact<{
 
 export type GetUsersQuery = {
   users: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      count: number
-      totalCount: number
-    }
+    pageInfo: { page: number; paginationLength: number; hasNextPage: boolean; hasPreviousPage: boolean; count: number; totalCount: number }
     nodes: Array<{
       id: string
       name?: string | null
@@ -80,17 +66,7 @@ export type GetUsersNameQueryVariables = Types.Exact<{
 }>
 
 export type GetUsersNameQuery = {
-  users: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      count: number
-      totalCount: number
-    }
-    nodes: Array<{ id: string; name?: string | null }>
-  }
+  users: { pageInfo: { page: number; paginationLength: number; hasNextPage: boolean; hasPreviousPage: boolean; count: number; totalCount: number }; nodes: Array<{ id: string; name?: string | null }> }
 }
 
 export type GetUserIdsQueryVariables = Types.Exact<{

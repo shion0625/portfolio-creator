@@ -7,8 +7,7 @@ import PrimarySearchAppBar from '~/components/NavBar'
 import { GetUserQuery } from '~/models/client'
 import { GetUser, GetUserIds } from '~/repositories/user'
 
-
-const UserDetail: NextPage<GetUserQuery> = ({user}) => {
+const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   if (!user) {
     return <CircularProgress color='inherit' />
   }
@@ -29,8 +28,8 @@ const UserDetail: NextPage<GetUserQuery> = ({user}) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const {users} = await GetUserIds(10, 0)
-  const paths = users.nodes.map((user: {id: string}) => ({
+  const { users } = await GetUserIds(10, 0)
+  const paths = users.nodes.map((user: { id: string }) => ({
     params: {
       id: user.id,
     },

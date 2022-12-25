@@ -3,6 +3,19 @@ import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 const defaultOptions = {} as const
+export type WorkFragmentFragment = {
+  id: string
+  title: string
+  summary?: string | null
+  image_url?: string | null
+  duration?: string | null
+  number_of_people?: number | null
+  language?: string | null
+  role?: string | null
+  url?: string | null
+  brief_story?: string | null
+}
+
 export type GetWorkQueryVariables = Types.Exact<{
   id: Types.Scalars['ID']
 }>
@@ -30,14 +43,7 @@ export type GetWorksQueryVariables = Types.Exact<{
 
 export type GetWorksQuery = {
   works: {
-    pageInfo: {
-      page: number
-      paginationLength: number
-      hasPreviousPage: boolean
-      hasNextPage: boolean
-      count: number
-      totalCount: number
-    }
+    pageInfo: { page: number; paginationLength: number; hasPreviousPage: boolean; hasNextPage: boolean; count: number; totalCount: number }
     nodes: Array<{
       id: string
       title: string
@@ -60,6 +66,7 @@ export type CreateWorkMutationVariables = Types.Exact<{
 
 export type CreateWorkMutation = {
   createWork: {
+    id: string
     title: string
     summary?: string | null
     image_url?: string | null
@@ -69,7 +76,6 @@ export type CreateWorkMutation = {
     role?: string | null
     url?: string | null
     brief_story?: string | null
-    user: { id: string; name?: string | null }
   }
 }
 
@@ -79,6 +85,7 @@ export type UpdateWorkMutationVariables = Types.Exact<{
 
 export type UpdateWorkMutation = {
   updateWork: {
+    id: string
     title: string
     summary?: string | null
     image_url?: string | null
@@ -88,7 +95,6 @@ export type UpdateWorkMutation = {
     role?: string | null
     url?: string | null
     brief_story?: string | null
-    user: { id: string; name?: string | null }
   }
 }
 
@@ -98,25 +104,31 @@ export type DeleteWorkMutationVariables = Types.Exact<{
 
 export type DeleteWorkMutation = { deleteWork?: boolean | null }
 
+export const WorkFragmentFragmentDoc = gql`
+  fragment WorkFragment on Work {
+    id
+    title
+    summary
+    image_url
+    duration
+    number_of_people
+    language
+    role
+    url
+    brief_story
+  }
+`
 export const GetWorkDocument = gql`
   query GetWork($id: ID!) {
     work(id: $id) {
-      id
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
+      ...WorkFragment
       user {
         id
         name
       }
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 
 /**
@@ -158,16 +170,7 @@ export const GetWorksDocument = gql`
         totalCount
       }
       nodes {
-        id
-        title
-        summary
-        image_url
-        duration
-        number_of_people
-        language
-        role
-        url
-        brief_story
+        ...WorkFragment
         user {
           id
           name
@@ -175,6 +178,7 @@ export const GetWorksDocument = gql`
       }
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 
 /**
@@ -208,21 +212,10 @@ export type GetWorksQueryResult = Apollo.QueryResult<GetWorksQuery, GetWorksQuer
 export const CreateWorkDocument = gql`
   mutation CreateWork($input: CreateWorkInput!) {
     createWork(input: $input) {
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
-      }
+      ...WorkFragment
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 export type CreateWorkMutationFn = Apollo.MutationFunction<CreateWorkMutation, CreateWorkMutationVariables>
 
@@ -253,21 +246,10 @@ export type CreateWorkMutationOptions = Apollo.BaseMutationOptions<CreateWorkMut
 export const UpdateWorkDocument = gql`
   mutation UpdateWork($input: UpdateWorkInput!) {
     updateWork(input: $input) {
-      title
-      summary
-      image_url
-      duration
-      number_of_people
-      language
-      role
-      url
-      brief_story
-      user {
-        id
-        name
-      }
+      ...WorkFragment
     }
   }
+  ${WorkFragmentFragmentDoc}
 `
 export type UpdateWorkMutationFn = Apollo.MutationFunction<UpdateWorkMutation, UpdateWorkMutationVariables>
 

@@ -2,8 +2,9 @@ import { WorkFormI } from '~/models/WorkForm'
 import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
 
 export function UpdateWorkService(session: any, work: WorkFormI, UpdateWork: any): boolean {
-
-  if (!session || !session.user) { return false }
+  if (!session || !session.user) {
+    return false
+  }
   if (work.languages != undefined) {
     work.language = JSON.stringify(work.languages)
   }
@@ -28,8 +29,9 @@ export function UpdateWorkService(session: any, work: WorkFormI, UpdateWork: any
 }
 
 export function CreateWorkService(session: any, work: WorkFormI, CreateWork: any): boolean {
-
-  if (!session || !session.user) { return false }
+  if (!session || !session.user) {
+    return false
+  }
   if (work.languages != undefined) {
     work.language = JSON.stringify(work.languages)
   }

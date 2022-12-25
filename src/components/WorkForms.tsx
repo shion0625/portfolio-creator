@@ -25,7 +25,8 @@ type TWorkFormContext = {
 export const WorkFormContext = createContext({} as TWorkFormContext)
 
 export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
-  user.works?.nodes.forEach((workItem: any) => {
+  const userCopy = Object.assign({}, JSON.parse(JSON.stringify(user)))
+  userCopy.works?.nodes.forEach((workItem: any) => {
     workItem.languages = JSON.parse(workItem.language)
     workItem.urls = JSON.parse(workItem.url)
   })
@@ -47,7 +48,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
     formState: { errors },
   } = useForm<WorkFormInterface>({
     defaultValues: {
-      works: user.works?.nodes,
+      works: userCopy.works?.nodes,
     },
 
     // blur イベントからバリデーションがトリガーされる

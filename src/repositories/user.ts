@@ -1,7 +1,7 @@
-import { assertIsDefined } from '~/utils/assert'
 import { GraphQLClient } from 'graphql-request'
-import { getSdk } from '~/models/ssr.generated'
 import { GetUserQuery, GetUserIdsQuery } from '~/models/client'
+import { getSdk } from '~/models/ssr.generated'
+import { assertIsDefined } from '~/utils/assert'
 
 async function fetcherSSG() {
   const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
