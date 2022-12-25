@@ -13,6 +13,7 @@ import { GetUserQuery } from '~/models/client'
 
 type Props = GetUserQuery & {
   onSubmit: (data: WorkFormInterface) => void
+  dirtyWorks: any
 }
 
 type TWorkFormContext = {
@@ -24,7 +25,7 @@ type TWorkFormContext = {
 
 export const WorkFormContext = createContext({} as TWorkFormContext)
 
-export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
+export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks }): JSX.Element => {
   const userCopy = Object.assign({}, JSON.parse(JSON.stringify(user)))
   userCopy.works?.nodes.forEach((workItem: any) => {
     workItem.languages = JSON.parse(workItem.language)
@@ -45,7 +46,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
 
     // errors オブジェクトには、各 input のフォームのエラーまたはエラーメッセージが含まれる
     // バリデーションとエラーメッセージで登録するとエラーメッセージが返される
-    formState: { errors },
+    formState: { dirtyFields, errors },
   } = useForm<WorkFormInterface>({
     defaultValues: {
       works: userCopy.works?.nodes,
@@ -54,6 +55,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user }): JSX.Element => {
     // blur イベントからバリデーションがトリガーされる
     mode: 'onBlur',
   })
+  dirtyWorks.current = dirtyFields.works
 
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
   const { fields, append, remove } = useFieldArray({

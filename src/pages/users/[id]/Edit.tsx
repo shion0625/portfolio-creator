@@ -5,7 +5,7 @@ import type { NextPage } from 'next'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { WorkForms } from '~/components/WorkForms'
 import { WorkFormInterface } from '~/models/WorkForm'
@@ -26,6 +26,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   })
 
   const { data: session, status } = useSession()
+  const dirtyWorks = useRef<boolean[]>()
 
   const [CreateWork] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
     // ミューテーション後に実行される処理
@@ -50,9 +51,9 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   const [UpdateWork] = useMutation<UpdateWorkMutation>(UpdateWorkDocument)
 
   const OnSubmit = (input: WorkFormInterface) => {
-    input.works?.map((work) => {
+    input.works?.map((work, index: number) => {
       //データの更新
-      if (work.id) {
+      if (work.id && dirtyWorks && dirtyWorks.current && dirtyWorks.current[index]) {
         UpdateWorkService(session, work, UpdateWork)
       }
       //新規作成
@@ -66,7 +67,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
     <>
       <PrimarySearchAppBar />
       <Box component='main' sx={{ m: 2 }}>
-        <>{data ? <WorkForms onSubmit={OnSubmit} user={data.user} /> : <p>ロード中です。</p>}</>
+        <>{data ? <WorkForms onSubmit={OnSubmit} user={data.user} dirtyWorks={dirtyWorks} /> : <p>ロード中です。</p>}</>
       </Box>
     </>
   )
