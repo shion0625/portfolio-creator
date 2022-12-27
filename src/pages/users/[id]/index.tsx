@@ -5,7 +5,7 @@ import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import Link from 'next/link'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { GetUserQuery } from '~/models/client'
-import { GetUser, GetUserIds } from '~/repositories/user'
+import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
 
 const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   if (!user) {
@@ -28,7 +28,7 @@ const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
 export default UserDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { users } = await GetUserIds(10, 0)
+  const { users } = await GetUserIdsServer(10, 0)
   const paths = users.nodes.map((user: { id: string }) => ({
     params: {
       id: user.id,
@@ -52,7 +52,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   if (Array.isArray(params.id)) {
     params.id = params.id.join()
   }
-  const { user } = await GetUser(params.id)
+  const { user } = await GetUserServer(params.id)
   return {
     props: {
       user,

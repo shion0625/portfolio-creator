@@ -1,6 +1,6 @@
+import { useQuery } from '@apollo/client'
 import { GraphQLClient } from 'graphql-request'
-import { GetUserQuery, GetUserIdsQuery } from '~/models/client'
-import { getSdk } from '~/models/client'
+import { GetUserQuery, GetUserIdsQuery, GetUserDocument, getSdk } from '~/models/client'
 import { assertIsDefined } from '~/utils/assert'
 
 async function fetcherSSG() {
@@ -11,13 +11,21 @@ async function fetcherSSG() {
   return sdk
 }
 
-export async function GetUser(id: string): Promise<GetUserQuery> {
+export function GetUser(id?: string | string[]) {
+  const { data } = useQuery<GetUserQuery>(GetUserDocument, {
+    fetchPolicy: 'cache-and-network',
+    variables: { id: id },
+  })
+  return data?.user
+}
+
+export async function GetUserServer(id: string): Promise<GetUserQuery> {
   const sdk = await fetcherSSG()
   const user = await sdk.GetUser({ id: id })
   return user
 }
 
-export async function GetUserIds(limit: number, offset: number): Promise<GetUserIdsQuery> {
+export async function GetUserIdsServer(limit: number, offset: number): Promise<GetUserIdsQuery> {
   const sdk = await fetcherSSG()
   const users = await sdk.GetUserIds({ limit: limit, offset: offset })
   return users
