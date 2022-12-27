@@ -59,7 +59,6 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeW
   })
   dirtyWorks.current = dirtyFields.works
 
-
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
   const { fields, append, remove } = useFieldArray({
     name: 'works',

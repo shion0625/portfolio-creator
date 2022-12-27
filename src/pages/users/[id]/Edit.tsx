@@ -9,7 +9,14 @@ import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { WorkForms } from '~/components/WorkForms'
 import { WorkFormInterface } from '~/models/WorkForm'
-import { CreateWorkMutation, UpdateWorkMutation, DeleteWorksMutation, CreateWorkDocument, UpdateWorkDocument, DeleteWorksDocument } from '~/models/client'
+import {
+  CreateWorkMutation,
+  UpdateWorkMutation,
+  DeleteWorksMutation,
+  CreateWorkDocument,
+  UpdateWorkDocument,
+  DeleteWorksDocument,
+} from '~/models/client'
 import { GetUserQuery } from '~/models/client'
 import { GetUserDocument } from '~/models/client'
 import { GetUser, GetUserIds } from '~/repositories/user'
@@ -28,7 +35,6 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   const { data: session, status } = useSession()
   const dirtyWorks = useRef<boolean[]>()
   const removeWorkIds = useRef<string[]>([''])
-
 
   const [CreateWork] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
     // ミューテーション後に実行される処理
@@ -74,7 +80,18 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
     <>
       <PrimarySearchAppBar />
       <Box component='main' sx={{ m: 2 }}>
-        <>{data ? <WorkForms onSubmit={OnSubmit} user={data.user} dirtyWorks={dirtyWorks} removeWorkIds={removeWorkIds.current} /> : <p>ロード中です。</p>}</>
+        <>
+          {data ? (
+            <WorkForms
+              onSubmit={OnSubmit}
+              user={data.user}
+              dirtyWorks={dirtyWorks}
+              removeWorkIds={removeWorkIds.current}
+            />
+          ) : (
+            <p>ロード中です。</p>
+          )}
+        </>
       </Box>
     </>
   )
