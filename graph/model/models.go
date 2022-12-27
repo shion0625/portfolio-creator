@@ -1,5 +1,4 @@
 package model
-
 type Work struct {
 	ID             string  `json:"id"`
 	Title          string  `json:"title"`
