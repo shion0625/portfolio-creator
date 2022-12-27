@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/shion0625/my-portfolio-backend/graph/generated"
 	"github.com/shion0625/my-portfolio-backend/graph/model"
@@ -33,6 +34,9 @@ func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWor
 		Role:           input.Role,
 		URL:            input.URL,
 		BriefStory:     input.BriefStory,
+		CreatedAt:      service.Time2str(time.Now()),
+		UpdatedAt:      service.Time2str(time.Now()),
+		IsDelete:       false,
 		UserID:         input.UserID,
 	}
 	r.DB.Create(&work)
