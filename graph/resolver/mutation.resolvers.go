@@ -41,6 +41,7 @@ func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWor
 
 // UpdateWork is the resolver for the updateWork field.
 func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error) {
+	fmt.Println("update")
 	work := model.Work{ID: input.ID}
 	if input.Title == nil {
 		input.Title = &work.Title

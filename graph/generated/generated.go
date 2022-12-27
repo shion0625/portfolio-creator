@@ -96,15 +96,18 @@ type ComplexityRoot struct {
 
 	Work struct {
 		BriefStory     func(childComplexity int) int
+		CreatedAt      func(childComplexity int) int
 		Duration       func(childComplexity int) int
 		ID             func(childComplexity int) int
 		ImageURL       func(childComplexity int) int
+		IsDelete       func(childComplexity int) int
 		Language       func(childComplexity int) int
 		NumberOfPeople func(childComplexity int) int
 		Role           func(childComplexity int) int
 		Summary        func(childComplexity int) int
 		Title          func(childComplexity int) int
 		URL            func(childComplexity int) int
+		UpdatedAt      func(childComplexity int) int
 		User           func(childComplexity int) int
 	}
 
@@ -134,6 +137,9 @@ type UserResolver interface {
 	Profile(ctx context.Context, obj *model.User) (*model.Profile, error)
 }
 type WorkResolver interface {
+	CreatedAt(ctx context.Context, obj *model.Work) (string, error)
+	UpdatedAt(ctx context.Context, obj *model.Work) (string, error)
+	IsDelete(ctx context.Context, obj *model.Work) (bool, error)
 	User(ctx context.Context, obj *model.Work) (*model.User, error)
 }
 
@@ -400,6 +406,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Work.BriefStory(childComplexity), true
 
+	case "Work.created_at":
+		if e.complexity.Work.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Work.CreatedAt(childComplexity), true
+
 	case "Work.duration":
 		if e.complexity.Work.Duration == nil {
 			break
@@ -420,6 +433,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Work.ImageURL(childComplexity), true
+
+	case "Work.is_delete":
+		if e.complexity.Work.IsDelete == nil {
+			break
+		}
+
+		return e.complexity.Work.IsDelete(childComplexity), true
 
 	case "Work.language":
 		if e.complexity.Work.Language == nil {
@@ -462,6 +482,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Work.URL(childComplexity), true
+
+	case "Work.updated_at":
+		if e.complexity.Work.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Work.UpdatedAt(childComplexity), true
 
 	case "Work.user":
 		if e.complexity.Work.User == nil {
@@ -555,11 +582,15 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../schema/common.graphqls", Input: `interface Node {
+	{Name: "../schema/common.graphqls", Input: `## common.graphqls ===============================================
+
+interface Node {
   id: ID!
 }
 
 scalar Timestamp
+scalar DateTime
+
 scalar Any
 
 directive @auth on FIELD_DEFINITION
@@ -579,7 +610,9 @@ type PaginationInfo {
   totalCount: Int!
 }
 `, BuiltIn: false},
-	{Name: "../schema/mutation.graphqls", Input: `### Mutation(更新系)の定義
+	{Name: "../schema/mutation.graphqls", Input: `## mutation.graphqls ===============================================
+
+### Mutation(更新系)の定義
 type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth
   createWork(input: CreateWorkInput!): Work!  @auth
@@ -629,14 +662,18 @@ enum Role {
   VIEWER
 }
 `, BuiltIn: false},
-	{Name: "../schema/profile.graphqls", Input: `type Profile {
+	{Name: "../schema/profile.graphqls", Input: `## profile.graphqls ===============================================
+
+type Profile {
   id: ID!
   birthday: Timestamp
   comment: String
   user: User!
   }
 `, BuiltIn: false},
-	{Name: "../schema/query.graphqls", Input: `###  Query(read系)
+	{Name: "../schema/query.graphqls", Input: `## query.graphqls ===============================================
+
+###  Query(read系)
 type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
@@ -644,7 +681,9 @@ type Query {
   works(limit: Int!, offset: Int): WorkPagination!
 }
 `, BuiltIn: false},
-	{Name: "../schema/user.graphqls", Input: `type User implements Node{
+	{Name: "../schema/user.graphqls", Input: `## user.graphqls ===============================================
+
+type User implements Node{
   id: ID!
   name: String
   email: String
@@ -659,7 +698,9 @@ type UserPagination implements Pagination{
   nodes: [User!]!
 }
 `, BuiltIn: false},
-	{Name: "../schema/work.graphqls", Input: `type Work implements Node{
+	{Name: "../schema/work.graphqls", Input: `## work.graphqls ===============================================
+
+type Work implements Node{
   id: ID!
   title: String!
   summary: String
@@ -670,6 +711,9 @@ type UserPagination implements Pagination{
   role: String
   url: String
   brief_story: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  is_delete: Boolean!
   user: User!
   }
 
@@ -1085,6 +1129,12 @@ func (ec *executionContext) fieldContext_Mutation_createWork(ctx context.Context
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Work_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Work_updated_at(ctx, field)
+			case "is_delete":
+				return ec.fieldContext_Work_is_delete(ctx, field)
 			case "user":
 				return ec.fieldContext_Work_user(ctx, field)
 			}
@@ -1184,6 +1234,12 @@ func (ec *executionContext) fieldContext_Mutation_updateWork(ctx context.Context
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Work_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Work_updated_at(ctx, field)
+			case "is_delete":
+				return ec.fieldContext_Work_is_delete(ctx, field)
 			case "user":
 				return ec.fieldContext_Work_user(ctx, field)
 			}
@@ -1969,6 +2025,12 @@ func (ec *executionContext) fieldContext_Query_work(ctx context.Context, field g
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Work_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Work_updated_at(ctx, field)
+			case "is_delete":
+				return ec.fieldContext_Work_is_delete(ctx, field)
 			case "user":
 				return ec.fieldContext_Work_user(ctx, field)
 			}
@@ -3019,6 +3081,138 @@ func (ec *executionContext) fieldContext_Work_brief_story(ctx context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _Work_created_at(ctx context.Context, field graphql.CollectedField, obj *model.Work) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Work_created_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Work().CreatedAt(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDateTime2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Work_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Work",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Work_updated_at(ctx context.Context, field graphql.CollectedField, obj *model.Work) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Work_updated_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Work().UpdatedAt(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDateTime2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Work_updated_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Work",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Work_is_delete(ctx context.Context, field graphql.CollectedField, obj *model.Work) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Work_is_delete(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Work().IsDelete(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Work_is_delete(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Work",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Work_user(ctx context.Context, field graphql.CollectedField, obj *model.Work) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Work_user(ctx, field)
 	if err != nil {
@@ -3196,6 +3390,12 @@ func (ec *executionContext) fieldContext_WorkPagination_nodes(ctx context.Contex
 				return ec.fieldContext_Work_url(ctx, field)
 			case "brief_story":
 				return ec.fieldContext_Work_brief_story(ctx, field)
+			case "created_at":
+				return ec.fieldContext_Work_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_Work_updated_at(ctx, field)
+			case "is_delete":
+				return ec.fieldContext_Work_is_delete(ctx, field)
 			case "user":
 				return ec.fieldContext_Work_user(ctx, field)
 			}
@@ -5767,6 +5967,66 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._Work_brief_story(ctx, field, obj)
 
+		case "created_at":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Work_created_at(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "updated_at":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Work_updated_at(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "is_delete":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Work_is_delete(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "user":
 			field := field
 
@@ -6190,6 +6450,21 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 func (ec *executionContext) unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋmyᚑportfolioᚑbackendᚋgraphᚋmodelᚐCreateWorkInput(ctx context.Context, v interface{}) (model.CreateWorkInput, error) {
 	res, err := ec.unmarshalInputCreateWorkInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDateTime2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDateTime2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {

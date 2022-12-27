@@ -11,6 +11,9 @@ type Work implements Node{
   role: String
   url: String
   brief_story: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  is_delete: Boolean!
   user: User!
   }
 

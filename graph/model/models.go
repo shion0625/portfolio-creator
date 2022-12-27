@@ -9,12 +9,15 @@ type Work struct {
 	NumberOfPeople *int    `json:"number_of_people"`
 	Language       *string `json:"language"`
 	Role           *string `json:"role"`
-	URL            *string  `json:"url"`
+	URL            *string `json:"url"`
 	BriefStory     *string `json:"brief_story"`
+	CreatedAt      string  `json:"created_at"`
+	UpdatedAt      string  `json:"updated_at"`
+	IsDelete       bool    `json:"is_delete"`
 	UserID         string   `json:"user"`
 }
 
-func (Work) IsNode() {}
+func (Work) IsNode()            {}
 
 type User struct {
 	ID            string          `json:"id"`
