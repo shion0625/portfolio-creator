@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { GraphQLClient } from 'graphql-request'
-import { GetUserQuery, GetUserIdsQuery, GetUserDocument, getSdk } from '~/models/client'
+import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument, getSdk } from '~/models/client'
 import { assertIsDefined } from '~/utils/assert'
 
 async function fetcherSSG() {
@@ -28,5 +28,11 @@ export async function GetUserServer(id: string): Promise<GetUserQuery> {
 export async function GetUserIdsServer(limit: number, offset: number): Promise<GetUserIdsQuery> {
   const sdk = await fetcherSSG()
   const users = await sdk.GetUserIds({ limit: limit, offset: offset })
+  return users
+}
+
+export async function GetUsersNameServer(): Promise<GetUsersNameQuery> {
+  const sdk = await fetcherSSG()
+  const users = await sdk.GetUsersName({ limit: 10, offset: 0 })
   return users
 }
