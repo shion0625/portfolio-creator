@@ -13,6 +13,8 @@ fragment WorkFragment on Work {
   role
   url
   brief_story
+  created_at
+  updated_at
 }
 
 query GetWork($id: ID!) {

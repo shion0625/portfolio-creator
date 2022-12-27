@@ -32,7 +32,7 @@
     "react-hook-form": "^7.39.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.13.2",
+    "@graphql-codegen/cli": "^2.13.7",
     "@graphql-codegen/import-types-preset": "^2.2.5",
     "@graphql-codegen/introspection": "^2.2.1",
     "@graphql-codegen/near-operation-file-preset": "^2.4.3",
