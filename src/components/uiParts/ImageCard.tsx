@@ -9,17 +9,23 @@ import BasicModal from '~/components/uiParts/modal'
 
 type Props = {
   workIndex: number
-  removeWork: (index: number) => void
+  removeWork: (index: number, id: string) => void
   watch: any
+  getValues: any
 }
 
-const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, watch }) => {
+const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, watch, getValues }) => {
   const watchFields = watch([`works.${workIndex}.title`, `works.${workIndex}.summary`])
-
+  const getWorkId = getValues([`works.${workIndex}.id`])
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-        <CardMedia component='img' height='140' image='/static/images/cards/contemplative-reptile.jpg' alt='green iguana' />
+        <CardMedia
+          component='img'
+          height='140'
+          image='/static/images/cards/contemplative-reptile.jpg'
+          alt='green iguana'
+        />
         <CardContent>
           <Typography
             gutterBottom
@@ -54,7 +60,7 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, watch }) 
         </Button>
         <BasicModal buttonText='編集' />
         {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
-        <IconButton aria-label='delete' onClick={() => removeWork(workIndex)}>
+        <IconButton aria-label='delete' onClick={() => removeWork(workIndex, getWorkId)}>
           <DeleteOutlineIcon />
         </IconButton>
       </CardActions>

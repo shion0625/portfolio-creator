@@ -1,5 +1,5 @@
-import { Weaken } from '~/utils/extendType'
 import { CreateWorkInput } from '~/models/types'
+import { Weaken } from '~/utils/extendType'
 
 export interface WorkFormI extends CreateWorkInput {
   id: string

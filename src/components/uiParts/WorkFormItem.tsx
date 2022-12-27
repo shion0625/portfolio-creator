@@ -35,9 +35,23 @@ const WorkFormItem: React.FC = () => {
         <ErrorMessage errors={errors} name={`works.${workIndex}.title`} as='p' message='⚠ タイトルを入力してください' />
       </Box>
 
-      <TextField sx={{ mb: 2 }} multiline rows={2} fullWidth size='small' label='概要' {...register(`works.${workIndex}.summary` as const)} />
+      <TextField
+        sx={{ mb: 2 }}
+        multiline
+        rows={2}
+        fullWidth
+        size='small'
+        label='概要'
+        {...register(`works.${workIndex}.summary` as const)}
+      />
 
-      <TextField sx={{ mb: 2 }} fullWidth size='small' label='開発期間' {...register(`works.${workIndex}.duration` as const)} />
+      <TextField
+        sx={{ mb: 2 }}
+        fullWidth
+        size='small'
+        label='開発期間'
+        {...register(`works.${workIndex}.duration` as const)}
+      />
 
       <TextField
         fullWidth
@@ -51,16 +65,43 @@ const WorkFormItem: React.FC = () => {
         })}
       />
       <Box color='error.main' fontSize={12} sx={{ mb: 2 }}>
-        <ErrorMessage errors={errors} name={`works.${workIndex}.number_of_people`} as='p' message='⚠ 数量欄に1~100の数字を入力してください' />
+        <ErrorMessage
+          errors={errors}
+          name={`works.${workIndex}.number_of_people`}
+          as='p'
+          message='⚠ 数量欄に1~100の数字を入力してください'
+        />
       </Box>
 
-      <NestedFieldArray register={register} control={control} nestIndex={workIndex} label='開発言語・技術' choiceItem='languages' />
+      <NestedFieldArray
+        register={register}
+        control={control}
+        nestIndex={workIndex}
+        label='開発言語・技術'
+        choiceItem='languages'
+      />
 
       <TextField sx={{ mb: 2 }} fullWidth size='small' label='役割' {...register(`works.${workIndex}.role` as const)} />
 
-      <NestedFieldArray register={register} control={control} nestIndex={workIndex} label='URL' type='url' placeholder='https://example.com' choiceItem='urls' />
+      <NestedFieldArray
+        register={register}
+        control={control}
+        nestIndex={workIndex}
+        label='URL'
+        type='url'
+        placeholder='https://example.com'
+        choiceItem='urls'
+      />
 
-      <TextField sx={{ mb: 2 }} multiline rows={2} fullWidth size='small' label='小話' {...register(`works.${workIndex}.brief_story` as const)} />
+      <TextField
+        sx={{ mb: 2 }}
+        multiline
+        rows={2}
+        fullWidth
+        size='small'
+        label='小話'
+        {...register(`works.${workIndex}.brief_story` as const)}
+      />
 
       <TextField fullWidth size='small' label='画像' {...register(`works.${workIndex}.image_url` as const)} />
     </Item>

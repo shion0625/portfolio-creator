@@ -10,7 +10,13 @@ type Props = {
   handleMobileMenuClose: (event: React.MouseEvent<HTMLElement>) => void //モバイルメニューを閉じる
 }
 
-const MobileMenu: React.FC<Props> = memo(function mobileMenu({ mobileMenuId, mobileMoreAnchorEl, isMobileMenuOpen, handleProfileMenuOpen, handleMobileMenuClose }) {
+const MobileMenu: React.FC<Props> = memo(function mobileMenu({
+  mobileMenuId,
+  mobileMoreAnchorEl,
+  isMobileMenuOpen,
+  handleProfileMenuOpen,
+  handleMobileMenuClose,
+}) {
   return (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -44,7 +50,13 @@ const MobileMenu: React.FC<Props> = memo(function mobileMenu({ mobileMenuId, mob
         <p>Notifications</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton size='large' aria-label='account of current user' aria-controls='primary-search-account-menu' aria-haspopup='true' color='inherit'>
+        <IconButton
+          size='large'
+          aria-label='account of current user'
+          aria-controls='primary-search-account-menu'
+          aria-haspopup='true'
+          color='inherit'
+        >
           <AccountCircle />
         </IconButton>
         <p>Profile</p>

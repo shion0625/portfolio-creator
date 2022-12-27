@@ -1,4 +1,9 @@
-import { AccountCircle, Mail as MailIcon, Notifications as NotificationsIcon, MoreVert as MoreIcon } from '@mui/icons-material'
+import {
+  AccountCircle,
+  Mail as MailIcon,
+  Notifications as NotificationsIcon,
+  MoreVert as MoreIcon,
+} from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import * as React from 'react'
 import ProfileMenu from '~/components/uiParts/ProfileMenu'
@@ -61,12 +66,27 @@ export default function PrimarySearchAppBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' onClick={handleProfileMenuOpen} color='inherit'>
+            <IconButton
+              size='large'
+              edge='end'
+              aria-label='account of current user'
+              aria-controls={menuId}
+              aria-haspopup='true'
+              onClick={handleProfileMenuOpen}
+              color='inherit'
+            >
               <AccountCircle />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton size='large' aria-label='show more' aria-controls={mobileMenuId} aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
+            <IconButton
+              size='large'
+              aria-label='show more'
+              aria-controls={mobileMenuId}
+              aria-haspopup='true'
+              onClick={handleMobileMenuOpen}
+              color='inherit'
+            >
               <MoreIcon />
             </IconButton>
           </Box>

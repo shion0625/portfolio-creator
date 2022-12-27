@@ -59,6 +59,6 @@ mutation UpdateWork($input: UpdateWorkInput!) {
   }
 }
 
-mutation DeleteWork($id: ID!) {
-  deleteWork(id: $id)
+mutation DeleteWorks($id: [ID]!) {
+  deleteWorks(id: $id)
 }

@@ -9,11 +9,11 @@ import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { WorkForms } from '~/components/WorkForms'
 import { WorkFormInterface } from '~/models/WorkForm'
-import { CreateWorkMutation, UpdateWorkMutation, CreateWorkDocument, UpdateWorkDocument } from '~/models/client'
+import { CreateWorkMutation, UpdateWorkMutation, DeleteWorksMutation, CreateWorkDocument, UpdateWorkDocument, DeleteWorksDocument } from '~/models/client'
 import { GetUserQuery } from '~/models/client'
 import { GetUserDocument } from '~/models/client'
 import { GetUser, GetUserIds } from '~/repositories/user'
-import { UpdateWorkService, CreateWorkService } from '~/services/work'
+import { UpdateWorkService, CreateWorkService, DeleteWorksService } from '~/services/work'
 
 const MyPageEdit: NextPage<GetUserQuery> = () => {
   const router = useRouter()
@@ -27,6 +27,8 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
 
   const { data: session, status } = useSession()
   const dirtyWorks = useRef<boolean[]>()
+  const removeWorkIds = useRef<string[]>([''])
+
 
   const [CreateWork] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
     // ミューテーション後に実行される処理
@@ -49,6 +51,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   })
 
   const [UpdateWork] = useMutation<UpdateWorkMutation>(UpdateWorkDocument)
+  const [DeleteWorks] = useMutation<DeleteWorksMutation>(DeleteWorksDocument)
 
   const OnSubmit = (input: WorkFormInterface) => {
     input.works?.map((work, index: number) => {
@@ -60,6 +63,10 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
       if (!work.id) {
         CreateWorkService(session, work, CreateWork)
       }
+      //初期状態で空の文字列が配列に入っているので1より大きかったらremoveメソッドを呼び出す。
+      if (removeWorkIds.current.length > 1) {
+        DeleteWorksService(session, removeWorkIds.current, DeleteWorks)
+      }
     })
     router.reload()
   }
@@ -67,7 +74,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
     <>
       <PrimarySearchAppBar />
       <Box component='main' sx={{ m: 2 }}>
-        <>{data ? <WorkForms onSubmit={OnSubmit} user={data.user} dirtyWorks={dirtyWorks} /> : <p>ロード中です。</p>}</>
+        <>{data ? <WorkForms onSubmit={OnSubmit} user={data.user} dirtyWorks={dirtyWorks} removeWorkIds={removeWorkIds.current} /> : <p>ロード中です。</p>}</>
       </Box>
     </>
   )

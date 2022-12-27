@@ -29,7 +29,12 @@ const BasicModal: React.FC<Props> = ({ buttonText }) => {
       <Button size='small' color='primary' onClick={handleOpen}>
         {buttonText}
       </Button>
-      <Modal open={open} onClose={handleClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
         <Box sx={style}>
           <WorkFormItem />
         </Box>

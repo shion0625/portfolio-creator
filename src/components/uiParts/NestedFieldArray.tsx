@@ -30,7 +30,14 @@ const NestedFieldArray: React.FC<Props> = ({ nestIndex, control, register, choic
       {fields.map((field, index) => {
         return (
           <Box key={field.id}>
-            <TextField type={type} sx={{ width: 4 / 5, mb: 2 }} size='small' label={label} placeholder={placeholder} {...register(`works[${nestIndex}].${choiceItem}[${index}]`)} />
+            <TextField
+              type={type}
+              sx={{ width: 4 / 5, mb: 2 }}
+              size='small'
+              label={label}
+              placeholder={placeholder}
+              {...register(`works[${nestIndex}].${choiceItem}[${index}]`)}
+            />
             <IconButton aria-label='delete' onClick={() => removeChoiceItem(index)}>
               <DeleteOutlineIcon />
             </IconButton>

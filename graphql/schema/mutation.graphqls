@@ -5,7 +5,7 @@ type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth
   createWork(input: CreateWorkInput!): Work!  @auth
   updateWork(input: UpdateWorkInput!): Work! @auth
-  deleteWork(id: ID!): Boolean @auth
+  deleteWorks(id: [ID]!): Boolean @auth
   login(id: String!, email: String!): Any!
 }
 

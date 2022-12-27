@@ -14,6 +14,7 @@ import { GetUserQuery } from '~/models/client'
 type Props = GetUserQuery & {
   onSubmit: (data: WorkFormInterface) => void
   dirtyWorks: any
+  removeWorkIds: string[]
 }
 
 type TWorkFormContext = {
@@ -25,7 +26,7 @@ type TWorkFormContext = {
 
 export const WorkFormContext = createContext({} as TWorkFormContext)
 
-export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks }): JSX.Element => {
+export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeWorkIds }): JSX.Element => {
   const userCopy = Object.assign({}, JSON.parse(JSON.stringify(user)))
   userCopy.works?.nodes.forEach((workItem: any) => {
     workItem.languages = JSON.parse(workItem.language)
@@ -40,6 +41,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks }): JSX.
     reset,
     control,
     watch,
+    getValues,
 
     // handleSubmit 関数はバリデーションに成功するとフォームデータを渡す
     handleSubmit,
@@ -57,6 +59,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks }): JSX.
   })
   dirtyWorks.current = dirtyFields.works
 
+
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
   const { fields, append, remove } = useFieldArray({
     name: 'works',
@@ -71,7 +74,8 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks }): JSX.
     reset(resetNewWorks)
   }
 
-  const removeWork = (index: number) => {
+  const removeWork = (index: number, workId: string) => {
+    removeWorkIds.push(workId[0])
     remove(index)
   }
 
@@ -82,7 +86,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks }): JSX.
           return (
             <WorkFormContext.Provider value={{ workIndex, register, control, errors }} key={field.id}>
               <Grid item xs={6} md={4} lg={3}>
-                <ImageCard workIndex={workIndex} removeWork={removeWork} watch={watch} />
+                <ImageCard workIndex={workIndex} removeWork={removeWork} watch={watch} getValues={getValues} />
               </Grid>
             </WorkFormContext.Provider>
           )

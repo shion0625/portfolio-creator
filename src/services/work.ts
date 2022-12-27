@@ -56,3 +56,15 @@ export function CreateWorkService(session: any, work: WorkFormI, CreateWork: any
   })
   return true
 }
+
+export function DeleteWorksService(session: any, id: string[], DeleteWorks: any) {
+  if (!session || !session.user) {
+    return false
+  }
+  id = id.filter(function (workId: string) {
+    return workId != '';
+  })
+  DeleteWorks({
+    variables: {id: id}
+  })
+}
