@@ -5,18 +5,23 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
 import BasicModal from '~/components/uiParts/modal'
+import { WorkFormInterface } from '~/models/WorkForm'
 
 type Props = {
   workIndex: number
   removeWork: (index: number, id: string) => void
-  watch: any
-  getValues: any
+  getValues: UseFormGetValues<WorkFormInterface>
+  control: Control<WorkFormInterface>
 }
 
-const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, watch, getValues }) => {
-  const watchFields = watch([`works.${workIndex}.title`, `works.${workIndex}.summary`])
-  const getWorkId = getValues([`works.${workIndex}.id`])
+const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control }) => {
+  const watchFields = useWatch({
+    control,
+    name: [`works.${workIndex}.title`, `works.${workIndex}.summary`],
+  })
+  const getWorkId = getValues(`works.${workIndex}.id`)
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
