@@ -23,7 +23,8 @@
       "~/styles/*": ["src/styles/*"],
       "~/apollo/*": ["src/libs/apollo/*"],
       "~/libs/*": ["src/libs/*"],
-      "~/utils/*": ["src/utils/*"]
+      "~/utils/*": ["src/utils/*"],
+      "~/context/*": ["src/context/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

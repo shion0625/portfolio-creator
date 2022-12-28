@@ -1,13 +1,12 @@
 import { Add as AddIcon } from '@mui/icons-material'
 // 利用したい MUI コンポーネントを import
-import { Box, Button, Container, Stack } from '@mui/material'
+import { Box, Button, Container } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
-import { createContext } from 'react'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray } from 'react-hook-form'
-import { Control, UseFormRegister } from 'react-hook-form'
 import ImageCard from '~/components/uiParts/ImageCard'
+import { WorkFormContext } from '~/context/workForm'
 import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
 import { GetUserQuery } from '~/models/client'
 
@@ -17,20 +16,11 @@ type Props = GetUserQuery & {
   removeWorkIds: string[]
 }
 
-type TWorkFormContext = {
-  register: UseFormRegister<WorkFormInterface>
-  control: Control<WorkFormInterface>
-  workIndex: number
-  errors: any
-}
-
-export const WorkFormContext = createContext({} as TWorkFormContext)
-
 export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeWorkIds }): JSX.Element => {
   const userCopy = Object.assign({}, JSON.parse(JSON.stringify(user)))
   userCopy.works?.nodes.forEach((workItem: any) => {
-    workItem.languages = JSON.parse(workItem.language)
-    workItem.urls = JSON.parse(workItem.url)
+    workItem.languages = JSON.parse(workItem?.language)
+    workItem.urls = JSON.parse(workItem?.url)
   })
 
   const {
@@ -57,6 +47,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeW
     // blur イベントからバリデーションがトリガーされる
     mode: 'onBlur',
   })
+
   dirtyWorks = dirtyFields.works
 
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる

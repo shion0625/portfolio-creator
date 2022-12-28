@@ -2,11 +2,11 @@ import { CircularProgress } from '@mui/material'
 import { Box } from '@mui/material'
 // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { GetUserQuery } from '~/models/client'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
-import { useSession } from 'next-auth/react'
 
 const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()

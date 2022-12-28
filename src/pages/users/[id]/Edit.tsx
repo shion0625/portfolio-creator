@@ -26,6 +26,9 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   const deleteWorks = DeleteWorks()
 
   const OnSubmit = (input: WorkFormInterface) => {
+    if (!session) {
+      return
+    }
     input.works?.map((work: WorkFormI, index: number) => {
       //新規作成
       if (!work.id) {
@@ -48,7 +51,12 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
       <Box component='main' sx={{ m: 2 }}>
         <>
           {user ? (
-            <WorkForms onSubmit={OnSubmit} user={user} dirtyWorks={dirtyWorks.current} removeWorkIds={removeWorkIds.current} />
+            <WorkForms
+              onSubmit={OnSubmit}
+              user={user}
+              dirtyWorks={dirtyWorks.current}
+              removeWorkIds={removeWorkIds.current}
+            />
           ) : (
             <p>ロード中です。</p>
           )}

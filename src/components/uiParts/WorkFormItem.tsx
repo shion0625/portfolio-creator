@@ -3,7 +3,7 @@ import { ErrorMessage } from '@hookform/error-message'
 import { Box, TextField, IconButton, Paper } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import React, { useContext } from 'react'
-import { WorkFormContext } from '~/components/WorkForms'
+import { WorkFormContext } from '~/context/workForm'
 import NestedFieldArray from '~/components/uiParts/NestedFieldArray'
 
 const Item = styled(Paper)(({ theme }) => ({
