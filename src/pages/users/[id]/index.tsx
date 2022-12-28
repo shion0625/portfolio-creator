@@ -6,8 +6,10 @@ import Link from 'next/link'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { GetUserQuery } from '~/models/client'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
+import { useSession } from 'next-auth/react'
 
 const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
+  const { data: session, status } = useSession()
   if (!user) {
     return <CircularProgress color='inherit' />
   }
@@ -18,6 +20,7 @@ const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
         <p>User Detail</p>
         <p>{`ID: ${user.id}`}</p>
         <p>{user.name}</p>
+        {session?.user?.id == user.id && <Link href={`/users/${user.id}/Edit`}>編集</Link>}
         <Link href='/users'>
           <a>Back to users</a>
         </Link>
