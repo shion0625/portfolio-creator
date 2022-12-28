@@ -1,5 +1,4 @@
 import { Box, Paper } from '@mui/material'
-import { GraphQLClient } from 'graphql-request'
 import { GetStaticProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'

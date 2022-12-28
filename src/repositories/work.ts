@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client'
 import {
   GetUserQuery,
+  GetWorksQuery,
   CreateWorkMutation,
   UpdateWorkMutation,
   DeleteWorksMutation,
@@ -9,6 +10,7 @@ import {
   DeleteWorksDocument,
   GetUserDocument,
 } from '~/models/client'
+import { fetcherSSG } from '~/repositories/server'
 
 export function UpdateWork() {
   const [UpdateWork] = useMutation<UpdateWorkMutation>(UpdateWorkDocument)
@@ -41,4 +43,10 @@ export function CreateWork(id?: string | string[]) {
     },
   })
   return CreateWork
+}
+
+export async function GetWorksServer(): Promise<GetWorksQuery> {
+  const sdk = await fetcherSSG()
+  const works = await sdk.GetWorks({ limit: 10, offset: 0 })
+  return works
 }

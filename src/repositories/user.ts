@@ -1,15 +1,7 @@
 import { useQuery } from '@apollo/client'
-import { GraphQLClient } from 'graphql-request'
-import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument, getSdk } from '~/models/client'
-import { assertIsDefined } from '~/utils/assert'
+import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } from '~/models/client'
+import { fetcherSSG } from '~/repositories/server'
 
-async function fetcherSSG() {
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL
-  assertIsDefined(apiBaseUrl)
-  const client = new GraphQLClient(apiBaseUrl)
-  const sdk = getSdk(client)
-  return sdk
-}
 
 export function GetUser(id?: string | string[]) {
   const { data } = useQuery<GetUserQuery>(GetUserDocument, {
