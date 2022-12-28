@@ -11,6 +11,20 @@ export type WorkFormInterface = {
   works?: WorkFormI[]
 }
 
+export type DirtyWork = {
+  id?: boolean,
+  title?: boolean,
+  urls?: boolean[],
+  summary?: boolean,
+  duration?: boolean,
+  number_of_people?: boolean,
+  languages?: boolean[],
+  role?: boolean,
+  brief_story?: boolean,
+  image_url?: boolean,
+  user_id?: boolean,
+}
+
 export const addNewWork = {
   id: '',
   title: '',

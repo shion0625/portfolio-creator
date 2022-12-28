@@ -8,12 +8,12 @@ import { createContext } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { Control, UseFormRegister } from 'react-hook-form'
 import ImageCard from '~/components/uiParts/ImageCard'
-import { WorkFormInterface, addNewWork, resetNewWorks } from '~/models/WorkForm'
+import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
 import { GetUserQuery } from '~/models/client'
 
 type Props = GetUserQuery & {
   onSubmit: (data: WorkFormInterface) => void
-  dirtyWorks: any
+  dirtyWorks?: DirtyWork[]
   removeWorkIds: string[]
 }
 
@@ -57,7 +57,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeW
     // blur イベントからバリデーションがトリガーされる
     mode: 'onBlur',
   })
-  dirtyWorks.current = dirtyFields.works
+  dirtyWorks = dirtyFields.works
 
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
   const { fields, append, remove } = useFieldArray({

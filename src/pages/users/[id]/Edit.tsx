@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
 import { WorkForms } from '~/components/WorkForms'
-import { WorkFormInterface } from '~/models/WorkForm'
+import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
 import { GetUserQuery } from '~/models/client'
 import { GetUser, GetUserServer, GetUserIdsServer } from '~/repositories/user'
 import { CreateWork, UpdateWork, DeleteWorks } from '~/repositories/work'
@@ -18,7 +18,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   const { id } = router.query
 
   const { data: session, status } = useSession()
-  const dirtyWorks = useRef<boolean[]>()
+  const dirtyWorks = useRef<DirtyWork[]>()
   const removeWorkIds = useRef<string[]>([''])
   const user = GetUser(id)
   const createWork = CreateWork(id)
@@ -26,7 +26,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
   const deleteWorks = DeleteWorks()
 
   const OnSubmit = (input: WorkFormInterface) => {
-    input.works?.map((work, index: number) => {
+    input.works?.map((work: WorkFormI, index: number) => {
       //新規作成
       if (!work.id) {
         CreateWorkService(session, work, createWork)
@@ -48,7 +48,7 @@ const MyPageEdit: NextPage<GetUserQuery> = () => {
       <Box component='main' sx={{ m: 2 }}>
         <>
           {user ? (
-            <WorkForms onSubmit={OnSubmit} user={user} dirtyWorks={dirtyWorks} removeWorkIds={removeWorkIds.current} />
+            <WorkForms onSubmit={OnSubmit} user={user} dirtyWorks={dirtyWorks.current} removeWorkIds={removeWorkIds.current} />
           ) : (
             <p>ロード中です。</p>
           )}
