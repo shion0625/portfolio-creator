@@ -1,7 +1,7 @@
 package directives
 
 import (
-	"github.com/shion0625/portfolio-creater/backend//graph/model"
+	"github.com/shion0625/portfolio-creater/backend/graph/model"
 )
 type contextKey string
 const roleContextKey contextKey = "roleKey"

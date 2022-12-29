@@ -2,7 +2,7 @@ package directives
 
 import(
 	"context"
-	"github.com/shion0625/portfolio-creater/backend//middlewares"
+	"github.com/shion0625/portfolio-creater/backend/middlewares"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )

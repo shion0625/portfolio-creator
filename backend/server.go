@@ -5,8 +5,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/shion0625/portfolio-creater/backend//middlewares"
-	"github.com/shion0625/portfolio-creater/backend//handler"
+	"github.com/shion0625/portfolio-creater/backend/middlewares"
+	"github.com/shion0625/portfolio-creater/backend/handler"
 	"log"
 	"net/http"
 	"os"
@@ -46,6 +46,6 @@ func loadEnv() {
 	}
 }
 
-// go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creater/backend//graph/model.User
+// go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creater/backend/graph/model.User
 
-// go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creater/backend//graph/model.Work
+// go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creater/backend/graph/model.Work

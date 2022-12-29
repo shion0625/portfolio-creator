@@ -6,7 +6,7 @@ package resolver
 
 import(
 	"gorm.io/gorm"
-	"github.com/shion0625/portfolio-creater/backend//dataloader"
+	"github.com/shion0625/portfolio-creater/backend/dataloader"
 )
 
 type Resolver struct{
