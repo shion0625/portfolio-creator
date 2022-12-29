@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/shion0625/my-portfolio-front/backend/graph/model"
-	"github.com/shion0625/my-portfolio-front/backend/db"
+	"github.com/shion0625/my-portfolio/backend//graph/model"
+	"github.com/shion0625/my-portfolio/backend//db"
 	// "gorm.io/gorm"
 	// "github.com/vektah/gqlparser/v2/gqlerror"
 

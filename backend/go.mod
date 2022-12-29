@@ -1,4 +1,4 @@
-module github.com/shion0625/my-portfolio-front/backend
+module github.com/shion0625/my-portfolio/backend/
 
 go 1.19
 

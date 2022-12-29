@@ -9,12 +9,12 @@ import (
 	_"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/shion0625/my-portfolio-front/backend/db"
-	"github.com/shion0625/my-portfolio-front/backend/dataloader"
-	"github.com/shion0625/my-portfolio-front/backend/graph/generated"
-	"github.com/shion0625/my-portfolio-front/backend/graph/resolver"
-	_"github.com/shion0625/my-portfolio-front/backend/graph/directives"
-	"github.com/shion0625/my-portfolio-front/backend/graph/directives"
+	"github.com/shion0625/my-portfolio/backend//db"
+	"github.com/shion0625/my-portfolio/backend//dataloader"
+	"github.com/shion0625/my-portfolio/backend//graph/generated"
+	"github.com/shion0625/my-portfolio/backend//graph/resolver"
+	_"github.com/shion0625/my-portfolio/backend//graph/directives"
+	"github.com/shion0625/my-portfolio/backend//graph/directives"
 )
 
 func Welcome() echo.HandlerFunc {

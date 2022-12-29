@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/shion0625/my-portfolio-front/backend/graph/generated"
-	"github.com/shion0625/my-portfolio-front/backend/graph/model"
+	"github.com/shion0625/my-portfolio/backend//graph/generated"
+	"github.com/shion0625/my-portfolio/backend//graph/model"
 )
 
 // User is the resolver for the user field.

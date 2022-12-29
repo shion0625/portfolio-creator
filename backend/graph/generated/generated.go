@@ -13,7 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/shion0625/my-portfolio-front/backend/graph/model"
+	"github.com/shion0625/my-portfolio/backend//graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -990,7 +990,7 @@ func (ec *executionContext) _Mutation_updateProfile(ctx context.Context, field g
 		if data, ok := tmp.(*model.User); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio-front/backend/graph/model.User`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio/backend//graph/model.User`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1081,7 +1081,7 @@ func (ec *executionContext) _Mutation_createWork(ctx context.Context, field grap
 		if data, ok := tmp.(*model.Work); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio-front/backend/graph/model.Work`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio/backend//graph/model.Work`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1186,7 +1186,7 @@ func (ec *executionContext) _Mutation_updateWork(ctx context.Context, field grap
 		if data, ok := tmp.(*model.Work); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio-front/backend/graph/model.Work`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/my-portfolio/backend//graph/model.Work`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)

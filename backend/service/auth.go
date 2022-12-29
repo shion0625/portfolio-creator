@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	// "fmt"
-	// "github.com/shion0625/my-portfolio-front/backend/graph/model"
+	// "github.com/shion0625/my-portfolio/backend//graph/model"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
 )

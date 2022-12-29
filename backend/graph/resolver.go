@@ -6,7 +6,7 @@ package graph
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 import (
-	"github.com/shion0625/my-portfolio-front/backend/dataloader"
+	"github.com/shion0625/my-portfolio/backend//dataloader"
 	"gorm.io/gorm"
 )
 
