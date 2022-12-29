@@ -1,0 +1,16 @@
+## user.graphqls ===============================================
+
+type User implements Node{
+  id: ID!
+  name: String
+  email: String
+  emailVerified: [Timestamp]
+  image: String
+  works: WorkPagination
+  profile: Profile
+}
+
+type UserPagination implements Pagination{
+  pageInfo: PaginationInfo!
+  nodes: [User!]!
+}

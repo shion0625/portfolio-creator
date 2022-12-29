@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-backend
+    tty: true
+    ports:
+      - '8080:8080'
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - go-data:/go
+
+  db:
+    image: postgres:latest
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: 'portfolio'
+      POSTGRES_PASSWORD: 'Xshion0912'
+      POSTGRES_USER: 'shion0625'
+      TimeZone: Asia/Tokyo
+    ports:
+      - '5432:5432'
+    volumes:
+      - /var/lib/postgresql/data
+
+volumes:
+  go-data:
