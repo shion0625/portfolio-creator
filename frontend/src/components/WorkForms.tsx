@@ -4,7 +4,7 @@ import { Box, Button, Container } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 // 利用したい React Hook Form のフックをimport
-import { useForm, useFieldArray, useWatch } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import ImageCard from '~/components/uiParts/ImageCard'
 import { WorkFormContext } from '~/context/workForm'
 import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
@@ -74,7 +74,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeW
           return (
             <WorkFormContext.Provider value={{ workIndex, register, control, errors }} key={field.id}>
               <Grid item xs={6} md={4} lg={3}>
-                <ImageCard workIndex={workIndex} removeWork={removeWork} getValues={getValues} control={control} />
+                <ImageCard workIndex={workIndex} removeWork={removeWork} getValues={getValues} control={control}/>
               </Grid>
             </WorkFormContext.Provider>
           )

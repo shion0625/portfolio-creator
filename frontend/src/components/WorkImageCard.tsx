@@ -1,27 +1,19 @@
-import { DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
-import { Button, CardActionArea, CardActions, IconButton } from '@mui/material'
+import {  CardActionArea, CardActions, IconButton } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
-import BasicModal from '~/components/uiParts/modal'
-import { WorkFormInterface } from '~/models/WorkForm'
+import ShareIcon from '@mui/icons-material/Share';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { Work } from '~/models/types'
 
 type Props = {
-  workIndex: number
-  removeWork: (index: number, id: string) => void
-  getValues: UseFormGetValues<WorkFormInterface>
-  control: Control<WorkFormInterface>
+  work: Work
 }
 
-const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control }) => {
-  const watchFields = useWatch({
-    control,
-    name: [`works.${workIndex}.title`, `works.${workIndex}.summary`],
-  })
-  const getWorkId = getValues(`works.${workIndex}.id`)
+export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
+  console.log(work)
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
@@ -43,7 +35,7 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues
               overflow: 'hidden',
             }}
           >
-            {watchFields[0]}
+            {work.title}
           </Typography>
           <Typography
             variant='body2'
@@ -55,22 +47,18 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues
               overflow: 'hidden',
             }}
           >
-            {watchFields[1]}
+            {work.summary}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size='small' color='primary'>
-          画像の追加
-        </Button>
-        <BasicModal buttonText='編集' />
-        {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
-        <IconButton aria-label='delete' onClick={() => removeWork(workIndex, getWorkId)}>
-          <DeleteOutlineIcon />
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
         </IconButton>
       </CardActions>
     </Card>
   )
 }
-
-export default MultiActionAreaCard

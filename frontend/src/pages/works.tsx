@@ -1,18 +1,19 @@
 import React from 'react'
-import { UserPagination, User } from '~/models/types'
+import { WorkPagination } from '~/models/types'
 import { GetStaticProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import { GetWorksServer } from '~/repositories/work'
+import { WorkList } from '~/components/WorkList'
 
 type Props = {
-  works: UserPagination
+  works: WorkPagination
 }
 
 const Works: NextPage<Props> = ({ works }) => {
   const { data: session, status } = useSession()
-  console.log(works)
   return (
     <>
+      <WorkList works={works} />
     </>
   )
 }
