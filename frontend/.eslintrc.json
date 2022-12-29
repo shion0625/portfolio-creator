@@ -1,0 +1,21 @@
+{
+  "plugins": ["jsx-a11y"],
+  "extends": ["plugin:jsx-a11y/strict", "next", "next/core-web-vitals", "prettier","next/babel"],
+  "rules": {
+    // 必須
+    "curly": "error",
+    "no-var": "error",
+    // 推奨
+    "dot-notation": "warn",
+    "no-trailing-spaces": "warn",
+    "space-infix-ops": "warn",
+    "no-implicit-coercion": "warn",
+    "jsx-a11y/control-has-associated-label": "warn",
+    "jsx-a11y/label-has-associated-control": "warn",
+    // 警告なし
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/no-onchange": "off",
+    "jsx-a11y/label-has-for": "off",
+    "react/jsx-no-target-blank": "off"
+  }
+}

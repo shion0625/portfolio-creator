@@ -12,7 +12,7 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app
+      - ./backend:/app
       - go-data:/go
 
   db:

@@ -16,8 +16,8 @@ ENV CGO_ENABLED=1 \
   GOARCH=amd64 \
   GO111MODULE=on
 
-COPY go.mod $APP_ROOT/go.mod
-COPY go.sum $APP_ROOT/go.sum
+COPY ./backend/go.mod $APP_ROOT/go.mod
+COPY ./backend/go.sum $APP_ROOT/go.sum
 
 RUN go mod download
 
