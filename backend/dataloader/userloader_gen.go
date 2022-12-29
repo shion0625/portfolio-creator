@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/shion0625/my-portfolio/backend//graph/model"
+	"github.com/shion0625/portfolio-creater/backend//graph/model"
 )
 
 // UserLoaderConfig captures the config to create a new UserLoader

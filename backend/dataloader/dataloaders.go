@@ -2,7 +2,7 @@ package dataloader
 
 import(
 	"time"
-	"github.com/shion0625/my-portfolio/backend//graph/model"
+	"github.com/shion0625/portfolio-creater/backend//graph/model"
   "gorm.io/gorm"
 )
 

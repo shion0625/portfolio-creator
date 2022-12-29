@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"context"
-	"github.com/shion0625/my-portfolio/backend//service"
+	"github.com/shion0625/portfolio-creater/backend//service"
 	"net/http"
 )
 
