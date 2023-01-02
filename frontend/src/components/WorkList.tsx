@@ -15,7 +15,7 @@ export const WorkList: React.FC<Props> = ({ works }): JSX.Element => {
         {works.nodes.map((work: Work) => {
           return (
             <Grid item xs={6} md={4} lg={3}>
-              <WorkImageCard work={ work } />
+              <WorkImageCard key={work.id} work={ work }/>
             </Grid>
           )
         })}
