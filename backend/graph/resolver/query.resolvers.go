@@ -14,7 +14,7 @@ import (
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	user := model.User{ID: id}
-	r.DB.First(&user)
+	r.DB.Debug().First(&user)
 	return &user, nil
 }
 
@@ -52,7 +52,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 // Work is the resolver for the work field.
 func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error) {
 	work := model.Work{ID: id}
-	r.DB.First(&work)
+	r.DB.Debug().First(&work)
 	return &work, nil
 }
 

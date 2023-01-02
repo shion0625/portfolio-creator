@@ -67,8 +67,6 @@ type UpdateWorkInput struct {
 	BriefStory     *string `json:"brief_story"`
 }
 
-func (this User) GetID() string { return this.ID }
-
 type UserPagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*User         `json:"nodes"`
@@ -86,8 +84,6 @@ func (this UserPagination) GetNodes() []Node {
 	}
 	return interfaceSlice
 }
-
-func (this Work) GetID() string { return this.ID }
 
 type WorkPagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`

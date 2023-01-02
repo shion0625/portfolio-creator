@@ -39,7 +39,7 @@ func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWor
 		IsDelete:       false,
 		UserID:         input.UserID,
 	}
-	r.DB.Create(&work)
+	r.DB.Debug().Create(&work)
 	return &work, nil
 }
 
@@ -62,7 +62,7 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWor
 		BriefStory:     input.BriefStory,
 		UpdatedAt:      service.Time2str(time.Now()),
 	})
-	result := r.DB.Save(&work)
+	result := r.DB.Debug().Save(&work)
 	return &work, result.Error
 }
 
@@ -85,19 +85,3 @@ func (r *mutationResolver) Login(ctx context.Context, id string, email string) (
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *mutationResolver) DeleteWork(ctx context.Context, id string) (*bool, error) {
-	work := model.Work{ID: id}
-	result := r.DB.Delete(&work)
-	b := true
-	if result.Error != nil {
-		b = false
-	}
-	return &b, result.Error
-}
