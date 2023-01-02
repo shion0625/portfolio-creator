@@ -25,8 +25,11 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 	hasPreviousPage := true
 
 	users := []*model.User{}
-	r.DB.Model(&model.User{}).Count(&totalCount)
-	result := r.DB.Debug().Limit(limit).Offset(*offset).Find(&users)
+
+	r.DB.Table("users").Count(&totalCount)
+
+	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Find(&users)
+
 	if limit < *offset {
 		hasPreviousPage = false
 	}
@@ -65,6 +68,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*mod
 	works := []*model.Work{}
 	r.DB.Model(&model.Work{}).Count(&totalCount)
 	result := r.DB.Debug().Limit(limit).Offset(*offset).Find(&works)
+
 	if limit < *offset {
 		hasPreviousPage = false
 	}

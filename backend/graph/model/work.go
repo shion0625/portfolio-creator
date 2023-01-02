@@ -1,5 +1,4 @@
 package model
-
 type Work struct {
 	ID             string  `json:"id"`
 	Title          string  `json:"title"`
@@ -18,3 +17,4 @@ type Work struct {
 }
 
 func (Work) IsNode()            {}
+func (this Work) GetID() string { return this.ID }

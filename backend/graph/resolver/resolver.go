@@ -1,16 +1,17 @@
 package resolver
 
+//go:generate go run github.com/99designs/gqlgen generate
+
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
-
-import(
-	"gorm.io/gorm"
+import (
 	"github.com/shion0625/portfolio-creater/backend/dataloader"
+	"gorm.io/gorm"
 )
 
-type Resolver struct{
-	UserLoader *dataloader.UserLoader
+type Resolver struct {
 	WorkLoader *dataloader.WorkLoader
-	DB *gorm.DB
+	UserLoader *dataloader.UserLoader
+	DB         *gorm.DB
 }
