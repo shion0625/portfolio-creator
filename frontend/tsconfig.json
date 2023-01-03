@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,41 +16,18 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "~/components/*": [
-        "src/components/*"
-      ],
-      "~/models/*": [
-        "src/models/*"
-      ],
-      "~/services/*": [
-        "src/services/*"
-      ],
-      "~/repositories/*": [
-        "src/repositories/*"
-      ],
-      "~/styles/*": [
-        "src/styles/*"
-      ],
-      "~/apollo/*": [
-        "src/libs/apollo/*"
-      ],
-      "~/libs/*": [
-        "src/libs/*"
-      ],
-      "~/utils/*": [
-        "src/utils/*"
-      ],
-      "~/context/*": [
-        "src/context/*"
-      ]
+      "~/components/*": ["src/components/*"],
+      "~/models/*": ["src/models/*"],
+      "~/services/*": ["src/services/*"],
+      "~/repositories/*": ["src/repositories/*"],
+      "~/styles/*": ["src/styles/*"],
+      "~/apollo/*": ["src/libs/apollo/*"],
+      "~/libs/*": ["src/libs/*"],
+      "~/utils/*": ["src/utils/*"],
+      "~/context/*": ["src/context/*"],
+      "~/constant/*": ["src/constant/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "frontend/node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", ".next"]
 }

@@ -1,11 +1,11 @@
-import React from 'react'
-import { WorkPagination } from '~/models/types'
+import { Box } from '@mui/material'
 import { GetStaticProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
-import { GetWorksServer } from '~/repositories/work'
-import { WorkList } from '~/components/WorkList'
+import React from 'react'
 import PrimarySearchAppBar from '~/components/NavBar'
-import { Box } from '@mui/material'
+import { WorkList } from '~/components/WorkList'
+import { WorkPagination } from '~/models/types'
+import { GetWorksServer } from '~/repositories/work'
 
 type Props = {
   works: WorkPagination

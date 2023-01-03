@@ -1,32 +1,29 @@
-import {  CardActionArea, CardActions, IconButton } from '@mui/material'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import ShareIcon from '@mui/icons-material/Share'
+import { CardActionArea, CardActions, IconButton } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import ShareIcon from '@mui/icons-material/Share';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import TransitionsModal from '~/components/uiParts/modalWork'
+import { WorkContext } from '~/context/WorkView'
 import { Work } from '~/models/types'
-import TransitionsModal  from '~/components/uiParts/modalWork'
+
 type Props = {
   work: Work
 }
 
 export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   return (
     <>
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea onClick={handleOpen}>
-          <CardMedia
-            component='img'
-            height='140'
-            image='/vercel.svg'
-            alt='green iguana'
-          />
+          <CardMedia component='img' height='140' image='/vercel.svg' alt='green iguana' />
           <CardContent>
             <Typography
               gutterBottom
@@ -56,15 +53,17 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <IconButton aria-label="add to favorites">
+          <IconButton aria-label='add to favorites'>
             <FavoriteIcon />
           </IconButton>
-          <IconButton aria-label="share">
+          <IconButton aria-label='share'>
             <ShareIcon />
           </IconButton>
         </CardActions>
       </Card>
-      <TransitionsModal handleOpen={handleOpen} handleClose={handleClose} open={open} />
+      <WorkContext.Provider value={{ work }}>
+        <TransitionsModal handleOpen={handleOpen} handleClose={handleClose} open={open} />
+      </WorkContext.Provider>
     </>
   )
 }

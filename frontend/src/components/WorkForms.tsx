@@ -74,7 +74,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, dirtyWorks, removeW
           return (
             <WorkFormContext.Provider value={{ workIndex, register, control, errors }} key={field.id}>
               <Grid item xs={6} md={4} lg={3}>
-                <ImageCard workIndex={workIndex} removeWork={removeWork} getValues={getValues} control={control}/>
+                <ImageCard workIndex={workIndex} removeWork={removeWork} getValues={getValues} control={control} />
               </Grid>
             </WorkFormContext.Provider>
           )
