@@ -14,7 +14,7 @@ func UsersByIDs(db *gorm.DB) *UserLoader{
 			users := make([]*model.User, len(ids))
 			errors := make([]error, len(ids))
 
-			db.Debug().Where("id IN ?", ids).Find(&users)
+			db.Debug().Table("users").Where("id IN ?", ids).Find(&users)
 
 			// 引数のidsに対応する順番の配列で返す。
 			return users, errors

@@ -13,8 +13,8 @@ const Home: NextPage = () => {
           <a>users</a>
         </Link>
         <br />
-        <Link href='myPageEdit'>
-          <a>myPageEdit</a>
+        <Link href='works'>
+          <a>works</a>
         </Link>
       </div>
     </>

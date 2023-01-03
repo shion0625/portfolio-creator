@@ -25,12 +25,7 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-        <CardMedia
-          component='img'
-          height='140'
-          image='/vercel.svg'
-          alt='green iguana'
-        />
+        <CardMedia component='img' height='140' image='/vercel.svg' alt='green iguana' />
         <CardContent>
           <Typography
             gutterBottom

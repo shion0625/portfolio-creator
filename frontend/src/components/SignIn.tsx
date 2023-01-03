@@ -19,7 +19,7 @@ const SignIn: NextPage = () => {
   }
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       if (status == 'authenticated' && session && session.user && session.user.email) {
         getJetToken(session.user.id, session.user.email)
         console.log('hi')

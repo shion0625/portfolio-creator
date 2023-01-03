@@ -1,6 +1,6 @@
 {
   "plugins": ["jsx-a11y"],
-  "extends": ["plugin:jsx-a11y/strict", "next", "next/core-web-vitals", "prettier","next/babel"],
+  "extends": ["plugin:jsx-a11y/strict", "next", "next/core-web-vitals", "prettier", "next/babel"],
   "rules": {
     // 必須
     "curly": "error",
