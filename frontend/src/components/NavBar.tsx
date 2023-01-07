@@ -3,28 +3,32 @@ import {
   Mail as MailIcon,
   Notifications as NotificationsIcon,
   MoreVert as MoreIcon,
+  InvertColors as InvertColorsIcon
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
-import * as React from 'react'
+import React, { useContext, useState, MouseEvent } from 'react'
 import ProfileMenu from '~/components/uiParts/ProfileMenu'
 import SearchArea from '~/components/uiParts/SearchArea'
 import MobileMenu from '~/components/uiParts/mobile/MobileMenu'
+import ColorModeContext from '~/context/ColorModeContext'
 
 export default function PrimarySearchAppBar() {
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
+  const colorMode = useContext(ColorModeContext);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
 
   const isMenuOpen = Boolean(anchorEl) //メニューの状態を管理
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl) //モバイルメニューの状態を管理
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMobileMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
@@ -54,6 +58,9 @@ export default function PrimarySearchAppBar() {
             portfolio
           </Typography>
           <SearchArea />
+          <IconButton color='inherit' onClick={colorMode.toggleColorMode}>
+            <InvertColorsIcon />
+          </IconButton>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size='large' aria-label='show 4 new mails' color='inherit'>

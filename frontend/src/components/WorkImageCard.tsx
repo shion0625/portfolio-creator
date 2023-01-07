@@ -23,8 +23,20 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
     <>
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea onClick={handleOpen}>
-          <CardMedia component='img' height='140' image='/vercel.svg' alt='green iguana' />
+          <CardMedia component='img' height='140' image='/vercel.svg' alt='green iguana' sx={{position: 'relative'}} />
           <CardContent>
+            <Typography
+              variant='subtitle1'
+              color='success.main'
+              sx={{
+                position: 'absolute',
+                zIndex: 100,
+                top: 0,
+                right: 10
+              }}
+            >
+              {work.user.name}
+            </Typography>
             <Typography
               gutterBottom
               variant='h5'
