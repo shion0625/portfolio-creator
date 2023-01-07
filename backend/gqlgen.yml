@@ -68,10 +68,6 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   Work:
-    fields:
-      user:
-        resolver: true
+    model: model.Work
   User:
-    fields:
-      work:
-        resolver: true
+    model: model.User

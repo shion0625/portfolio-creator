@@ -5,6 +5,7 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 	"math"
 
 	"github.com/shion0625/portfolio-creater/backend/graph/generated"
@@ -13,8 +14,11 @@ import (
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	user := model.User{ID: id}
-	r.DB.Debug().First(&user)
+	var user model.User
+	if err := r.DB.Debug().Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
+		return nil, err
+	}
+
 	return &user, nil
 }
 
@@ -24,11 +28,12 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 	hasNextPage := true
 	hasPreviousPage := true
 
-	users := []*model.User{}
+	var users []*model.User
 
-	r.DB.Table("users").Count(&totalCount)
+	r.DB.Debug().Table("users").Count(&totalCount)
 
-	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Find(&users)
+	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Take(&users)
+	fmt.Print(result.Error)
 
 	if limit < *offset {
 		hasPreviousPage = false

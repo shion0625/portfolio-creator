@@ -12,7 +12,6 @@ type Props = {
 }
 
 const Users: NextPage<Props> = ({ users }) => {
-  const { data: session, status } = useSession()
 
   return (
     <>
