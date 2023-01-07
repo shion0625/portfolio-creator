@@ -11,6 +11,7 @@ import ProfileMenu from '~/components/uiParts/ProfileMenu'
 import SearchArea from '~/components/uiParts/SearchArea'
 import MobileMenu from '~/components/uiParts/mobile/MobileMenu'
 import ColorModeContext from '~/context/ColorModeContext'
+import Link from 'next/link'
 
 export default function PrimarySearchAppBar() {
   const menuId = 'profile-menu'
@@ -55,7 +56,9 @@ export default function PrimarySearchAppBar() {
             <MenuIcon />
           </IconButton> */}
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
-            portfolio
+            <Link href='/'>
+              <a>portfolio</a>
+            </Link>
           </Typography>
           <SearchArea />
           <IconButton color='inherit' onClick={colorMode.toggleColorMode}>

@@ -27,7 +27,6 @@ const Users: NextPage<Props> = ({ users }) => {
                   <a>{user.name}</a>
                 </Paper>
               </Link>
-              {session?.user?.id == user.id && <Link href={`/users/${user.id}/Edit`}>編集</Link>}
             </div>
           )
         })}
