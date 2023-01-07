@@ -5,8 +5,9 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
+import React, { useContext } from 'react'
 import TransitionsModal from '~/components/uiParts/modalWork'
+import ColorModeContext from '~/context/ColorModeContext'
 import { WorkContext } from '~/context/WorkView'
 import { Work } from '~/models/types'
 
@@ -18,21 +19,28 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const colorMode = useContext(ColorModeContext)
 
   return (
     <>
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea onClick={handleOpen}>
-          <CardMedia component='img' height='140' image='/vercel.svg' alt='green iguana' sx={{position: 'relative'}} />
+          <CardMedia
+            component='img'
+            height='140'
+            image='/vercel.svg'
+            alt='green iguana'
+            sx={{ position: 'relative' }}
+          />
           <CardContent>
             <Typography
               variant='subtitle1'
-              color='success.main'
+              color={`primary.${colorMode.mode}`}
               sx={{
                 position: 'absolute',
                 zIndex: 100,
                 top: 0,
-                right: 10
+                right: 10,
               }}
             >
               {work.user.name}

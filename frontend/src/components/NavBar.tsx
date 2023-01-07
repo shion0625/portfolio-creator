@@ -3,7 +3,7 @@ import {
   Mail as MailIcon,
   Notifications as NotificationsIcon,
   MoreVert as MoreIcon,
-  InvertColors as InvertColorsIcon
+  InvertColors as InvertColorsIcon,
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import React, { useContext, useState, MouseEvent } from 'react'
@@ -16,7 +16,7 @@ export default function PrimarySearchAppBar() {
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 
-  const colorMode = useContext(ColorModeContext);
+  const colorMode = useContext(ColorModeContext)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得

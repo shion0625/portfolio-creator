@@ -1,10 +1,6 @@
-import { createTheme } from '@mui/material/styles';
-import React, { useContext } from 'react'
-import ColorModeContext from '~/context/ColorModeContext'
-
 type themeType = {
-  main: string,
-  light: string,
+  main: string
+  light: string
   dark: string
 }
 
@@ -28,18 +24,18 @@ export const error: themeType = {
 
 export const warning: themeType = {
   main: '#ed6c02',
-    light: '#ff9800',
-      dark: '#e65100',
+  light: '#ff9800',
+  dark: '#e65100',
 }
 
-export const info: themeType ={
+export const info: themeType = {
   main: '#0288d1',
-    light: '#03a9f4',
-      dark: '#01579b',
+  light: '#03a9f4',
+  dark: '#01579b',
 }
 
 export const success: themeType = {
   main: '#2e7d32',
-    light: '#4caf50',
-      dark: '#1b5e20',
+  light: '#4caf50',
+  dark: '#1b5e20',
 }

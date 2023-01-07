@@ -1,7 +1,7 @@
+import Typography from '@mui/material/Typography'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import SignIn from '~/components/SignIn'
-import Typography from '@mui/material/Typography'
 
 const Home: NextPage = () => {
   return (
@@ -17,7 +17,7 @@ const Home: NextPage = () => {
         <Link href='works'>
           <a>works</a>
         </Link>
-        <Typography color="success.main" />
+        <Typography color='success.main' />
       </div>
     </>
   )

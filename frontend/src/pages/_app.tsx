@@ -1,23 +1,24 @@
 import { ApolloProvider } from '@apollo/client'
+import { ThemeProvider } from '@mui/material'
+import { createTheme } from '@mui/material/styles'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
+import { useState } from 'react'
+import ColorModeContext from '~/context/ColorModeContext'
 import { initializeApollo } from '~/libs/apollo/apolloClient'
 import '~/styles/globals.css'
-import { primary, secondary, error, warning, info, success } from '~/styles/theme';
-import { ThemeProvider } from '@mui/material';
-import ColorModeContext from '~/context/ColorModeContext'
-import { useState } from 'react';
-import { createTheme } from '@mui/material/styles';
+import { primary, secondary, error, warning, info, success } from '~/styles/theme'
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   const client = initializeApollo()
-  const [mode, setMode] = useState<'light' | 'dark'>('dark');
+  const [mode, setMode] = useState<'light' | 'dark'>('dark')
 
   const colorMode = {
     toggleColorMode: () => {
-      setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
     },
+    mode,
   }
 
   const theme = createTheme({
@@ -30,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
       info,
       success,
     },
-  });
+  })
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -40,10 +41,8 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
             <Component {...pageProps} />
           </SessionProvider>
         </ApolloProvider>
-      </ThemeProvider >
+      </ThemeProvider>
     </ColorModeContext.Provider>
-
-
   )
 }
 
