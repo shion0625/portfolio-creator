@@ -32,9 +32,8 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 
 	r.DB.Debug().Table("users").Count(&totalCount)
 
-	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Take(&users)
-	fmt.Print(result.Error)
-
+	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Find(&users)
+	fmt.Print(users)
 	if limit < *offset {
 		hasPreviousPage = false
 	}

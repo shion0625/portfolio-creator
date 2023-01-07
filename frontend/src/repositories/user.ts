@@ -3,7 +3,7 @@ import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } fro
 import { fetcherSSG } from '~/repositories/server'
 
 export function GetUser(id?: string | string[]) {
-  const { data } = useQuery<GetUserQuery>(GetUserDocument, {
+  const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
     fetchPolicy: 'cache-and-network',
     variables: { id: id },
   })

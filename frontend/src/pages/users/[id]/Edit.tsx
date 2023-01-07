@@ -12,7 +12,7 @@ import { GetUser, GetUserServer, GetUserIdsServer } from '~/repositories/user'
 import { CreateWork, UpdateWork, DeleteWorks } from '~/repositories/work'
 import { UpdateWorkService, CreateWorkService, DeleteWorksService } from '~/services/work'
 
-const MyPageEdit: NextPage<GetUserQuery> = () => {
+const MyPageEdit: NextPage = () => {
   // パスパラメータから値を取得
   const router = useRouter()
   const { id } = router.query
