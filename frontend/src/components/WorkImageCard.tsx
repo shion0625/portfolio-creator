@@ -35,7 +35,7 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
           <CardContent>
             <Typography
               variant='subtitle1'
-              color={`primary.${colorMode.mode}`}
+              color={`text.main`}
               sx={{
                 position: 'absolute',
                 zIndex: 100,
@@ -49,6 +49,7 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
               gutterBottom
               variant='h5'
               component='div'
+              color='text.main'
               sx={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
@@ -60,7 +61,6 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
             </Typography>
             <Typography
               variant='body2'
-              color='text.secondary'
               sx={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
