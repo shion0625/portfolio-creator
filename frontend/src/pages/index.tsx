@@ -6,11 +6,11 @@ import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } fro
 import { useQuery } from '@apollo/client'
 
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
-    fetchPolicy: 'cache-and-network',
-    variables: { id: "clce9hebi0000ss6p88alg7gd" },
-  })
-  console.log(data)
+  // const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
+  //   fetchPolicy: 'cache-and-network',
+  //   variables: { id: "clce9hebi0000ss6p88alg7gd" },
+  // })
+  // console.log(data)
   return (
     <>
       <SignIn />
@@ -21,7 +21,7 @@ const Home: NextPage = () => {
           <a>users</a>
         </Link>
         <br />
-        <Link href='works'>
+        <Link href='/works'>
           <a>works</a>
         </Link>
         <Typography color='success.main' />

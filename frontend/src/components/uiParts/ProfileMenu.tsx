@@ -35,12 +35,12 @@ const ProfileMenu: React.FC<Props> = memo(function profileMenu({ anchorEl, menuI
         </Link>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Link href='users'>
+        <Link href='/users'>
           <a>ユーザ一覧</a>
         </Link>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Link href='works'>
+        <Link href='/works'>
           <a>作品一覧</a>
         </Link>
       </MenuItem>
