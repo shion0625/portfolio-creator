@@ -89,6 +89,7 @@ export type Profile = {
 
 export type Query = {
   user: User;
+  userAuth: User;
   users: UserPagination;
   work?: Maybe<Work>;
   works: WorkPagination;
@@ -96,6 +97,11 @@ export type Query = {
 
 
 export type QueryUserArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryUserAuthArgs = {
   id: Scalars['ID'];
 };
 
