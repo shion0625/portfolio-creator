@@ -42,12 +42,12 @@ const createApolloClientQuery = (ctx: { req: any }) => {
 }
 
 export const initializeApollo = (initialState = null, ctx?: any) => {
-  const _apolloClient = apolloClient ?? createApolloClient(ctx)
+  let _apolloClient = apolloClient ?? createApolloClient(ctx)
 
   // For SSG and SSR always create a new Apollo Client
   if (typeof window === 'undefined') {
-    const _apolloClientQuery = createApolloClientQuery(ctx)
-    return _apolloClientQuery
+    _apolloClient = createApolloClientQuery(ctx)
+    return _apolloClient
   }
 
   // Create the Apollo Client once in the client
