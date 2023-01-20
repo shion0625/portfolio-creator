@@ -1,4 +1,32 @@
 # schema.graphqlsのQueryの内容に従って定義
+
+# フラグメント名        フラグメントを適用するデータ型
+fragment PaginationFragment on PaginationInfo {
+  # 取得するフィールド
+  page
+  hasNextPage
+  count
+  totalCount
+  paginationLength
+  hasPreviousPage
+}
+
+fragment WorkFragment on Work {
+  # 取得するフィールド
+  id
+  title
+  summary
+  image_url
+  duration
+  number_of_people
+  language
+  role
+  url
+  brief_story
+  created_at
+  updated_at
+}
+
 query GetUser($id: ID!) {
   user(id: $id) {
     id
@@ -6,24 +34,27 @@ query GetUser($id: ID!) {
     email
     works{
       pageInfo{
-        page
-        hasNextPage
-        count
-        totalCount
-        paginationLength
-        hasPreviousPage
+        ...PaginationFragment
       }
       nodes{
-        id
-        title
-        summary
-        image_url
-        duration
-        number_of_people
-        language
-        role
-        url
-        brief_story
+      ...WorkFragment
+      }
+    }
+  }
+}
+
+
+query GetUserAuth($id: ID!) {
+  userAuth(id: $id) {
+    id
+    name
+    email
+    works{
+      pageInfo{
+        ...PaginationFragment
+      }
+      nodes{
+      ...WorkFragment
       }
     }
   }
@@ -32,28 +63,14 @@ query GetUser($id: ID!) {
 query GetUsers($limit: Int!, $offset: Int) {
   users(limit: $limit, offset: $offset) {
     pageInfo{
-      page
-      paginationLength
-      hasNextPage
-      hasPreviousPage
-      count
-      totalCount
+      ...PaginationFragment
     }
     nodes{
       id
       name
       works{
         nodes{
-          id
-          title
-          summary
-          image_url
-          duration
-          number_of_people
-          language
-          role
-          url
-          brief_story
+          ...WorkFragment
           user{
             id
             name
@@ -67,12 +84,7 @@ query GetUsers($limit: Int!, $offset: Int) {
 query GetUsersName($limit: Int!, $offset: Int) {
   users(limit: $limit, offset: $offset) {
     pageInfo{
-      page
-      paginationLength
-      hasNextPage
-      hasPreviousPage
-      count
-      totalCount
+      ...PaginationFragment
     }
     nodes{
       id

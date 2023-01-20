@@ -3,12 +3,23 @@ import * as Types from '../../src/models/types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
+export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
+
+export type WorkFragmentFragment = { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any };
+
 export type GetUserQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
 
-export type GetUserQuery = { user: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null }> } | null } };
+export type GetUserQuery = { user: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any }> } | null } };
+
+export type GetUserAuthQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID'];
+}>;
+
+
+export type GetUserAuthQuery = { userAuth: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any }> } | null } };
 
 export type GetUsersQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
@@ -16,7 +27,7 @@ export type GetUsersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetUsersQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name?: string | null, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, user: { id: string, name?: string | null } }> } | null }> } };
+export type GetUsersQuery = { users: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, user: { id: string, name?: string | null } }> } | null }> } };
 
 export type GetUsersNameQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
@@ -24,7 +35,7 @@ export type GetUsersNameQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetUsersNameQuery = { users: { pageInfo: { page: number, paginationLength: number, hasNextPage: boolean, hasPreviousPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, name?: string | null }> } };
+export type GetUsersNameQuery = { users: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null }> } };
 
 export type GetUserIdsQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
@@ -42,7 +53,32 @@ export type LoginMutationVariables = Types.Exact<{
 
 export type LoginMutation = { login: any };
 
-
+export const PaginationFragmentFragmentDoc = gql`
+    fragment PaginationFragment on PaginationInfo {
+  page
+  hasNextPage
+  count
+  totalCount
+  paginationLength
+  hasPreviousPage
+}
+    `;
+export const WorkFragmentFragmentDoc = gql`
+    fragment WorkFragment on Work {
+  id
+  title
+  summary
+  image_url
+  duration
+  number_of_people
+  language
+  role
+  url
+  brief_story
+  created_at
+  updated_at
+}
+    `;
 export const GetUserDocument = gql`
     query GetUser($id: ID!) {
   user(id: $id) {
@@ -51,29 +87,16 @@ export const GetUserDocument = gql`
     email
     works {
       pageInfo {
-        page
-        hasNextPage
-        count
-        totalCount
-        paginationLength
-        hasPreviousPage
+        ...PaginationFragment
       }
       nodes {
-        id
-        title
-        summary
-        image_url
-        duration
-        number_of_people
-        language
-        role
-        url
-        brief_story
+        ...WorkFragment
       }
     }
   }
 }
-    `;
+    ${PaginationFragmentFragmentDoc}
+${WorkFragmentFragmentDoc}`;
 
 /**
  * __useGetUserQuery__
@@ -102,32 +125,64 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const GetUserAuthDocument = gql`
+    query GetUserAuth($id: ID!) {
+  userAuth(id: $id) {
+    id
+    name
+    email
+    works {
+      pageInfo {
+        ...PaginationFragment
+      }
+      nodes {
+        ...WorkFragment
+      }
+    }
+  }
+}
+    ${PaginationFragmentFragmentDoc}
+${WorkFragmentFragmentDoc}`;
+
+/**
+ * __useGetUserAuthQuery__
+ *
+ * To run a query within a React component, call `useGetUserAuthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserAuthQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserAuthQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserAuthQuery(baseOptions: Apollo.QueryHookOptions<GetUserAuthQuery, GetUserAuthQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserAuthQuery, GetUserAuthQueryVariables>(GetUserAuthDocument, options);
+      }
+export function useGetUserAuthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserAuthQuery, GetUserAuthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserAuthQuery, GetUserAuthQueryVariables>(GetUserAuthDocument, options);
+        }
+export type GetUserAuthQueryHookResult = ReturnType<typeof useGetUserAuthQuery>;
+export type GetUserAuthLazyQueryHookResult = ReturnType<typeof useGetUserAuthLazyQuery>;
+export type GetUserAuthQueryResult = Apollo.QueryResult<GetUserAuthQuery, GetUserAuthQueryVariables>;
 export const GetUsersDocument = gql`
     query GetUsers($limit: Int!, $offset: Int) {
   users(limit: $limit, offset: $offset) {
     pageInfo {
-      page
-      paginationLength
-      hasNextPage
-      hasPreviousPage
-      count
-      totalCount
+      ...PaginationFragment
     }
     nodes {
       id
       name
       works {
         nodes {
-          id
-          title
-          summary
-          image_url
-          duration
-          number_of_people
-          language
-          role
-          url
-          brief_story
+          ...WorkFragment
           user {
             id
             name
@@ -137,7 +192,8 @@ export const GetUsersDocument = gql`
     }
   }
 }
-    `;
+    ${PaginationFragmentFragmentDoc}
+${WorkFragmentFragmentDoc}`;
 
 /**
  * __useGetUsersQuery__
@@ -171,12 +227,7 @@ export const GetUsersNameDocument = gql`
     query GetUsersName($limit: Int!, $offset: Int) {
   users(limit: $limit, offset: $offset) {
     pageInfo {
-      page
-      paginationLength
-      hasNextPage
-      hasPreviousPage
-      count
-      totalCount
+      ...PaginationFragment
     }
     nodes {
       id
@@ -184,7 +235,7 @@ export const GetUsersNameDocument = gql`
     }
   }
 }
-    `;
+    ${PaginationFragmentFragmentDoc}`;
 
 /**
  * __useGetUsersNameQuery__
