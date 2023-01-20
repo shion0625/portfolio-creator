@@ -12,6 +12,17 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
 )
 
+// UserAuth is the resolver for the userAuth field.
+func (r *queryResolver) UserAuth(ctx context.Context, id string) (*model.User, error) {
+	var user model.User
+	if err := r.DB.Debug().Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
+		return nil, err
+	}
+	fmt.Println("auth")
+
+	return &user, nil
+}
+
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	var user model.User
