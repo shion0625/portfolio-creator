@@ -28,7 +28,15 @@ const createApolloClient = (ctx: { req: any }) => {
   return new ApolloClient({
     ssrMode: true,
     link: authMiddleware.concat(httpLink),
-    // link: httpLink,
+    cache: new InMemoryCache(),
+  })
+}
+
+//jwt認証が要らない時、SSGの時
+const createApolloClientQuery = (ctx: { req: any }) => {
+  return new ApolloClient({
+    ssrMode: true,
+    link: httpLink,
     cache: new InMemoryCache(),
   })
 }
@@ -38,7 +46,8 @@ export const initializeApollo = (initialState = null, ctx?: any) => {
 
   // For SSG and SSR always create a new Apollo Client
   if (typeof window === 'undefined') {
-    return _apolloClient
+    const _apolloClientQuery = createApolloClientQuery(ctx)
+    return _apolloClientQuery
   }
 
   // Create the Apollo Client once in the client
