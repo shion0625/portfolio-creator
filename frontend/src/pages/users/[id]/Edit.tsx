@@ -12,7 +12,7 @@ import { CreateWork, UpdateWork, DeleteWorks } from '~/repositories/work'
 import { UpdateWorkService, CreateWorkService, DeleteWorksService } from '~/services/work'
 import { CircularProgress } from '@mui/material'
 import { useQuery } from '@apollo/client'
-import { GetUserAuthQuery,GetUserAuthDocument } from '~/models/client'
+import { GetUserAuthQuery, GetUserAuthDocument } from '~/models/client'
 
 
 const MyPageEdit: NextPage = () => {
@@ -23,7 +23,6 @@ const MyPageEdit: NextPage = () => {
   const [count, setCount] = useState(0);
 
   const { data: session, status } = useSession()
-  const [dirtyWorks, setDirtyWorks] = useState<DirtyWork[]>()
   const removeWorkIds = useRef<string[]>([''])
   //データの取得
   const { data, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
@@ -34,7 +33,8 @@ const MyPageEdit: NextPage = () => {
   const updateWork = UpdateWork()
   const deleteWorks = DeleteWorks()
 
-  const OnSubmit = (input: WorkFormInterface) => {
+  const OnSubmit = (input: WorkFormInterface, dirtyWorks?: DirtyWork[]): void => {
+    console.log('dirtyworks')
     console.log(dirtyWorks)
     if (!session) {
       return
@@ -47,26 +47,8 @@ const MyPageEdit: NextPage = () => {
       }
 
       if (work.id && dirtyWorks) {
-        if (dirtyWorks[index]?.languages) {
-          dirtyWorks[index].languages = dirtyWorks[index].languages?.filter(Boolean)
-        }
-        if (dirtyWorks[index]?.urls) {
-          dirtyWorks[index].urls = dirtyWorks[index].urls?.filter(Boolean)
-        }
-
-        if (dirtyWorks[index].title
-          || dirtyWorks[index].summary
-          || dirtyWorks[index].image_url
-          || dirtyWorks[index].duration
-          || dirtyWorks[index].number_of_people
-          || dirtyWorks[index].languages?.length
-          || dirtyWorks[index].role
-          || dirtyWorks[index].urls?.length
-          || dirtyWorks[index].brief_story
-          ) {
-          console.log(dirtyWorks[index].languages)
+        if (dirtyWorks[index]) {
           console.log('update' + index)
-          console.log(dirtyWorks[index])
           UpdateWorkService(session, work, updateWork)
         }
 
@@ -90,7 +72,6 @@ const MyPageEdit: NextPage = () => {
             <WorkForms
               onSubmit={OnSubmit}
               user={data?.userAuth}
-              setDirtyWorks={setDirtyWorks}
               removeWorkIds={removeWorkIds.current}
             />
           ) : (

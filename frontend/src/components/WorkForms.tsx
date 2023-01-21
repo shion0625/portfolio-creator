@@ -1,22 +1,21 @@
 import { Add as AddIcon } from '@mui/icons-material'
 // 利用したい MUI コンポーネントを import
-import { Box, Button, Container } from '@mui/material'
+import { Box, Button, Container, Stack } from '@mui/material'
 import Grid from '@mui/material/Grid'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 // 利用したい React Hook Form のフックをimport
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import ImageCard from '~/components/uiParts/ImageCard'
 import { WorkFormContext } from '~/context/workForm'
 import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
 import { GetUserQuery } from '~/models/client'
 
 type Props = GetUserQuery & {
-  onSubmit: (data: WorkFormInterface) => void
-  setDirtyWorks: (data?: DirtyWork[]) => void
+  onSubmit: (data: WorkFormInterface, dirtyWorks?: DirtyWork[]) => void
   removeWorkIds: string[]
 }
 
-export const WorkForms: React.FC<Props> = ({ onSubmit, user, setDirtyWorks, removeWorkIds }): JSX.Element => {
+export const WorkForms: React.FC<Props> = ({ onSubmit, user, removeWorkIds }): JSX.Element => {
   //userオブジェクトのデータの複製
   const userCopy = Object.assign({}, JSON.parse(JSON.stringify(user)))
   userCopy.works?.nodes.forEach((workItem: any) => {
@@ -38,7 +37,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, setDirtyWorks, remo
 
     // errors オブジェクトには、各 input のフォームのエラーまたはエラーメッセージが含まれる
     // バリデーションとエラーメッセージで登録するとエラーメッセージが返される
-    formState: { touchedFields, dirtyFields, errors },
+    formState: { touchedFields, errors },
   } = useForm<WorkFormInterface>({
     defaultValues: {
       works: userCopy.works?.nodes,
@@ -47,11 +46,6 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, setDirtyWorks, remo
     // blur イベントからバリデーションがトリガーされる
     mode: 'onBlur',
   })
-  console.log(touchedFields)
-
-  useEffect(() => {
-    setDirtyWorks(dirtyFields.works)
-  }, [dirtyFields.works]);
 
   // useFieldArray に name と control を渡すことで、MUI の TextField への入力値を取得できるようになる
   const { fields, append, remove } = useFieldArray({
@@ -71,8 +65,25 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, setDirtyWorks, remo
     removeWorkIds.push(workId)
     remove(index)
   }
+
+  const submitWork: SubmitHandler<WorkFormInterface> = (data: WorkFormInterface) => {
+    onSubmit(data, touchedFields.works)
+    // touched状態とdirty状態のリセット
+    // 値,エラーは保持したまま
+    reset({}, {
+      keepErrors: true,
+      keepDirty: false,
+      keepValues: true,
+      keepTouched: false,
+    }
+    )
+  }
+
   return (
     <Container maxWidth='lg' sx={{ pt: 5, bgcolor: 'yellow' }}>
+    <Stack component="form" noValidate
+        onSubmit={handleSubmit(submitWork)}
+      >
       <Grid container spacing={2}>
         {fields.map((field, workIndex) => {
           return (
@@ -100,12 +111,12 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, setDirtyWorks, remo
           color='primary'
           variant='contained'
           disableElevation
-          // submit イベントからバリデーションがトリガーされる
-          onClick={handleSubmit(onSubmit)}
+          type="submit"
         >
           送信
         </Button>
-      </Box>
+        </Box>
+      </Stack>
     </Container>
   )
 }
