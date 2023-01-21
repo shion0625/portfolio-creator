@@ -1,28 +1,18 @@
+import { style } from './style'
 import Backdrop from '@mui/material/Backdrop'
 import Box from '@mui/material/Box'
 import Fade from '@mui/material/Fade'
 import Modal from '@mui/material/Modal'
 import * as React from 'react'
-import WorkItem from '~/components/parts/WorkItem'
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-}
 
 type Props = {
   handleOpen: () => void
   handleClose: () => void
   open: boolean
+  children: React.ReactNode
 }
 
-const TransitionsModal: React.FC<Props> = ({ handleOpen, handleClose, open }) => {
+const TransitionsModal: React.FC<Props> = ({ handleOpen, handleClose, open, children }) => {
   return (
     <div>
       <Modal
@@ -37,9 +27,7 @@ const TransitionsModal: React.FC<Props> = ({ handleOpen, handleClose, open }) =>
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>
-            <WorkItem />
-          </Box>
+          <Box sx={style}>{children}</Box>
         </Fade>
       </Modal>
     </div>

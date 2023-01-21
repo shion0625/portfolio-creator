@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
 import BasicModal from '~/components/parts/Modal'
+import WorkFormItem from '~/components/parts/WorkFormItem'
 import { WorkFormInterface } from '~/models/WorkForm'
 
 type Props = {
@@ -16,11 +17,13 @@ type Props = {
   control: Control<WorkFormInterface>
 }
 
-const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control }) => {
+const ImageCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control }): JSX.Element => {
+  //react-hook-formで特定のworkのtitleとsummaryを監視
   const watchFields = useWatch({
     control,
     name: [`works.${workIndex}.title`, `works.${workIndex}.summary`],
   })
+  //workのidを取得している
   const getWorkId = getValues(`works.${workIndex}.id`)
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -58,7 +61,9 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues
         <Button size='small' color='primary'>
           画像の追加
         </Button>
-        <BasicModal buttonText='編集' />
+        <BasicModal buttonText='編集'>
+          <WorkFormItem />
+        </BasicModal>
         {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
         <IconButton aria-label='delete' onClick={() => removeWork(workIndex, getWorkId)}>
           <DeleteOutlineIcon />
@@ -68,4 +73,4 @@ const MultiActionAreaCard: React.FC<Props> = ({ workIndex, removeWork, getValues
   )
 }
 
-export default MultiActionAreaCard
+export default ImageCard

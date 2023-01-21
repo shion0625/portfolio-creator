@@ -1,22 +1,10 @@
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
-import { Box, TextField, IconButton, Paper, Chip } from '@mui/material'
+import { Item } from './style'
+import { Box, Chip } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import { styled } from '@mui/material/styles'
-import Link from 'next/link'
 import React, { useContext } from 'react'
 import { Color } from '~/constant/constant'
 import { WorkContext } from '~/context/WorkView'
-
-const Item: any = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  width: 500,
-  height: 500,
-  overflowY: 'auto',
-}))
 
 const WorkItem: React.FC = () => {
   const { work } = useContext(WorkContext)
@@ -52,15 +40,13 @@ const WorkItem: React.FC = () => {
 
         <Typography paragraph>
           {urls.length != 0 &&
-            urls.map((url, i) => {
-              return (
-                <Box key={url + i}>
-                  <a href={url} target='_blank' rel='noopener noreferrer'>
-                    {url}
-                  </a>
-                </Box>
-              )
-            })}
+            urls.map((url, i) => (
+              <Box key={url + i}>
+                <a href={url} target='_blank' rel='noopener noreferrer'>
+                  {url}
+                </a>
+              </Box>
+            ))}
         </Typography>
       </>
     </Item>

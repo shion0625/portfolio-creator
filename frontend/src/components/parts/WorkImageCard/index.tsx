@@ -5,9 +5,9 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
-import React, { useContext } from 'react'
-import TransitionsModal from '~/components/parts/ModalWork'
-import ColorModeContext from '~/context/ColorModeContext'
+import React from 'react'
+import TransitionsModal from '~/components/parts/TransitionsModal'
+import WorkItem from '~/components/templates/WorkItem'
 import { WorkContext } from '~/context/WorkView'
 import { Work } from '~/models/types'
 
@@ -19,7 +19,6 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const colorMode = useContext(ColorModeContext)
 
   return (
     <>
@@ -82,7 +81,9 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
         </CardActions>
       </Card>
       <WorkContext.Provider value={{ work }}>
-        <TransitionsModal handleOpen={handleOpen} handleClose={handleClose} open={open} />
+        <TransitionsModal handleOpen={handleOpen} handleClose={handleClose} open={open}>
+          <WorkItem />
+        </TransitionsModal>
       </WorkContext.Provider>
     </>
   )

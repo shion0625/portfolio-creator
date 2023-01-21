@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid'
 import React, { useEffect, useState } from 'react'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
-import ImageCard from '~/components/parts/ImageCard'
+import ImageCard from '~/components/templates/ImageCard'
 import { WorkFormContext } from '~/context/workForm'
 import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
 import { GetUserQuery } from '~/models/client'

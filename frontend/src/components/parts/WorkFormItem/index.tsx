@@ -1,21 +1,10 @@
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
+import { Item } from './style'
 import { ErrorMessage } from '@hookform/error-message'
-import { Box, TextField, IconButton, Paper } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { Box, TextField } from '@mui/material'
 import React, { useContext } from 'react'
-import NestedFieldArray from '~/components/parts/NestedFieldArray'
+import NestedFieldArray from '~/components/templates/NestedFieldList'
 import { WorkFormContext } from '~/context/workForm'
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  width: 500,
-  height: 500,
-  overflowY: 'auto',
-}))
 
 const WorkFormItem: React.FC = () => {
   const { register, control, workIndex, errors } = useContext(WorkFormContext)
