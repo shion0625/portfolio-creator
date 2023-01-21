@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid'
 import React from 'react'
-import { WorkImageCard } from '~/components/WorkImageCard'
+import { WorkImageCard } from '~/components/parts/WorkImageCard'
 import { WorkPagination, Work } from '~/models/types'
 
 type Props = {

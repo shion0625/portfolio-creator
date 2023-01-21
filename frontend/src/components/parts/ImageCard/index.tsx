@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
-import BasicModal from '~/components/uiParts/modal'
+import BasicModal from '~/components/parts/Modal'
 import { WorkFormInterface } from '~/models/WorkForm'
 
 type Props = {

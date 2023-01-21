@@ -33,23 +33,23 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
       text: {
         ...(mode === 'light'
           ? {
-            primary: '#000',
-            main: '#42a5f5',
-            secondary: '#ba68c8',
-            error: '#ef5350',
-            warning: '#ff9800',
-            info: '#03a9f4',
-            success: '4caf50'
-          }
+              primary: '#000',
+              main: '#42a5f5',
+              secondary: '#ba68c8',
+              error: '#ef5350',
+              warning: '#ff9800',
+              info: '#03a9f4',
+              success: '4caf50',
+            }
           : {
-            primary: '#fff',
-            main: '#1565c0',
-            secondary: '#7b1fa2',
-            error: '#c62828',
-            warning: '#e65100',
-            info: '#01579b',
-            success: '1b5e20'
-          }),
+              primary: '#fff',
+              main: '#1565c0',
+              secondary: '#7b1fa2',
+              error: '#c62828',
+              warning: '#e65100',
+              info: '#01579b',
+              success: '1b5e20',
+            }),
       },
     },
   })

@@ -18,6 +18,7 @@ const NestedFieldArray: React.FC<Props> = ({ nestIndex, control, register, choic
     control,
     name: `works[${nestIndex}].${choiceItem}`,
   })
+
   const addChoiceItem = () => {
     append('')
   }

@@ -6,12 +6,12 @@ import {
   InvertColors as InvertColorsIcon,
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
-import React, { useContext, useState, MouseEvent } from 'react'
-import ProfileMenu from '~/components/uiParts/ProfileMenu'
-import SearchArea from '~/components/uiParts/SearchArea'
-import MobileMenu from '~/components/uiParts/mobile/MobileMenu'
-import ColorModeContext from '~/context/ColorModeContext'
 import Link from 'next/link'
+import React, { useContext, useState, MouseEvent } from 'react'
+import MobileMenu from '~/components/parts/MobileMenu'
+import ProfileMenu from '~/components/parts/ProfileMenu'
+import SearchArea from '~/components/parts/SearchArea'
+import ColorModeContext from '~/context/ColorModeContext'
 
 export default function PrimarySearchAppBar() {
   const menuId = 'profile-menu'

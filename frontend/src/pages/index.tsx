@@ -1,9 +1,9 @@
+import { useQuery } from '@apollo/client'
 import Typography from '@mui/material/Typography'
 import type { NextPage } from 'next'
 import Link from 'next/link'
-import SignIn from '~/components/SignIn'
+import SignIn from '~/components/templates/SignIn'
 import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } from '~/models/client'
-import { useQuery } from '@apollo/client'
 
 const Home: NextPage = () => {
   // const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {

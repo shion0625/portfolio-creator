@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Fade from '@mui/material/Fade'
 import Modal from '@mui/material/Modal'
 import * as React from 'react'
-import WorkItem from '~/components/uiParts/WorkItem'
+import WorkItem from '~/components/parts/WorkItem'
 
 const style = {
   position: 'absolute' as 'absolute',

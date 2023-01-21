@@ -4,7 +4,7 @@ import { Box } from '@mui/material'
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import PrimarySearchAppBar from '~/components/NavBar'
+import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { GetUserQuery } from '~/models/client'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
 
