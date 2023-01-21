@@ -30,7 +30,7 @@ const ProfileMenu: React.FC<Props> = memo(function profileMenu({ anchorEl, menuI
       onClose={handleMenuClose}
     >
       <MenuContent menuName='ホーム' href='/' onClick={handleMenuClose} />
-      <MenuContent menuName='ユーザ一覧' href='/user' onClick={handleMenuClose} />
+      <MenuContent menuName='ユーザ一覧' href='/users' onClick={handleMenuClose} />
       <MenuContent menuName='作品一覧' href='/works' onClick={handleMenuClose} />
 
       {session?.user?.id && (
