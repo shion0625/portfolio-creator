@@ -1,9 +1,10 @@
 package dataloader
 
-import(
+import (
 	"time"
+
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
-  "gorm.io/gorm"
+	"gorm.io/gorm"
 )
 
 func UsersByIDs(db *gorm.DB) *UserLoader{
@@ -14,7 +15,18 @@ func UsersByIDs(db *gorm.DB) *UserLoader{
 			users := make([]*model.User, len(ids))
 			errors := make([]error, len(ids))
 
-			db.Debug().Table("users").Where("id IN ?", ids).Find(&users)
+			var usersTemp []*model.User
+
+			db.Debug().Table("users").Where("id IN ?", ids).Find(&usersTemp)
+
+			userById := map[string]*model.User{}
+				for _, user := range usersTemp {
+						userById[user.ID] = user
+				}
+
+				for i, id := range ids {
+						users[i] = userById[id]
+				}
 
 			// 引数のidsに対応する順番の配列で返す。
 			return users, errors
@@ -30,11 +42,11 @@ func WorksByIDs(db *gorm.DB) *WorkLoader{
 		Fetch: func(ids []string) ([][]*model.Work, []error) {
 			works := make([][]*model.Work, len(ids))
 			errors := make([]error, len(ids))
-			var workTemp []*model.Work
-			db.Debug().Where("user_id IN ?", ids).Find(&workTemp)
+			var worksTemp []*model.Work
+			db.Debug().Where("user_id IN ?", ids).Find(&worksTemp)
 
 			workByUserId := map[string][]*model.Work{}
-				for _, work := range workTemp {
+				for _, work := range worksTemp {
 						workByUserId[work.UserID] = append(workByUserId[work.UserID], work)
 				}
 

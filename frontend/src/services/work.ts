@@ -62,9 +62,8 @@ export function DeleteWorksService(session: Session, id: string[], deleteWorks: 
   if (!session.user) {
     return false
   }
-  id = id.filter(function (workId: string) {
-    return workId != ''
-  })
+  id = id.filter(Boolean)
+
   deleteWorks({
     variables: { id: id },
   })

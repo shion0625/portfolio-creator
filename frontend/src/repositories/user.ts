@@ -1,14 +1,31 @@
 import { useQuery } from '@apollo/client'
-import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } from '~/models/client'
+import { GetUserQuery, GetUserAuthQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument, GetUserAuthDocument } from '~/models/client'
 import { fetcherSSG } from '~/repositories/server'
 
+type UserWorksReturn = {
+  data?: any
+  loading?: any
+  error?: any
+}
+
 export function GetUser(id?: string | string[]) {
-  const { data } = useQuery<GetUserQuery>(GetUserDocument, {
+  const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
     fetchPolicy: 'cache-and-network',
     variables: { id: id },
   })
   return data?.user
 }
+
+
+export function GetUserAuth(id?: string | string[]) {
+  const { data, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
+    variables: { id: id },
+  })
+
+  console.log('auth')
+  return data?.userAuth
+}
+
 
 export async function GetUserServer(id: string): Promise<GetUserQuery> {
   const sdk = await fetcherSSG()

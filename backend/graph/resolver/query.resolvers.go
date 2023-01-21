@@ -5,16 +5,31 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 	"math"
 
 	"github.com/shion0625/portfolio-creater/backend/graph/generated"
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
 )
 
+// UserAuth is the resolver for the userAuth field.
+func (r *queryResolver) UserAuth(ctx context.Context, id string) (*model.User, error) {
+	var user model.User
+	if err := r.DB.Debug().Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
+		return nil, err
+	}
+	fmt.Println("auth")
+
+	return &user, nil
+}
+
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	user := model.User{ID: id}
-	r.DB.Debug().First(&user)
+	var user model.User
+	if err := r.DB.Debug().Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
+		return nil, err
+	}
+
 	return &user, nil
 }
 
@@ -24,12 +39,12 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 	hasNextPage := true
 	hasPreviousPage := true
 
-	users := []*model.User{}
+	var users []*model.User
 
-	r.DB.Table("users").Count(&totalCount)
+	r.DB.Debug().Table("users").Count(&totalCount)
 
 	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Find(&users)
-
+	fmt.Print(users)
 	if limit < *offset {
 		hasPreviousPage = false
 	}

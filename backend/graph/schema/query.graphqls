@@ -2,6 +2,7 @@
 
 ###  Query(read系)
 type Query {
+  userAuth(id: ID!): User! @auth
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
