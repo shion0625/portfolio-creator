@@ -4,6 +4,7 @@ import type { NextPage } from 'next'
 import Link from 'next/link'
 import SignIn from '~/components/templates/SignIn'
 import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } from '~/models/client'
+import NavBar from '~/components/templates/NavBar'
 
 const Home: NextPage = () => {
   // const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
@@ -13,6 +14,7 @@ const Home: NextPage = () => {
   // console.log(data)
   return (
     <>
+      <NavBar />
       <SignIn />
       <div style={{ margin: '0 auto', width: '1000px' }}>
         {/* {data?.user.id} */}

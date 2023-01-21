@@ -3,7 +3,7 @@ import { GetStaticProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
-import PrimarySearchAppBar from '~/components/templates/NavBar'
+import NavBar from '~/components/templates/NavBar'
 import { UserPagination, User } from '~/models/types'
 import { GetUsersNameServer } from '~/repositories/user'
 
@@ -14,7 +14,7 @@ type Props = {
 const Users: NextPage<Props> = ({ users }) => {
   return (
     <>
-      <PrimarySearchAppBar />
+      <NavBar />
       <Box component='main' sx={{ m: 2 }}>
         <p>ユーザの一覧</p>
         {users?.nodes.map((user: User) => {

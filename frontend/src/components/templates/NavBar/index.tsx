@@ -13,7 +13,7 @@ import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
 import ColorModeContext from '~/context/ColorModeContext'
 
-export default function PrimarySearchAppBar() {
+export default function NavBar() {
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 

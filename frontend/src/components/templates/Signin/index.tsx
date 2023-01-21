@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client'
 import type { NextPage } from 'next'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import React, { useCallback, useEffect } from 'react'
-import { setCookieToken, destroyCookieToken, printCookie } from '~/libs/nookies/setCookie'
+import { setCookieToken, destroyCookieToken } from '~/libs/nookies/setCookie'
 import { LoginDocument } from '~/models/client'
 import { LoginMutation } from '~/models/client'
 
@@ -19,10 +19,9 @@ const SignIn: NextPage = () => {
   }
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       if (status == 'authenticated' && session && session.user && session.user.email) {
         getJetToken(session.user.id, session.user.email)
-        console.log('hi')
       }
     })()
   }, [status])
