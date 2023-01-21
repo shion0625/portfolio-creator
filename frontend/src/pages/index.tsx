@@ -1,10 +1,11 @@
 import { useQuery } from '@apollo/client'
-import Typography from '@mui/material/Typography'
+import { Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import Link from 'next/link'
+import MuiLink from '~/components/parts/MuiLink'
+import NavBar from '~/components/templates/NavBar'
 import SignIn from '~/components/templates/SignIn'
 import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } from '~/models/client'
-import NavBar from '~/components/templates/NavBar'
 
 const Home: NextPage = () => {
   // const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
@@ -19,14 +20,16 @@ const Home: NextPage = () => {
       <div style={{ margin: '0 auto', width: '1000px' }}>
         {/* {data?.user.id} */}
         <br />
-        <Link href='/users'>
-          <a>users</a>
+        <Link href='/users' passHref>
+          <MuiLink>ユーザ一覧</MuiLink>
         </Link>
         <br />
-        <Link href='/works'>
-          <a>works</a>
+        <Link href='/works' passHref>
+          <MuiLink>ポートフォリオ一覧</MuiLink>
         </Link>
-        <Typography color='success.main' />
+        <Link href='/works' passHref>
+          <a href='/works'> works</a>
+        </Link>
       </div>
     </>
   )

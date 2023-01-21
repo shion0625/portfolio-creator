@@ -4,6 +4,7 @@ import { Box } from '@mui/material'
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import MuiLink from '~/components/parts/MuiLink'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { GetUserQuery } from '~/models/client'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
@@ -21,8 +22,8 @@ const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
         <p>{`ID: ${user.id}`}</p>
         <p>{user.name}</p>
         {session?.user?.id == user.id && <Link href={`/users/${user.id}/Edit`}>編集</Link>}
-        <Link href='/users'>
-          <a>Back to users</a>
+        <Link href='/users' passHref>
+          <MuiLink>ユーザ一覧に戻る</MuiLink>
         </Link>
       </Box>
     </>

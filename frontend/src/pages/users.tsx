@@ -3,6 +3,7 @@ import { GetStaticProps, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
+import MuiLink from '~/components/parts/MuiLink'
 import NavBar from '~/components/templates/NavBar'
 import { UserPagination, User } from '~/models/types'
 import { GetUsersNameServer } from '~/repositories/user'
@@ -20,9 +21,9 @@ const Users: NextPage<Props> = ({ users }) => {
         {users?.nodes.map((user: User) => {
           return (
             <div key={user.id}>
-              <Link href={`/users/${user.id}`}>
+              <Link href={`/users/${user.id}`} passHref>
                 <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
-                  <a>{user.name}</a>
+                  <MuiLink>{user.name ?? `名無しさん`}</MuiLink>
                 </Paper>
               </Link>
             </div>

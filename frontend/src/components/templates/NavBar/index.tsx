@@ -9,6 +9,7 @@ import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/materi
 import Link from 'next/link'
 import React, { useContext, useState, MouseEvent } from 'react'
 import MobileMenu from '~/components/parts/MobileMenu'
+import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
 import ColorModeContext from '~/context/ColorModeContext'
@@ -56,8 +57,8 @@ export default function NavBar() {
             <MenuIcon />
           </IconButton> */}
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <Link href='/'>
-              <a>portfolio</a>
+            <Link href='/' passHref>
+              <MuiLink>portfolio</MuiLink>
             </Link>
           </Typography>
           <SearchArea />
