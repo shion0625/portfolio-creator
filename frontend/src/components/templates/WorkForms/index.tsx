@@ -8,17 +8,17 @@ import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import ImageCard from '~/components/templates/ImageCard'
 import { WorkFormContext } from '~/context/workForm'
 import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
-import { GetUserQuery } from '~/models/client'
+import { GetUserAuthQuery } from '~/models/client'
 
-type Props = GetUserQuery & {
+type Props = GetUserAuthQuery & {
   onSubmit: (data: WorkFormInterface, dirtyWorks?: DirtyWork[]) => void
   removeWorkIds: string[]
 }
 
-export const WorkForms: React.FC<Props> = ({ onSubmit, user, removeWorkIds }): JSX.Element => {
-  //userオブジェクトのデータの複製
-  const userCopy = Object.assign({}, JSON.parse(JSON.stringify(user)))
-  userCopy.works?.nodes.forEach((workItem: any) => {
+export const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }): JSX.Element => {
+  //userAuthオブジェクトのデータの複製
+  const userAuthCopy = Object.assign({}, JSON.parse(JSON.stringify(userAuth)))
+  userAuthCopy.works?.nodes.forEach((workItem: any) => {
     workItem.languages = JSON.parse(workItem?.language)
     workItem.urls = JSON.parse(workItem?.url)
   })
@@ -40,7 +40,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, user, removeWorkIds }): J
     formState: { touchedFields, errors },
   } = useForm<WorkFormInterface>({
     defaultValues: {
-      works: userCopy.works?.nodes,
+      works: userAuthCopy.works?.nodes,
     },
 
     // blur イベントからバリデーションがトリガーされる
