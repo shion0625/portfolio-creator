@@ -1,7 +1,7 @@
 import { Menu } from '@mui/material'
 import { useSession } from 'next-auth/react'
 import React, { memo } from 'react'
-import MenuContent from '~/components/parts/MenuContent'
+import LinkMenuItem from '~/components/parts/LinkMenuItem'
 
 type Props = {
   anchorEl: null | HTMLElement //押されたボタンの位置を取得
@@ -29,12 +29,12 @@ const ProfileMenu: React.FC<Props> = memo(function profileMenu({ anchorEl, menuI
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuContent menuName='ホーム' href='/' onClick={handleMenuClose} />
-      <MenuContent menuName='ユーザ一覧' href='/users' onClick={handleMenuClose} />
-      <MenuContent menuName='作品一覧' href='/works' onClick={handleMenuClose} />
+      <LinkMenuItem menuName='ホーム' href='/' onClick={handleMenuClose} />
+      <LinkMenuItem menuName='ユーザ一覧' href='/users' onClick={handleMenuClose} />
+      <LinkMenuItem menuName='作品一覧' href='/works' onClick={handleMenuClose} />
 
       {session?.user?.id && (
-        <MenuContent
+        <LinkMenuItem
           menuName='ポートフォリオ編集'
           href={`/users/${session?.user?.id}/Edit`}
           onClick={handleMenuClose}
@@ -42,9 +42,9 @@ const ProfileMenu: React.FC<Props> = memo(function profileMenu({ anchorEl, menuI
       )}
 
       {session?.user?.id ? (
-        <MenuContent menuName='ログアウト' href={`/users/${session?.user?.id}/Edit`} onClick={handleMenuClose} />
+        <LinkMenuItem menuName='ログアウト' href={`/users/${session?.user?.id}/Edit`} onClick={handleMenuClose} />
       ) : (
-        <MenuContent menuName='ログイン' href={`/users/${session?.user?.id}/Edit`} onClick={handleMenuClose} />
+        <LinkMenuItem menuName='ログイン' href={`/users/${session?.user?.id}/Edit`} onClick={handleMenuClose} />
       )}
     </Menu>
   )
