@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import { Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import MuiLink from '~/components/parts/MuiLink'
