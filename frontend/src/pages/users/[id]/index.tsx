@@ -8,11 +8,17 @@ import UsersIDView from '~/components/views/UsersID'
 
 const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()
+  //ユーザが見つかっていない
   if (!user) {
     return <CircularProgress color='inherit' />
   }
+  // sessionが存在していない
+  if (!session) {
+    return <CircularProgress color='inherit' />
+  }
+
   return (
-    <UsersIDView user={ user } session = {session} />
+    <UsersIDView user={ user } session={session} />
   )
 }
 export default UserDetail

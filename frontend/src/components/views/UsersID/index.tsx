@@ -4,9 +4,10 @@ import Link from 'next/link'
 import MuiLink from '~/components/parts/MuiLink'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { GetUserQuery } from '~/models/client'
+import { Session } from 'next-auth'
 
 type UserDetailProps = GetUserQuery & {
-  session: any
+  session: Session
 }
 
 const UsersIDView: React.FC<UserDetailProps> = ({ user, session }) => {
