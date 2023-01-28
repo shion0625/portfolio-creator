@@ -2,7 +2,7 @@ import { Session } from 'next-auth'
 import { WorkFormI } from '~/models/WorkForm'
 import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
 
-export function CreateWorkService(session: Session, work: WorkFormI, createWork: any): boolean {
+export const createWorkDB = (session: Session, work: WorkFormI, createWork: any):Promise<void> => new Promise((resolve, reject)=> {
   if (!session.user) {
     return false
   }
@@ -28,10 +28,10 @@ export function CreateWorkService(session: Session, work: WorkFormI, createWork:
   createWork({
     variables: { input: createWorkInput },
   })
-  return true
-}
+  resolve()
+})
 
-export function UpdateWorkService(session: Session, work: WorkFormI, updateWork: any): boolean {
+export const updateWorkDB = (session: Session, work: WorkFormI, updateWork: any): Promise<void> => new Promise((resolve, reject) => {
   if (!session.user) {
     return false
   }
@@ -55,16 +55,17 @@ export function UpdateWorkService(session: Session, work: WorkFormI, updateWork:
     url: work.url,
   }
   updateWork({ variables: { input: updateWorkInput } })
-  return true
-}
+  resolve()
+})
 
-export function DeleteWorksService(session: Session, id: string[], deleteWorks: any) {
+export const deleteWorksDB = (session: Session, ids: string[], deleteWorks: any): Promise<void> => new Promise((resolve, reject) => {
   if (!session.user) {
     return false
   }
-  id = id.filter(Boolean)
+  ids = ids.filter(Boolean)
 
   deleteWorks({
-    variables: { id: id },
+    variables: { id: ids },
   })
-}
+  resolve()
+})
