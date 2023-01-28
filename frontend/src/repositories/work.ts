@@ -1,7 +1,4 @@
-import {
-  GetWorksQuery,
-
-} from '~/models/client'
+import { GetWorksQuery } from '~/models/client'
 import { fetcherSSG } from '~/repositories/server'
 
 export async function GetWorksServer(): Promise<GetWorksQuery> {

@@ -2,9 +2,9 @@ import { CircularProgress } from '@mui/material'
 // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
+import UsersIDView from '~/components/views/UsersID'
 import { GetUserQuery } from '~/models/client'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
-import UsersIDView from '~/components/views/UsersID'
 
 const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()
@@ -17,9 +17,7 @@ const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
     return <CircularProgress color='inherit' />
   }
 
-  return (
-    <UsersIDView user={ user } session={session} />
-  )
+  return <UsersIDView user={user} session={session} />
 }
 export default UserDetail
 

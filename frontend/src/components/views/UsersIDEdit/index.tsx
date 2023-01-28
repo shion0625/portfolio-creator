@@ -1,21 +1,21 @@
+import { resultCreateWork, resultUpdateWork, resultDeleteWork } from './hook'
 import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
+import lo from 'lodash'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
-import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
-import { useCreateWork, useUpdateWork, useDeleteWorks } from '~/hooks/Work/mutation'
-import { resultCreateWork, resultUpdateWork, resultDeleteWork } from './hook'
 import { GetUserAuth } from '~/hooks/User/query'
-import lo from 'lodash';
+import { useCreateWork, useUpdateWork, useDeleteWorks } from '~/hooks/Work/mutation'
+import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
 
 const UserIDEditView: React.FC = () => {
   // パスパラメータから値を取得
   const router = useRouter()
   const { id } = router.query
-  if (!id || Array.isArray(id)) return (<div>error</div>)
+  if (!id || Array.isArray(id)) return <div>error</div>
 
   const [count, setCount] = useState(0)
 
@@ -33,18 +33,20 @@ const UserIDEditView: React.FC = () => {
     if (!session || !session.user || session.user.id != id) {
       return
     }
-    let chunkedIndex = 0;
+    let chunkedIndex = 0
     for (const chunked of lo.chunk(input.works, 3)) {
-      await Promise.all(chunked.map((work: WorkFormI, index: number) => {
-      //新規作成
-        if (!work.id) {
-          resultCreateWork(session, work, createWork)
-        }
-        //更新
-        if (work.id && dirtyWorks && dirtyWorks[chunkedIndex + index]) {
+      await Promise.all(
+        chunked.map((work: WorkFormI, index: number) => {
+          //新規作成
+          if (!work.id) {
+            resultCreateWork(session, work, createWork)
+          }
+          //更新
+          if (work.id && dirtyWorks && dirtyWorks[chunkedIndex + index]) {
             resultUpdateWork(session, work, updateWork)
-        }
-      }))
+          }
+        }),
+      )
     }
 
     //初期状態で空の文字列が配列に入っているので1より大きかったらremoveメソッドを呼び出す。
@@ -54,9 +56,9 @@ const UserIDEditView: React.FC = () => {
     setCount(count + 1)
   }
 
-  if (userData === 'error') return (<div>error</div>)
-  if (userData === 'dataNotFound') return (<div>dataNotFound</div>)
-  if (userData === 'loading') return (<div>loading</div>)
+  if (userData === 'error') return <div>error</div>
+  if (userData === 'dataNotFound') return <div>dataNotFound</div>
+  if (userData === 'loading') return <div>loading</div>
 
   return (
     <>

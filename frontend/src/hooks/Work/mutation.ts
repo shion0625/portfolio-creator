@@ -25,7 +25,7 @@ export function useDeleteWorks() {
 
 // create work mutation
 export function useCreateWork(id: string) {
-  const [CreateWork, {loading, error}] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
+  const [CreateWork, { loading, error }] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
     // ミューテーション後に実行される処理
     update(cache, { data }) {
       const newWork = data?.createWork // ミューテーションのレスポンス

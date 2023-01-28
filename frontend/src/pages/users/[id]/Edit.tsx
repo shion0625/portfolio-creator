@@ -1,14 +1,11 @@
 import type { NextPage } from 'next'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import React from 'react'
+import UserIDEditView from '~/components/views/UsersIDEdit'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
 
-import UserIDEditView from '~/components/views/UsersIDEdit'
-
 const UserIDEdit: NextPage = () => {
-  return (
-  <UserIDEditView />
-  )
+  return <UserIDEditView />
 }
 
 export default UserIDEdit

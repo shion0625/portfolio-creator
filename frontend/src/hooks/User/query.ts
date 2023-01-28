@@ -10,6 +10,6 @@ export const GetUserAuth = (id: string) => {
   if (!data) return 'dataNotFound'
 
   return {
-    userAuth: data.userAuth
+    userAuth: data.userAuth,
   }
 }
