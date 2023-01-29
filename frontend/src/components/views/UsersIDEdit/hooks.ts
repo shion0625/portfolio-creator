@@ -2,7 +2,7 @@ import { Session } from 'next-auth'
 import { WorkFormI } from '~/models/WorkForm'
 import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
 
-export const createWorkDB = (session: Session, work: WorkFormI, createWork: any): Promise<void> =>
+const createWorkDB = (session: Session, work: WorkFormI, createWork: any): Promise<void> =>
   new Promise((resolve, reject) => {
     if (!session.user) {
       return false
@@ -32,7 +32,7 @@ export const createWorkDB = (session: Session, work: WorkFormI, createWork: any)
     resolve()
   })
 
-export const updateWorkDB = (session: Session, work: WorkFormI, updateWork: any): Promise<void> =>
+const updateWorkDB = (session: Session, work: WorkFormI, updateWork: any): Promise<void> =>
   new Promise((resolve, reject) => {
     if (!session.user) {
       return false
@@ -60,7 +60,7 @@ export const updateWorkDB = (session: Session, work: WorkFormI, updateWork: any)
     resolve()
   })
 
-export const deleteWorksDB = (session: Session, ids: string[], deleteWorks: any): Promise<void> =>
+const deleteWorksDB = (session: Session, ids: string[], deleteWorks: any): Promise<void> =>
   new Promise((resolve, reject) => {
     if (!session.user) {
       return false
@@ -72,3 +72,18 @@ export const deleteWorksDB = (session: Session, ids: string[], deleteWorks: any)
     })
     resolve()
   })
+
+export const resultCreateWork = async (session: Session, work: WorkFormI, createWork: any): Promise<void> => {
+  await createWorkDB(session, work, createWork)
+  return
+}
+
+export const resultUpdateWork = async (session: Session, work: WorkFormI, updateWork: any): Promise<void> => {
+  await updateWorkDB(session, work, updateWork)
+  return
+}
+
+export const resultDeleteWork = async (session: Session, ids: string[], deleteWorks: any): Promise<void> => {
+  await deleteWorksDB(session, ids, deleteWorks)
+  return
+}

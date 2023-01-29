@@ -1,11 +1,26 @@
 import type { NextPage } from 'next'
 import { GetStaticProps, GetStaticPaths } from 'next'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import React from 'react'
 import UserIDEditView from '~/components/views/UsersIDEdit'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
 
 const UserIDEdit: NextPage = () => {
-  return <UserIDEditView />
+  const router = useRouter()
+  const { data: session, status } = useSession()
+
+  // パスパラメータから値を取得
+  const { id } = router.query
+  //idが存在していない場合はエラー
+  if (!id || Array.isArray(id)) {
+    return <div>error</div>
+  }
+  //sessionが存在していない、sessionのIDとrouterのIDが一致していない場合エラー
+  if (!session || !session.user || session.user.id != id) {
+    return <div>error</div>
+  }
+  return <UserIDEditView id={id} session={session} />
 }
 
 export default UserIDEdit

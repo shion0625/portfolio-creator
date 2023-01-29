@@ -1,9 +1,8 @@
-import { resultCreateWork, resultUpdateWork, resultDeleteWork } from './hook'
+import { resultCreateWork, resultUpdateWork, resultDeleteWork } from './hooks'
 import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
 import lo from 'lodash'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import { Session } from 'next-auth'
 import React, { useRef, useState } from 'react'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
@@ -11,15 +10,15 @@ import { GetUserAuth } from '~/hooks/User/query'
 import { useCreateWork, useUpdateWork, useDeleteWorks } from '~/hooks/Work/mutation'
 import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
 
-const UserIDEditView: React.FC = () => {
-  // パスパラメータから値を取得
-  const router = useRouter()
-  const { id } = router.query
-  if (!id || Array.isArray(id)) return <div>error</div>
+type UserIDEditViewProps = {
+  id: string
+  session: Session
+}
 
+const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
+  //onSubmitが行われた際に再描画したい。（データの取得処理を行う）
   const [count, setCount] = useState(0)
 
-  const { data: session, status } = useSession()
   const removeWorkIds = useRef<string[]>([''])
   //データの取得
   const userData = GetUserAuth(id)
@@ -29,10 +28,6 @@ const UserIDEditView: React.FC = () => {
   const [deleteWorks, deleteLoading, deleteError] = useDeleteWorks()
 
   const OnSubmit = async (input: WorkFormInterface, dirtyWorks?: DirtyWork[]) => {
-    //ログインしているユーザとパスのユーザが同じかどうか
-    if (!session || !session.user || session.user.id != id) {
-      return
-    }
     let chunkedIndex = 0
     for (const chunked of lo.chunk(input.works, 3)) {
       await Promise.all(

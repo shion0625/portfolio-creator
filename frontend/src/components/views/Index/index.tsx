@@ -1,17 +1,9 @@
-import { useQuery } from '@apollo/client'
-import type { NextPage } from 'next'
 import Link from 'next/link'
 import MuiLink from '~/components/parts/MuiLink'
 import NavBar from '~/components/templates/NavBar'
 import SignIn from '~/components/templates/SignIn'
-import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery, GetUserDocument } from '~/models/client'
 
 const IndexView: React.FC = () => {
-  // const { data, loading, error } = useQuery<GetUserQuery>(GetUserDocument, {
-  //   fetchPolicy: 'cache-and-network',
-  //   variables: { id: "clce9hebi0000ss6p88alg7gd" },
-  // })
-  // console.log(data)
   return (
     <>
       <NavBar />
