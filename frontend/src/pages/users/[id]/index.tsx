@@ -1,32 +1,23 @@
 import { CircularProgress } from '@mui/material'
-import { Box } from '@mui/material'
 // 一覧ページへリンクするので
 import type { GetStaticProps, GetStaticPaths, NextPage } from 'next'
 import { useSession } from 'next-auth/react'
-import Link from 'next/link'
-import PrimarySearchAppBar from '~/components/NavBar'
+import UsersIDView from '~/components/views/UsersID'
 import { GetUserQuery } from '~/models/client'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
 
 const UserDetail: NextPage<GetUserQuery> = ({ user }) => {
   const { data: session, status } = useSession()
+  //ユーザが見つかっていない
   if (!user) {
     return <CircularProgress color='inherit' />
   }
-  return (
-    <>
-      <PrimarySearchAppBar />
-      <Box component='main' sx={{ m: 2 }}>
-        <p>User Detail</p>
-        <p>{`ID: ${user.id}`}</p>
-        <p>{user.name}</p>
-        {session?.user?.id == user.id && <Link href={`/users/${user.id}/Edit`}>編集</Link>}
-        <Link href='/users'>
-          <a>Back to users</a>
-        </Link>
-      </Box>
-    </>
-  )
+  // sessionが存在していない
+  if (!session) {
+    return <CircularProgress color='inherit' />
+  }
+
+  return <UsersIDView user={user} session={session} />
 }
 export default UserDetail
 

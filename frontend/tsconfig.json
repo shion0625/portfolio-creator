@@ -25,7 +25,8 @@
       "~/libs/*": ["src/libs/*"],
       "~/utils/*": ["src/utils/*"],
       "~/context/*": ["src/context/*"],
-      "~/constant/*": ["src/constant/*"]
+      "~/constant/*": ["src/constant/*"],
+      "~/hooks/*": ["src/hooks/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
