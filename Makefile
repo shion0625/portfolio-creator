@@ -25,7 +25,7 @@ server:
 	docker compose exec server sh
 
 migrate-user:
-	npx prisma migrate dev
+	docker-compose exec web npx prisma migrate dev
 
 migrate-up:
 	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/db/migrations up
