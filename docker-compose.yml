@@ -9,11 +9,12 @@ services:
     tty: true
     ports:
       - '3000:3000'
+    depends_on:
+      - db
     volumes:
       - ./frontend:/front
     environment:
       - WATCHPACK_POLLING=true
-    command: sh -c "yarn"
 
   server:
     build:

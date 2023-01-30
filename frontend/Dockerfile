@@ -1,3 +1,3 @@
-FROM node:lts-buster-slim
+FROM node:18.12.0-bullseye-slim
 
 WORKDIR /front

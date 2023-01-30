@@ -24,8 +24,15 @@ sql:
 server:
 	docker compose exec server sh
 
+yarn:
+	docker-compose exec web yarn
+
+yarn-dev:
+	docker-compose exec web yarn dev
+
 migrate-user:
 	docker-compose exec web npx prisma migrate dev
+	docker-compose exec web npx prisma generate
 
 migrate-up:
 	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/db/migrations up
