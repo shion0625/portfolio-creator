@@ -1,4 +1,4 @@
-import { resultCreateWork, resultUpdateWork, resultDeleteWork } from './hooks'
+import { resultCreateWork, resultUpdateWork, resultDeleteWork, useForceUpdate } from './hooks'
 import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
 import lo from 'lodash'
@@ -17,7 +17,7 @@ type UserIDEditViewProps = {
 
 const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
   //onSubmitが行われた際に再描画したい。（データの取得処理を行う）
-  const [count, setCount] = useState(0)
+  const forceUpdate = useForceUpdate();
 
   const removeWorkIds = useRef<string[]>([''])
   //データの取得
@@ -48,7 +48,7 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
     if (removeWorkIds.current.length > 1) {
       resultDeleteWork(session, removeWorkIds.current, deleteWorks)
     }
-    setCount(count + 1)
+    forceUpdate()
   }
 
   if (userData === 'error') return <div>error</div>

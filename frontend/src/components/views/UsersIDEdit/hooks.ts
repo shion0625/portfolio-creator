@@ -1,6 +1,12 @@
 import { Session } from 'next-auth'
 import { WorkFormI } from '~/models/WorkForm'
 import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
+import React, { useRef, useState } from 'react'
+
+export const useForceUpdate = () => {
+  const [count, setCount] = useState(0);
+  return () => setCount(e => count + 1);
+}
 
 const createWorkDB = (session: Session, work: WorkFormI, createWork: any): Promise<void> =>
   new Promise((resolve, reject) => {
