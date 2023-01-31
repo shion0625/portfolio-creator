@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import MuiLink from '~/components/parts/MuiLink'
 import NavBar from '~/components/templates/NavBar'
-import SignIn from '~/components/templates/SignIn'
+import SignIn from '~/components/templates/Signin'
 
 const IndexView: React.FC = () => {
   return (
@@ -17,9 +17,6 @@ const IndexView: React.FC = () => {
         <br />
         <Link href='/works' passHref>
           <MuiLink>ポートフォリオ一覧</MuiLink>
-        </Link>
-        <Link href='/works' passHref>
-          <a href='/works'> works</a>
         </Link>
       </div>
     </>
