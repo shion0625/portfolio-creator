@@ -3,11 +3,10 @@ import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
 import lo from 'lodash'
 import { Session } from 'next-auth'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
-import { GetUserAuth } from '~/hooks/User/query'
-import { useCreateWork, useUpdateWork, useDeleteWorks } from '~/hooks/Work/mutation'
+import { useCreateWork, useUpdateWork, useDeleteWorks, GetUserAuth } from '~/hooks/Work/mutation'
 import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
 
 type UserIDEditViewProps = {

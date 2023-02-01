@@ -1,7 +1,13 @@
 import { Session } from 'next-auth'
 import { WorkFormI } from '~/models/WorkForm'
 import { CreateWorkInput, UpdateWorkInput, User } from '~/models/types'
-import React, { useRef, useState } from 'react'
+import { useState } from 'react'
+import { useQuery } from '@apollo/client'
+import {
+  GetUserAuthQuery,
+  GetUserAuthDocument,
+} from '~/models/client'
+
 
 export const useForceUpdate = () => {
   const [count, setCount] = useState(0);
@@ -92,4 +98,13 @@ export const resultUpdateWork = async (session: Session, work: WorkFormI, update
 export const resultDeleteWork = async (session: Session, ids: string[], deleteWorks: any): Promise<void> => {
   await deleteWorksDB(session, ids, deleteWorks)
   return
+}
+
+export function GetUserAuth(id?: string | string[]) {
+  const { data, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
+    variables: { id: id },
+  })
+
+  console.log('auth')
+  return data?.userAuth
 }
