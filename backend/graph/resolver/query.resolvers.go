@@ -6,11 +6,12 @@ package resolver
 import (
 	"context"
 	"math"
-	"gorm.io/gorm"
+
 	"github.com/shion0625/portfolio-creater/backend/graph/generated"
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
 	"github.com/shion0625/portfolio-creater/backend/service"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"gorm.io/gorm"
 )
 
 // UserAuth is the resolver for the userAuth field.
@@ -55,7 +56,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 		return nil, err
 	}
 
-	users, numRows,err := service.UsersGet(ctx, r.DB, limit, *offset)
+	users, numRows, err := service.UsersGet(ctx, r.DB, limit, *offset)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -106,7 +107,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*mod
 		return nil, err
 	}
 
-works, numRows,err := service.WorksGet(ctx, r.DB, limit, *offset)
+	works, numRows, err := service.WorksGet(ctx, r.DB, limit, *offset)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
