@@ -50,7 +50,7 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Mutation struct {
 		CreateWork    func(childComplexity int, input model.CreateWorkInput) int
-		DeleteWorks   func(childComplexity int, id []*string) int
+		DeleteWorks   func(childComplexity int, ids []*string) int
 		Login         func(childComplexity int, id string, email string) int
 		UpdateProfile func(childComplexity int, input model.UpdateProfileInput) int
 		UpdateWork    func(childComplexity int, input model.UpdateWorkInput) int
@@ -122,7 +122,7 @@ type MutationResolver interface {
 	UpdateProfile(ctx context.Context, input model.UpdateProfileInput) (*model.User, error)
 	CreateWork(ctx context.Context, input model.CreateWorkInput) (*model.Work, error)
 	UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error)
-	DeleteWorks(ctx context.Context, id []*string) (*bool, error)
+	DeleteWorks(ctx context.Context, ids []*string) (bool, error)
 	Login(ctx context.Context, id string, email string) (interface{}, error)
 }
 type QueryResolver interface {
@@ -177,7 +177,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteWorks(childComplexity, args["id"].([]*string)), true
+		return e.complexity.Mutation.DeleteWorks(childComplexity, args["ids"].([]*string)), true
 
 	case "Mutation.login":
 		if e.complexity.Mutation.Login == nil {
@@ -626,7 +626,7 @@ type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth
   createWork(input: CreateWorkInput!): Work!  @auth
   updateWork(input: UpdateWorkInput!): Work! @auth
-  deleteWorks(id: [ID]!): Boolean @auth
+  deleteWorks(ids: [ID]!): Boolean! @auth
   login(id: String!, email: String!): Any!
 }
 
@@ -773,14 +773,14 @@ func (ec *executionContext) field_Mutation_deleteWorks_args(ctx context.Context,
 	var err error
 	args := map[string]interface{}{}
 	var arg0 []*string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+	if tmp, ok := rawArgs["ids"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ids"))
 		arg0, err = ec.unmarshalNID2ᚕᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg0
+	args["ids"] = arg0
 	return args, nil
 }
 
@@ -1300,7 +1300,7 @@ func (ec *executionContext) _Mutation_deleteWorks(ctx context.Context, field gra
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().DeleteWorks(rctx, fc.Args["id"].([]*string))
+			return ec.resolvers.Mutation().DeleteWorks(rctx, fc.Args["ids"].([]*string))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Auth == nil {
@@ -1316,21 +1316,24 @@ func (ec *executionContext) _Mutation_deleteWorks(ctx context.Context, field gra
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*bool); ok {
+		if data, ok := tmp.(bool); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *bool`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deleteWorks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5644,6 +5647,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_deleteWorks(ctx, field)
 			})
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "login":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
