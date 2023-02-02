@@ -3,10 +3,10 @@ import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
 import lo from 'lodash'
 import { Session } from 'next-auth'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
-import { GetUserAuth } from '~/hooks/User/query'
+import { useGetUserWork } from '~/hooks/User/query'
 import { useCreateWork, useUpdateWork, useDeleteWorks } from '~/hooks/Work/mutation'
 import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
 
@@ -16,12 +16,10 @@ type UserIDEditViewProps = {
 }
 
 const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
-  //onSubmitが行われた際に再描画したい。（データの取得処理を行う）
-  const forceUpdate = useForceUpdate();
 
   const removeWorkIds = useRef<string[]>([''])
   //データの取得
-  const userData = GetUserAuth(id)
+  const { userData, onUpdate } = useGetUserWork(id)
   // データの更新
   const [createWork, createLoading, createError] = useCreateWork(id)
   const [updateWork, updateLoading, updateError] = useUpdateWork()
@@ -48,12 +46,10 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
     if (removeWorkIds.current.length > 1) {
       resultDeleteWork(session, removeWorkIds.current, deleteWorks)
     }
-    forceUpdate()
+    onUpdate()
   }
 
-  if (userData === 'error') return <div>error</div>
-  if (userData === 'dataNotFound') return <div>dataNotFound</div>
-  if (userData === 'loading') return <div>loading</div>
+
 
   return (
     <>
@@ -61,7 +57,7 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
       <Box component='main' sx={{ m: 2 }}>
         <>
           {userData ? (
-            <WorkForms onSubmit={OnSubmit} userAuth={userData.userAuth} removeWorkIds={removeWorkIds.current} />
+            <WorkForms onSubmit={OnSubmit} userAuth={userData} removeWorkIds={removeWorkIds.current} />
           ) : (
             <CircularProgress color='inherit' />
           )}

@@ -1,15 +1,27 @@
 import { useQuery } from '@apollo/client'
 import { GetUserAuthQuery, GetUserAuthDocument } from '~/models/client'
+import React, { useCallback, useRef, useState } from 'react'
+// export const GetUserAuth = (id: string) => {
+//   const { data, refetch: refetchUserData, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
+//     variables: { id: id },
+//   })
+//   if (loading) return 'loading'
+//   if (error) return 'error'
+//   if (!data) return 'dataNotFound'
 
-export const GetUserAuth = (id: string) => {
-  const { data, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
+//   return [data, refetch]
+// }
+
+
+export function useGetUserWork(id: string) {
+  const { data, refetch, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
     variables: { id: id },
   })
-  if (loading) return 'loading'
-  if (error) return 'error'
-  if (!data) return 'dataNotFound'
 
-  return {
-    userAuth: data.userAuth,
-  }
+  const onUpdate = useCallback(async () => {
+    refetch(); // 更新が完了したら再取得の処理を行う
+  },[]);
+
+  return { userData: data?.userAuth, onUpdate: onUpdate }
+
 }

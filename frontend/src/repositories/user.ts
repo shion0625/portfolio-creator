@@ -23,14 +23,13 @@ export function GetUser(id?: string | string[]) {
   return data?.user
 }
 
-export function GetUserAuth(id?: string | string[]) {
-  const { data, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
-    variables: { id: id },
-  })
+// export function GetUserAuth(id?: string | string[]) {
+//   const { data, refetch: refetchUserData } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
+//     variables: { id: id },
+//   })
 
-  console.log('auth')
-  return data?.userAuth
-}
+//   return [data?.userAuth, refetchUserData]
+// }
 
 export async function GetUserServer(id: string): Promise<GetUserQuery> {
   const sdk = await fetcherSSG()

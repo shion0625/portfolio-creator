@@ -5,8 +5,15 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import UserIDEditView from '~/components/views/UsersIDEdit'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
+import { useState } from 'react'
+
+// const useForceUpdate = () => {
+//   const [count, setCount] = useState(0);
+//   return () => setCount(e => count + 1);
+// }
 
 const UserIDEdit: NextPage = () => {
+  const [count, setCount] = useState(0);
   const router = useRouter()
   const { data: session, status } = useSession()
 
@@ -51,11 +58,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     params.id = params.id.join()
   }
 
-  const { user } = await GetUserServer(params?.id)
+  // const { user } = await GetUserServer(params?.id)
+  // return {
+  //   props: {
+  //     user,
+  //   },
+  //   notFound: !user,
+  // }
   return {
     props: {
-      user,
-    },
-    notFound: !user,
+      user: 'success',
+    }
   }
 }
