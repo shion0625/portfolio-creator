@@ -18,10 +18,10 @@ export function useGetUserWork(id: string) {
     variables: { id: id },
   })
 
-  const onUpdate = useCallback(async () => {
-    refetch(); // 更新が完了したら再取得の処理を行う
-  },[]);
+  // const onUpdate = useCallback(async () => {
+  //   refetch() // 更新が完了したら再取得の処理を行う
+  // },[])
 
-  return { userData: data?.userAuth, onUpdate: onUpdate }
+  return { userData: data?.userAuth, onUpdate: refetch }
 
 }

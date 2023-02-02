@@ -43,7 +43,6 @@ query GetUser($id: ID!) {
   }
 }
 
-
 query GetUserAuth($id: ID!) {
   userAuth(id: $id) {
     id
