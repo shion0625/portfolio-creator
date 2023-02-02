@@ -5,108 +5,130 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 	"math"
-
+	"gorm.io/gorm"
 	"github.com/shion0625/portfolio-creater/backend/graph/generated"
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/service"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // UserAuth is the resolver for the userAuth field.
 func (r *queryResolver) UserAuth(ctx context.Context, id string) (*model.User, error) {
-	var user model.User
-	if err := r.DB.Debug().Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
+	user, err := service.UserGetByID(ctx, r.DB, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "user id not found",
+			}
+		}
 		return nil, err
 	}
-	fmt.Println("auth")
 
-	return &user, nil
+	return user, nil
 }
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	var user model.User
-	if err := r.DB.Debug().Table("users").Where("id = ?", id).Take(&user).Error; err != nil {
+	user, err := service.UserGetByID(ctx, r.DB, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "user id not found",
+			}
+		}
 		return nil, err
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*model.UserPagination, error) {
-	var totalCount int64
-	hasNextPage := true
-	hasPreviousPage := true
-
-	var users []*model.User
-
-	r.DB.Debug().Table("users").Count(&totalCount)
-
-	result := r.DB.Debug().Table("users").Limit(limit).Offset(*offset).Find(&users)
-	fmt.Print(users)
-	if limit < *offset {
-		hasPreviousPage = false
+	totalCount, err := service.UserTotalCount(ctx, r.DB)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "userTotalCount not found",
+			}
+		}
+		return nil, err
 	}
-	if int(totalCount) < limit+*offset {
-		hasNextPage = false
+
+	users, numRows,err := service.UsersGet(ctx, r.DB, limit, *offset)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "users not found",
+			}
+		}
+		return nil, err
 	}
 
 	pageInfo := model.PaginationInfo{
 		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
 		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      hasNextPage,
-		HasPreviousPage:  hasPreviousPage,
-		Count:            int(result.RowsAffected),
+		HasNextPage:      int(totalCount) < (limit + *offset),
+		HasPreviousPage:  (limit < *offset),
+		Count:            int(numRows),
 		TotalCount:       int(totalCount),
 	}
 	pagination := model.UserPagination{
 		PageInfo: &pageInfo,
 		Nodes:    users,
 	}
-	return &pagination, result.Error
+	return &pagination, nil
 }
 
 // Work is the resolver for the work field.
 func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error) {
-	work := model.Work{ID: id}
-	r.DB.Debug().First(&work)
-	return &work, nil
+	work, err := service.WorkGetByID(ctx, r.DB, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "work id not found",
+			}
+		}
+		return nil, err
+	}
+	return work, nil
 }
 
 // Works is the resolver for the works field.
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*model.WorkPagination, error) {
-	var totalCount int64
-	hasNextPage := true
-	hasPreviousPage := true
-
-	works := []*model.Work{}
-	r.DB.Model(&model.Work{}).Count(&totalCount)
-	result := r.DB.Debug().Limit(limit).Offset(*offset).Find(&works)
-
-	if limit < *offset {
-		hasPreviousPage = false
+	totalCount, err := service.WorkTotalCount(ctx, r.DB)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "work totalCount not found",
+			}
+		}
+		return nil, err
 	}
-	if int(totalCount) < limit+*offset {
-		hasNextPage = false
+
+works, numRows,err := service.WorksGet(ctx, r.DB, limit, *offset)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "works not found",
+			}
+		}
+		return nil, err
 	}
-	// if int(result.RowsAffected) == 0 {
-	// 	result.Error = "データが見つかりませんでした。"
-	// }
 
 	pageInfo := model.PaginationInfo{
 		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
 		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      hasNextPage,
-		HasPreviousPage:  hasPreviousPage,
-		Count:            int(result.RowsAffected),
+		HasNextPage:      (int(totalCount) < limit+*offset),
+		HasPreviousPage:  limit < *offset,
+		Count:            int(numRows),
 		TotalCount:       int(totalCount),
 	}
 	pagination := model.WorkPagination{
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}
-	return &pagination, result.Error
+	return &pagination, nil
 }
 
 // Query returns generated.QueryResolver implementation.
