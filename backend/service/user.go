@@ -27,7 +27,7 @@ func UserGetByEmail(ctx context.Context, email string) (*model.User, error) {
 	return &user, nil
 }
 
-func UserTotalCount(ctx context.Context,db *gorm.DB) (int64, error) {
+func UserTotalCountGet(ctx context.Context,db *gorm.DB) (int64, error) {
 	var totalCount int64
 	if err := db.Model(&model.User{}).Count(&totalCount).Error; err != nil {
 		return 0, err

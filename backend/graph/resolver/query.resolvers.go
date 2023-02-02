@@ -45,7 +45,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*model.UserPagination, error) {
-	totalCount, err := service.UserTotalCount(ctx, r.DB)
+	totalCount, err := service.UserTotalCountGet(ctx, r.DB)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -96,7 +96,7 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error
 
 // Works is the resolver for the works field.
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*model.WorkPagination, error) {
-	totalCount, err := service.WorkTotalCount(ctx, r.DB)
+	totalCount, err := service.WorkTotalCountGet(ctx, r.DB)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{

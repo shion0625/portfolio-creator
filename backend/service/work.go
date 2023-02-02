@@ -16,7 +16,7 @@ func WorkGetByID(ctx context.Context, db *gorm.DB, id string) (*model.Work, erro
 	return &work, nil
 }
 
-func WorkTotalCount(ctx context.Context, db *gorm.DB) (int64, error) {
+func WorkTotalCountGet(ctx context.Context, db *gorm.DB) (int64, error) {
 	var totalCount int64
 	if err := db.Model(&model.Work{}).Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
 		return 0, err
