@@ -1,6 +1,6 @@
 overwrite: true
-schema: ./graphql/schema.graphql
-documents: ./graphql/query/*.graphql
+schema: src/libs/graphql/schema.graphql
+documents: src/libs/graphql/query/*.graphql
 generates:
   src/models/:
     preset: near-operation-file

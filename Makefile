@@ -1,6 +1,6 @@
 cp:
-	cp ./backend/graph/schema/*.graphqls ./frontend/graphql/schema/
-	cat ./frontend/graphql/schema/*.graphqls > ./frontend/graphql/schema.graphql
+	cp ./backend/graph/schema/*.graphqls ./frontend/src/libs/graphql/schema/
+	cat ./frontend/src/libs/graphql/schema/*.graphqls > ./frontend/src/libs/graphql/schema.graphql
 
 gen:
 	@make cp
@@ -13,7 +13,7 @@ front-dev:
 	docker-compose exec web yarn dev
 
 gen-o:
-	docker-compose exec web yarn run graphql-codegen --config graphql/codegen-server.yaml
+	docker-compose exec web yarn run graphql-codegen --config src/libs/graphql/codegen-server.yaml
 
 server:
 	docker compose exec server sh
