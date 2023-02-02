@@ -1,6 +1,11 @@
 package service
 
 import (
+	"encoding/base64"
+	"fmt"
+	"math/rand"
+	"time"
+
 	"context"
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
 	"gorm.io/gorm"
@@ -32,4 +37,58 @@ func WorksGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*model
 	}
 
 	return works,result.RowsAffected, nil
+}
+
+func WorkCreate(ctx context.Context, db *gorm.DB,input model.CreateWorkInput) (*model.Work, error) {
+	id := fmt.Sprintf("work:%d", rand.Int())
+	work := model.Work{
+		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
+		Title:          input.Title,
+		Summary:        input.Summary,
+		ImageURL:       input.ImageURL,
+		Duration:       input.Duration,
+		NumberOfPeople: input.NumberOfPeople,
+		Language:       input.Language,
+		Role:           input.Role,
+		URL:            input.URL,
+		BriefStory:     input.BriefStory,
+		CreatedAt:      Time2str(time.Now()),
+		UpdatedAt:      Time2str(time.Now()),
+		IsDelete:       false,
+		UserID:         input.UserID,
+	}
+	if err := db.Create(&work).Error; err != nil {
+		return nil, err
+	}
+
+	return &work, nil
+}
+
+func WorkUpdate(ctx context.Context, db *gorm.DB, work *model.Work, input model.UpdateWorkInput) (*model.Work, error) {
+	if err := db.Model(work).Updates(model.Work{
+		Title:          *input.Title,
+		Summary:        input.Summary,
+		ImageURL:       input.ImageURL,
+		Duration:       input.Duration,
+		NumberOfPeople: input.NumberOfPeople,
+		Language:       input.Language,
+		Role:           input.Role,
+		URL:            input.URL,
+		BriefStory:     input.BriefStory,
+		UpdatedAt:      Time2str(time.Now()),
+	}).Error; err != nil {
+		return nil, err
+	}
+
+	return work, nil
+}
+
+func WorksDelete(ctx context.Context, db *gorm.DB, ids []*string) (*model.Work, error) {
+	if err:= db.Model(model.Work{}).Where("id IN ?", ids).Updates(model.Work{
+		IsDelete: true,
+		UpdatedAt: Time2str(time.Now()),
+	}).Error; err != nil {
+		return nil, err
+	}
+	return nil, nil
 }

@@ -5,14 +5,13 @@ package resolver
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
-	"math/rand"
-	"time"
 
 	"github.com/shion0625/portfolio-creater/backend/graph/generated"
 	"github.com/shion0625/portfolio-creater/backend/graph/model"
 	"github.com/shion0625/portfolio-creater/backend/service"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+	"gorm.io/gorm"
 )
 
 // UpdateProfile is the resolver for the updateProfile field.
@@ -22,59 +21,42 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, input model.Update
 
 // CreateWork is the resolver for the createWork field.
 func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWorkInput) (*model.Work, error) {
-	id := fmt.Sprintf("work:%d", rand.Int())
-	work := model.Work{
-		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
-		Title:          input.Title,
-		Summary:        input.Summary,
-		ImageURL:       input.ImageURL,
-		Duration:       input.Duration,
-		NumberOfPeople: input.NumberOfPeople,
-		Language:       input.Language,
-		Role:           input.Role,
-		URL:            input.URL,
-		BriefStory:     input.BriefStory,
-		CreatedAt:      service.Time2str(time.Now()),
-		UpdatedAt:      service.Time2str(time.Now()),
-		IsDelete:       false,
-		UserID:         input.UserID,
+	work, err := service.WorkCreate(ctx, r.DB, input)
+	if err != nil {
+		return nil, err
 	}
-	r.DB.Debug().Create(&work)
-	return &work, nil
+	return work, nil
 }
 
 // UpdateWork is the resolver for the updateWork field.
 func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error) {
-	work := model.Work{ID: input.ID}
+	work, err := service.WorkGetByID(ctx, r.DB, input.ID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "work not found",
+			}
+		}
+		return nil, err
+	}
 	if input.Title == nil {
 		input.Title = &work.Title
 	}
-	r.DB.Debug().First(&work)
-	r.DB.Debug().Model(&work).Updates(model.Work{
-		Title:          *input.Title,
-		Summary:        input.Summary,
-		ImageURL:       input.ImageURL,
-		Duration:       input.Duration,
-		NumberOfPeople: input.NumberOfPeople,
-		Language:       input.Language,
-		Role:           input.Role,
-		URL:            input.URL,
-		BriefStory:     input.BriefStory,
-		UpdatedAt:      service.Time2str(time.Now()),
-	})
-	result := r.DB.Debug().Save(&work)
-	return &work, result.Error
+	updatedWork, err := service.WorkUpdate(ctx, r.DB, work, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedWork, nil
 }
 
 // DeleteWorks is the resolver for the deleteWorks field.
-func (r *mutationResolver) DeleteWorks(ctx context.Context, id []*string) (*bool, error) {
-	fmt.Println("delete")
-	result := r.DB.Debug().Model(model.Work{}).Where("id IN ?", id).Updates(model.Work{IsDelete: true, UpdatedAt: service.Time2str(time.Now())})
-	ans := false
-	if result.Error == nil {
-		ans = true
+func (r *mutationResolver) DeleteWorks(ctx context.Context, ids []*string) (bool, error) {
+	_, err := service.WorksDelete(ctx, r.DB, ids)
+	if err != nil {
+		return false, err
 	}
-	return &ans, result.Error
+	return true, nil
 }
 
 // Login is the resolver for the login field.
