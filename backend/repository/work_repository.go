@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/shion0625/portfolio-creater/backend/domain"
-	"github.com/shion0625/portfolio-creater/backend/service"
+	"github.com/shion0625/portfolio-creater/backend/util"
 	"gorm.io/gorm"
 	"math/rand"
 	"time"
@@ -59,8 +59,8 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 		Role:           input.Role,
 		URL:            input.URL,
 		BriefStory:     input.BriefStory,
-		CreatedAt:      service.Time2str(time.Now()),
-		UpdatedAt:      service.Time2str(time.Now()),
+		CreatedAt:      util.Time2str(time.Now()),
+		UpdatedAt:      util.Time2str(time.Now()),
 		IsDelete:       false,
 		UserID:         input.UserID,
 	}
@@ -82,7 +82,7 @@ func (g *WorkRepository) Update(ctx context.Context, work *domain.Work, input do
 		Role:           input.Role,
 		URL:            input.URL,
 		BriefStory:     input.BriefStory,
-		UpdatedAt:      service.Time2str(time.Now()),
+		UpdatedAt:      util.Time2str(time.Now()),
 	}).Error; err != nil {
 		return err
 	}
@@ -93,7 +93,7 @@ func (g *WorkRepository) Update(ctx context.Context, work *domain.Work, input do
 func (g *WorkRepository) Delete(ctx context.Context, ids []*string) error {
 	if err := g.db.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
 		IsDelete:  true,
-		UpdatedAt: service.Time2str(time.Now()),
+		UpdatedAt: util.Time2str(time.Now()),
 	}).Error; err != nil {
 		return err
 	}
