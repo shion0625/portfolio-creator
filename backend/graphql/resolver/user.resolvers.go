@@ -7,14 +7,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/shion0625/portfolio-creater/backend/graph/generated"
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 )
 
 // Works is the resolver for the works field.
-func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkPagination, error) {
+func (r *userResolver) Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error) {
 	works, err := r.WorkLoader.Load(obj.ID)
-	pageInfo := model.PaginationInfo{
+	pageInfo := domain.PaginationInfo{
 		Page:             1,
 		PaginationLength: 1,
 		HasNextPage:      false,
@@ -22,7 +22,7 @@ func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkP
 		Count:            len(works),
 		TotalCount:       len(works),
 	}
-	pagination := model.WorkPagination{
+	pagination := domain.WorkPagination{
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}
@@ -30,7 +30,7 @@ func (r *userResolver) Works(ctx context.Context, obj *model.User) (*model.WorkP
 }
 
 // Profile is the resolver for the profile field.
-func (r *userResolver) Profile(ctx context.Context, obj *model.User) (*model.Profile, error) {
+func (r *userResolver) Profile(ctx context.Context, obj *domain.User) (*domain.Profile, error) {
 	panic(fmt.Errorf("not implemented: Profile - profile"))
 }
 

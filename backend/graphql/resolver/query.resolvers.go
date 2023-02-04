@@ -7,15 +7,15 @@ import (
 	"context"
 	"math"
 
-	"github.com/shion0625/portfolio-creater/backend/graph/generated"
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/service"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
 )
 
 // UserAuth is the resolver for the userAuth field.
-func (r *queryResolver) UserAuth(ctx context.Context, id string) (*model.User, error) {
+func (r *queryResolver) UserAuth(ctx context.Context, id string) (*domain.User, error) {
 	user, err := service.UserGetByID(ctx, r.DB, id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -30,7 +30,7 @@ func (r *queryResolver) UserAuth(ctx context.Context, id string) (*model.User, e
 }
 
 // User is the resolver for the user field.
-func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
+func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, error) {
 	user, err := service.UserGetByID(ctx, r.DB, id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -45,7 +45,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error
 }
 
 // Users is the resolver for the users field.
-func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*model.UserPagination, error) {
+func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*domain.UserPagination, error) {
 	totalCount, err := service.UserTotalCountGet(ctx, r.DB)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -66,7 +66,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 		return nil, err
 	}
 
-	pageInfo := model.PaginationInfo{
+	pageInfo := domain.PaginationInfo{
 		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
 		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
 		HasNextPage:      int(totalCount) < (limit + *offset),
@@ -74,7 +74,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 		Count:            int(numRows),
 		TotalCount:       int(totalCount),
 	}
-	pagination := model.UserPagination{
+	pagination := domain.UserPagination{
 		PageInfo: &pageInfo,
 		Nodes:    users,
 	}
@@ -82,7 +82,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*mod
 }
 
 // Work is the resolver for the work field.
-func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error) {
+func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, error) {
 	work, err := service.WorkGetByID(ctx, r.DB, id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -96,7 +96,7 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*model.Work, error
 }
 
 // Works is the resolver for the works field.
-func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*model.WorkPagination, error) {
+func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*domain.WorkPagination, error) {
 	totalCount, err := service.WorkTotalCountGet(ctx, r.DB)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -117,7 +117,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*mod
 		return nil, err
 	}
 
-	pageInfo := model.PaginationInfo{
+	pageInfo := domain.PaginationInfo{
 		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
 		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
 		HasNextPage:      (int(totalCount) < limit+*offset),
@@ -125,7 +125,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*mod
 		Count:            int(numRows),
 		TotalCount:       int(totalCount),
 	}
-	pagination := model.WorkPagination{
+	pagination := domain.WorkPagination{
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}

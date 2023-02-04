@@ -1,10 +1,10 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - graph/schema/*.graphqls
+  - graphql/schema/*.graphqls
 
 # Where should the generated server code go?
 exec:
-  filename: graph/generated/generated.go
+  filename: graphql/generated/generated.go
   package: generated
 
 # Enable Apollo federation support
@@ -14,13 +14,13 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: graph/model/models_gen.go
-  package: model
+  filename: domain/models_gen.go
+  package: domain
 
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: graph/resolver
+  dir: graphql/resolver
   package: resolver
 
 # Optional: turn on use ` + "`" + `gqlgen:"fieldName"` + "`" + ` tags in your models
@@ -48,7 +48,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "github.com/shion0625/portfolio-creater/backend/graph/model"
+  - "github.com/shion0625/portfolio-creater/backend/domain"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -68,6 +68,6 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   Work:
-    model: model.Work
+    model: domain.Work
   User:
-    model: model.User
+    model: domain.User

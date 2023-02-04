@@ -7,20 +7,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/shion0625/portfolio-creater/backend/graph/generated"
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/service"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
 )
 
 // UpdateProfile is the resolver for the updateProfile field.
-func (r *mutationResolver) UpdateProfile(ctx context.Context, input model.UpdateProfileInput) (*model.User, error) {
+func (r *mutationResolver) UpdateProfile(ctx context.Context, input domain.UpdateProfileInput) (*domain.User, error) {
 	panic(fmt.Errorf("not implemented: UpdateProfile - updateProfile"))
 }
 
 // CreateWork is the resolver for the createWork field.
-func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWorkInput) (*model.Work, error) {
+func (r *mutationResolver) CreateWork(ctx context.Context, input domain.CreateWorkInput) (*domain.Work, error) {
 	work, err := service.WorkCreate(ctx, r.DB, input)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (r *mutationResolver) CreateWork(ctx context.Context, input model.CreateWor
 }
 
 // UpdateWork is the resolver for the updateWork field.
-func (r *mutationResolver) UpdateWork(ctx context.Context, input model.UpdateWorkInput) (*model.Work, error) {
+func (r *mutationResolver) UpdateWork(ctx context.Context, input domain.UpdateWorkInput) (*domain.Work, error) {
 	work, err := service.WorkGetByID(ctx, r.DB, input.ID)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

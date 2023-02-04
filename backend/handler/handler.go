@@ -9,12 +9,12 @@ import (
 	_"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/shion0625/portfolio-creater/backend/db"
-	"github.com/shion0625/portfolio-creater/backend/dataloader"
-	"github.com/shion0625/portfolio-creater/backend/graph/generated"
-	"github.com/shion0625/portfolio-creater/backend/graph/resolver"
-	_"github.com/shion0625/portfolio-creater/backend/graph/directives"
-	"github.com/shion0625/portfolio-creater/backend/graph/directives"
+	"github.com/shion0625/portfolio-creater/backend/infrastructure"
+	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
+	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
+	_"github.com/shion0625/portfolio-creater/backend/graphql/directives"
+	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
 )
 
 func Welcome() echo.HandlerFunc {
@@ -35,7 +35,7 @@ func Playground() echo.HandlerFunc {
 
 func QueryPlayground() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		db := db.ConnectGORM()
+		db := infrastructure.ConnectGORM()
 		userLoader := dataloader.UsersByIDs(db)
 		workLoader := dataloader.WorksByIDs(db)
 		gc := generated.Config{Resolvers: &resolver.Resolver{

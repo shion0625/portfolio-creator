@@ -4,11 +4,11 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
 	"net/http"
 )
 
-func LoginSession(c echo.Context, user []model.User) error {
+func LoginSession(c echo.Context, user []domain.User) error {
 	// sessionの作成
 	session, _ := session.Get("session", c)
 	session.Options = &sessions.Options{

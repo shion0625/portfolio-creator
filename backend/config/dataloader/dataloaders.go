@@ -3,7 +3,7 @@ package dataloader
 import (
 	"time"
 
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
 	"gorm.io/gorm"
 )
 
@@ -11,15 +11,15 @@ func UsersByIDs(db *gorm.DB) *UserLoader{
 	userLoader := NewUserLoader(UserLoaderConfig{
 		MaxBatch: 100, // 溜める最大数、0を指定すると制限無し
 		Wait:     2 * time.Millisecond, // 溜める時間
-		Fetch: func(ids []string) ([]*model.User, []error) {
-			users := make([]*model.User, len(ids))
+		Fetch: func(ids []string) ([]*domain.User, []error) {
+			users := make([]*domain.User, len(ids))
 			errors := make([]error, len(ids))
 
-			var usersTemp []*model.User
+			var usersTemp []*domain.User
 
 			db.Debug().Table("users").Where("id IN ?", ids).Find(&usersTemp)
 
-			userById := map[string]*model.User{}
+			userById := map[string]*domain.User{}
 				for _, user := range usersTemp {
 						userById[user.ID] = user
 				}
@@ -39,13 +39,13 @@ func WorksByIDs(db *gorm.DB) *WorkLoader{
 	workLoader := NewWorkLoader(WorkLoaderConfig{
 		MaxBatch: 100, // 溜める最大数、0を指定すると制限無し
 		Wait:     2 * time.Millisecond, // 溜める時間
-		Fetch: func(ids []string) ([][]*model.Work, []error) {
-			works := make([][]*model.Work, len(ids))
+		Fetch: func(ids []string) ([][]*domain.Work, []error) {
+			works := make([][]*domain.Work, len(ids))
 			errors := make([]error, len(ids))
-			var worksTemp []*model.Work
+			var worksTemp []*domain.Work
 			db.Debug().Where("user_id IN ?", ids).Find(&worksTemp)
 
-			workByUserId := map[string][]*model.Work{}
+			workByUserId := map[string][]*domain.Work{}
 				for _, work := range worksTemp {
 						workByUserId[work.UserID] = append(workByUserId[work.UserID], work)
 				}

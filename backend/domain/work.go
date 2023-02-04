@@ -1,4 +1,5 @@
-package model
+package domain
+
 type Work struct {
 	ID             string  `json:"id"`
 	Title          string  `json:"title"`
@@ -18,3 +19,12 @@ type Work struct {
 
 func (Work) IsNode()            {}
 func (this Work) GetID() string { return this.ID }
+
+// WorkUseCase represent the work's usecases
+type IWorkUseCase interface {
+}
+
+// WorkRepository represent the work's repository contract
+type IWorkRepository interface {
+
+}

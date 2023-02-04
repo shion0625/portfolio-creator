@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"context"
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
 	"gorm.io/gorm"
 
 )
 
-func WorkGetByID(ctx context.Context, db *gorm.DB, id string) (*model.Work, error) {
-	work := model.Work{ID: id}
+func WorkGetByID(ctx context.Context, db *gorm.DB, id string) (*domain.Work, error) {
+	work := domain.Work{ID: id}
 	if err := db.Where("id = ?", id).First(&work).Error; err != nil {
 		return nil, err
 	}
@@ -23,14 +23,14 @@ func WorkGetByID(ctx context.Context, db *gorm.DB, id string) (*model.Work, erro
 
 func WorkTotalCountGet(ctx context.Context, db *gorm.DB) (int64, error) {
 	var totalCount int64
-	if err := db.Model(&model.Work{}).Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
+	if err := db.Model(&domain.Work{}).Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
 		return 0, err
 	}
 	return totalCount, nil
 }
 
-func WorksGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*model.Work,int64, error) {
-	var works []*model.Work
+func WorksGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*domain.Work,int64, error) {
+	var works []*domain.Work
 	result := db.Limit(limit).Offset(offset).Find(&works)
 	if result.Error != nil {
 		return nil,0, result.Error
@@ -39,9 +39,9 @@ func WorksGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*model
 	return works,result.RowsAffected, nil
 }
 
-func WorkCreate(ctx context.Context, db *gorm.DB,input model.CreateWorkInput) (*model.Work, error) {
+func WorkCreate(ctx context.Context, db *gorm.DB,input domain.CreateWorkInput) (*domain.Work, error) {
 	id := fmt.Sprintf("work:%d", rand.Int())
-	work := model.Work{
+	work := domain.Work{
 		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
 		Title:          input.Title,
 		Summary:        input.Summary,
@@ -64,8 +64,8 @@ func WorkCreate(ctx context.Context, db *gorm.DB,input model.CreateWorkInput) (*
 	return &work, nil
 }
 
-func WorkUpdate(ctx context.Context, db *gorm.DB, work *model.Work, input model.UpdateWorkInput) (*model.Work, error) {
-	if err := db.Model(work).Updates(model.Work{
+func WorkUpdate(ctx context.Context, db *gorm.DB, work *domain.Work, input domain.UpdateWorkInput) (*domain.Work, error) {
+	if err := db.Model(work).Updates(domain.Work{
 		Title:          *input.Title,
 		Summary:        input.Summary,
 		ImageURL:       input.ImageURL,
@@ -83,8 +83,8 @@ func WorkUpdate(ctx context.Context, db *gorm.DB, work *model.Work, input model.
 	return work, nil
 }
 
-func WorksDelete(ctx context.Context, db *gorm.DB, ids []*string) (*model.Work, error) {
-	if err:= db.Model(model.Work{}).Where("id IN ?", ids).Updates(model.Work{
+func WorksDelete(ctx context.Context, db *gorm.DB, ids []*string) (*domain.Work, error) {
+	if err:= db.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
 		IsDelete: true,
 		UpdatedAt: Time2str(time.Now()),
 	}).Error; err != nil {

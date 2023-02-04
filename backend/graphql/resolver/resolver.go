@@ -6,11 +6,13 @@ package resolver
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 import (
-	"github.com/shion0625/portfolio-creater/backend/dataloader"
+	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creater/backend/usecase"
 	"gorm.io/gorm"
 )
 
 type Resolver struct {
+	userUserCase usecase.UserUseCase
 	WorkLoader *dataloader.WorkLoader
 	UserLoader *dataloader.UserLoader
 	DB         *gorm.DB

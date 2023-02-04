@@ -6,12 +6,12 @@ package resolver
 import (
 	"context"
 
-	"github.com/shion0625/portfolio-creater/backend/graph/generated"
-	"github.com/shion0625/portfolio-creater/backend/graph/model"
+	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 )
 
 // User is the resolver for the user field.
-func (r *workResolver) User(ctx context.Context, obj *model.Work) (*model.User, error) {
+func (r *workResolver) User(ctx context.Context, obj *domain.Work) (*domain.User, error) {
 	user, err := r.UserLoader.Load(obj.UserID)
 	return user, err
 }
