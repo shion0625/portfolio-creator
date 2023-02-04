@@ -4,10 +4,26 @@ import (
 	"time"
 
 	"github.com/shion0625/portfolio-creater/backend/domain"
-	"gorm.io/gorm"
 )
 
-func UsersByIDs(db *gorm.DB) *UserLoader {
+type IDataLoader interface{
+	UsersByIDs() *UserLoader
+	WorksByIDs() *WorkLoader
+}
+
+type DataLoader struct {
+	userRepo domain.IUserRepository
+	workRepo domain.IWorkRepository
+}
+
+func NewDataLoader(u domain.IUserRepository, w domain.IWorkRepository) IDataLoader {
+	return &DataLoader{
+		userRepo: u,
+		workRepo: w,
+	}
+}
+
+func (d DataLoader) UsersByIDs() *UserLoader {
 	userLoader := NewUserLoader(UserLoaderConfig{
 		MaxBatch: 100,                  // 溜める最大数、0を指定すると制限無し
 		Wait:     2 * time.Millisecond, // 溜める時間
@@ -15,9 +31,10 @@ func UsersByIDs(db *gorm.DB) *UserLoader {
 			users := make([]*domain.User, len(ids))
 			errors := make([]error, len(ids))
 
-			var usersTemp []*domain.User
-
-			db.Debug().Table("users").Where("id IN ?", ids).Find(&usersTemp)
+			usersTemp, err := d.userRepo.GetByIDs(ids)
+			if err != nil {
+				errors = append(errors, err)
+			}
 
 			userById := map[string]*domain.User{}
 			for _, user := range usersTemp {
@@ -35,7 +52,7 @@ func UsersByIDs(db *gorm.DB) *UserLoader {
 	return userLoader
 }
 
-func WorksByIDs(db *gorm.DB) *WorkLoader {
+func (d DataLoader) WorksByIDs() *WorkLoader {
 	workLoader := NewWorkLoader(WorkLoaderConfig{
 		MaxBatch: 100,                  // 溜める最大数、0を指定すると制限無し
 		Wait:     2 * time.Millisecond, // 溜める時間

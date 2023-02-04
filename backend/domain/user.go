@@ -29,4 +29,5 @@ type IUserRepository interface {
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetTotalCount(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, limit int, offset int) ([]*User, int64, error)
+	GetByIDs(ids []string)([]*User, error)
 }
