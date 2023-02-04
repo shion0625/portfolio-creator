@@ -34,7 +34,7 @@ func Playground() echo.HandlerFunc {
 
 func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// db := infrastructure.ConnectGORM()
+		// db := infrastructure.ConnectDB()
 		// userLoader := dataloader.UsersByIDs(db)
 		// workLoader := dataloader.WorksByIDs(db)
 		gc := generated.Config{Resolvers: r}

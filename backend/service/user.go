@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/shion0625/portfolio-creater/backend/domain"
 	"github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"gorm.io/gorm"
@@ -18,7 +19,7 @@ func UserGetByID(ctx context.Context, db *gorm.DB, id string) (*domain.User, err
 }
 
 func UserGetByEmail(ctx context.Context, email string) (*domain.User, error) {
-	db := infrastructure.ConnectGORM()
+	db := infrastructure.ConnectDB()
 	var user domain.User
 	if err := db.Table("users").Where("email LIKE ?", email).Take(&user).Error; err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func UsersGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*domai
 }
 
 // func UserUpdateByID(ctx context.Context, input domain.UpdateProfileInput) (*domain.User, error){
-// 	db := db.ConnectGORM()
+// 	db := db.ConnectDB()
 // 	user, err :=UserGetByID(ctx, input.ID)
 // 	if err != nil {
 // 		// if user not found

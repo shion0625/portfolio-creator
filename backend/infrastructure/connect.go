@@ -1,12 +1,13 @@
 package infrastructure
 
 import (
+	"os"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"os"
 )
 
-func ConnectGORM() *gorm.DB {
+func ConnectDB() *gorm.DB {
 	//データベースへの接続
 	dsn := os.Getenv("DATABASE_URL")
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

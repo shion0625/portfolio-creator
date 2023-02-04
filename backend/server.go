@@ -18,7 +18,7 @@ import (
 
 func main() {
 	loadEnv()
-	db := infrastructure.ConnectGORM()
+	db := infrastructure.ConnectDB()
 
 	e := echo.New()
 	e.Use(middleware.Logger())
