@@ -9,11 +9,11 @@ import (
 
 type WorkUseCase struct {
 	workRepo   domain.IWorkRepository
-	workLoader dataloader.IWorkLoader
+	workLoader *dataloader.WorkLoader
 }
 
 // NewWorkUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewWorkUseCase(w domain.IWorkRepository, wl dataloader.IWorkLoader) domain.IWorkUseCase {
+func NewWorkUseCase(w domain.IWorkRepository, wl *dataloader.WorkLoader) domain.IWorkUseCase {
 	return &WorkUseCase{
 		workRepo:   w,
 		workLoader: wl,

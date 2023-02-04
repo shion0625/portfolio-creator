@@ -2,6 +2,7 @@ package dig
 
 import (
 	"github.com/pkg/errors"
+	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
 	"github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"github.com/shion0625/portfolio-creater/backend/repository"
@@ -16,9 +17,11 @@ func BuildDigDependencies() (*dig.Container, error) {
 		c,
 		infrastructure.NewSQLHandler,
 		repository.NewUserRepository,
+		dataloader.NewUserLoader,
 		usecase.NewUserUseCase,
 
 		repository.NewWorkRepository,
+		dataloader.NewWorkLoader,
 		usecase.NewWorkUseCase,
 
 		resolver.NewResolver,

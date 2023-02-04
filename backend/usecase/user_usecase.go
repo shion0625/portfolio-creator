@@ -11,11 +11,11 @@ import (
 
 type UserUseCase struct {
 	userRepo   domain.IUserRepository
-	userLoader dataloader.IUserLoader
+	userLoader *dataloader.UserLoader
 }
 
 // NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewUserUseCase(u domain.IUserRepository, ul dataloader.IUserLoader) domain.IUserUseCase {
+func NewUserUseCase(u domain.IUserRepository, ul *dataloader.UserLoader) domain.IUserUseCase {
 	return &UserUseCase{
 		userRepo:   u,
 		userLoader: ul,
