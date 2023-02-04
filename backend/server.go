@@ -95,7 +95,3 @@ func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 		return nil
 	}
 }
-
-// go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creater/backend/graph/model.User
-
-// go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creater/backend/graph/model.Work

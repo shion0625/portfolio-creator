@@ -24,6 +24,15 @@ gqlgen:
 server-run:
 	docker compose exec server go run server.go
 
+dataload-user:
+	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creater/backend/domain.User
+
+dataload-work:
+	docker compose exec server go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creater/backend/domain.Work
+
+get:
+	docker compose exec server go get github.com/vektah/dataloaden
+
 graphql:
 	docker compose exec server go run github.com/99designs/gqlgen
 
