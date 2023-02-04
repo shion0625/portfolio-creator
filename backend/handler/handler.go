@@ -9,11 +9,10 @@ import (
 	_"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/shion0625/portfolio-creater/backend/infrastructure"
-	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
+	_ "github.com/shion0625/portfolio-creater/backend/infrastructure"
+	_ "github.com/shion0625/portfolio-creater/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	_"github.com/shion0625/portfolio-creater/backend/graphql/directives"
 	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
 )
 
@@ -33,16 +32,12 @@ func Playground() echo.HandlerFunc {
 	}
 }
 
-func QueryPlayground() echo.HandlerFunc {
+func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		db := infrastructure.ConnectGORM()
-		userLoader := dataloader.UsersByIDs(db)
-		workLoader := dataloader.WorksByIDs(db)
-		gc := generated.Config{Resolvers: &resolver.Resolver{
-			DB:         db,
-			UserLoader: userLoader,
-			WorkLoader: workLoader,
-		}}
+		// db := infrastructure.ConnectGORM()
+		// userLoader := dataloader.UsersByIDs(db)
+		// workLoader := dataloader.WorksByIDs(db)
+		gc := generated.Config{Resolvers: r}
 		gc.Directives.Auth = directives.Auth
 		// gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
 		// 	// session, err := session.Get("session", c)

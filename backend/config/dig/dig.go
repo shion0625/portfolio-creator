@@ -6,17 +6,18 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/repository"
 	"github.com/shion0625/portfolio-creater/backend/usecase"
 	"go.uber.org/dig"
+	"gorm.io/gorm"
 )
 
-func BuildDigDependencies() (*dig.Container, error) {
+func BuildDigDependencies(db *gorm.DB) (*dig.Container, error) {
 	c := dig.New()
 
 	registerDependencies(
 		c,
-		repository.NewUserRepository,
+		repository.NewUserRepository(db),
 		usecase.NewUserUseCase,
 
-		repository.NewWorkRepository,
+		repository.NewWorkRepository(db),
 		usecase.NewWorkUseCase,
 
 		resolver.NewResolver,
