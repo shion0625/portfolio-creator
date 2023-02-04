@@ -1,23 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/shion0625/portfolio-creater/backend/config/dig"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	"github.com/shion0625/portfolio-creater/backend/handler"
 	"github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"github.com/shion0625/portfolio-creater/backend/config/jwt"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
+	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
+	"github.com/shion0625/portfolio-creater/backend/util"
 )
 
 func main() {
-	loadEnv()
+	util.LoadEnv()
 	db := infrastructure.ConnectDB()
 
 	e := echo.New()
@@ -33,10 +34,10 @@ func main() {
 	c, _ := dig.BuildDigDependencies(db)
 	err := c.Invoke(func(r *resolver.Resolver) error {
 
-		e.GET("/", handler.Playground())
+		e.GET("/", Playground())
 		g := e.Group("/api")
 		g.Use(echo.WrapMiddleware(jwt.AuthMiddleware))
-		g.POST("/query", handler.QueryPlayground(r))
+		g.POST("/query", QueryPlayground(r))
 		return nil
 	})
 
@@ -44,7 +45,7 @@ func main() {
 		panic(err)
 	}
 
-	port := getPort()
+	port := util.GetPort()
 	errPort := e.Start(port)
 	if errPort == nil {
 		log.Fatalln(errPort)
@@ -54,22 +55,45 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-// ここで.envファイル全体を読み込みます。
-// この読み込み処理がないと、個々の環境変数が取得出来ません。
-func loadEnv() {
-	// 読み込めなかったら err にエラーが入ります。
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Printf("読み込み出来ませんでした: %v", err)
+func Playground() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		playgroundHandler := playground.Handler("GraphQL playground", "/api/query")
+		playgroundHandler.ServeHTTP(c.Response(), c.Request())
+		return nil
 	}
 }
 
-func getPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
+func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// db := infrastructure.ConnectDB()
+		// userLoader := dataloader.UsersByIDs(db)
+		// workLoader := dataloader.WorksByIDs(db)
+		gc := generated.Config{Resolvers: r}
+		gc.Directives.Auth = directives.Auth
+		// gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {
+		// 	// session, err := session.Get("session", c)
+		// 	// if err!=nil {
+		// 	//     return nil, c.String(http.StatusInternalServerError, "Error")
+		// 	// }
+		// 	// //ログインしているか
+		// 	// if b, _:=session.Values["auth"];b!=true{
+		// 	//     return nil, c.String(http.StatusUnauthorized, "401")
+		// 	// }else {
+		// 	// 	if !directives.HasRole(session.Values["role"].(string), role) {
+		// 	// 		return nil, fmt.Errorf("Access denied")
+		// 	// 	}
+		// 	// 	return next(ctx)
+		// 	// }
+		// 	return next(ctx)
+		// }
+		graphqlHandler := handler.NewDefaultServer(
+			generated.NewExecutableSchema(
+				gc,
+			),
+		)
+		graphqlHandler.ServeHTTP(c.Response(), c.Request())
+		return nil
 	}
-	return port
 }
 
 // go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creater/backend/graph/model.User
