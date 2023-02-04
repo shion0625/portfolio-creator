@@ -33,6 +33,8 @@ go-gen:
 fmt:
 	docker compose exec server go fmt ./...
 
+mod-tidy:
+	docker compose exec server go mod tidy
 db:
 	docker compose exec db sh
 

@@ -9,7 +9,9 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo-contrib v0.13.0
 	github.com/labstack/echo/v4 v4.9.0
+	github.com/pkg/errors v0.9.1
 	github.com/vektah/gqlparser/v2 v2.5.1
+	go.uber.org/dig v1.16.1
 	golang.org/x/crypto v0.0.0-20221005025214-4161e89ecf1b
 	gorm.io/driver/postgres v1.3.10
 	gorm.io/gorm v1.23.10
