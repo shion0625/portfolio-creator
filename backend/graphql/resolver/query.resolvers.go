@@ -9,14 +9,13 @@ import (
 
 	"github.com/shion0625/portfolio-creater/backend/domain"
 	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
-	"github.com/shion0625/portfolio-creater/backend/service"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
 )
 
 // UserAuth is the resolver for the userAuth field.
 func (r *queryResolver) UserAuth(ctx context.Context, id string) (*domain.User, error) {
-	user, err := service.UserGetByID(ctx, r.DB, id)
+	user, err := r.userUseCase.GetByID(ctx, id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -31,7 +30,7 @@ func (r *queryResolver) UserAuth(ctx context.Context, id string) (*domain.User, 
 
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, error) {
-	user, err := service.UserGetByID(ctx, r.DB, id)
+	user, err := r.userUseCase.GetByID(ctx, id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -46,7 +45,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, erro
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*domain.UserPagination, error) {
-	totalCount, err := service.UserTotalCountGet(ctx, r.DB)
+	totalCount, err := r.userUseCase.GetTotalCount(ctx)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -56,7 +55,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*dom
 		return nil, err
 	}
 
-	users, numRows, err := service.UsersGet(ctx, r.DB, limit, *offset)
+	users, numRows, err := r.userUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -83,7 +82,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*dom
 
 // Work is the resolver for the work field.
 func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, error) {
-	work, err := service.WorkGetByID(ctx, r.DB, id)
+	work, err := r.workUseCase.GetByID(ctx, id)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -97,7 +96,7 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, erro
 
 // Works is the resolver for the works field.
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*domain.WorkPagination, error) {
-	totalCount, err := service.WorkTotalCountGet(ctx, r.DB)
+	totalCount, err := r.workUseCase.GetTotalCount(ctx)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -107,7 +106,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*dom
 		return nil, err
 	}
 
-	works, numRows, err := service.WorksGet(ctx, r.DB, limit, *offset)
+	works, numRows, err := r.workUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{

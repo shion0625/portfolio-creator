@@ -120,8 +120,8 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	UpdateProfile(ctx context.Context, input domain.UpdateProfileInput) (*domain.User, error)
-	CreateWork(ctx context.Context, input domain.CreateWorkInput) (*domain.Work, error)
-	UpdateWork(ctx context.Context, input domain.UpdateWorkInput) (*domain.Work, error)
+	CreateWork(ctx context.Context, input domain.CreateWorkInput) (bool, error)
+	UpdateWork(ctx context.Context, input domain.UpdateWorkInput) (bool, error)
 	DeleteWorks(ctx context.Context, ids []*string) (bool, error)
 	Login(ctx context.Context, id string, email string) (interface{}, error)
 }
@@ -624,8 +624,8 @@ type PaginationInfo {
 ### Mutation(更新系)の定義
 type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth
-  createWork(input: CreateWorkInput!): Work!  @auth
-  updateWork(input: UpdateWorkInput!): Work! @auth
+  createWork(input: CreateWorkInput!): Boolean! @auth
+  updateWork(input: UpdateWorkInput!): Boolean! @auth
   deleteWorks(ids: [ID]!): Boolean! @auth
   login(id: String!, email: String!): Any!
 }
@@ -1106,10 +1106,10 @@ func (ec *executionContext) _Mutation_createWork(ctx context.Context, field grap
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*domain.Work); ok {
+		if data, ok := tmp.(bool); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/portfolio-creater/backend/domain.Work`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1121,9 +1121,9 @@ func (ec *executionContext) _Mutation_createWork(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*domain.Work)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createWork(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1133,37 +1133,7 @@ func (ec *executionContext) fieldContext_Mutation_createWork(ctx context.Context
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Work_id(ctx, field)
-			case "title":
-				return ec.fieldContext_Work_title(ctx, field)
-			case "summary":
-				return ec.fieldContext_Work_summary(ctx, field)
-			case "image_url":
-				return ec.fieldContext_Work_image_url(ctx, field)
-			case "duration":
-				return ec.fieldContext_Work_duration(ctx, field)
-			case "number_of_people":
-				return ec.fieldContext_Work_number_of_people(ctx, field)
-			case "language":
-				return ec.fieldContext_Work_language(ctx, field)
-			case "role":
-				return ec.fieldContext_Work_role(ctx, field)
-			case "url":
-				return ec.fieldContext_Work_url(ctx, field)
-			case "brief_story":
-				return ec.fieldContext_Work_brief_story(ctx, field)
-			case "created_at":
-				return ec.fieldContext_Work_created_at(ctx, field)
-			case "updated_at":
-				return ec.fieldContext_Work_updated_at(ctx, field)
-			case "is_delete":
-				return ec.fieldContext_Work_is_delete(ctx, field)
-			case "user":
-				return ec.fieldContext_Work_user(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	defer func() {
@@ -1211,10 +1181,10 @@ func (ec *executionContext) _Mutation_updateWork(ctx context.Context, field grap
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*domain.Work); ok {
+		if data, ok := tmp.(bool); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/portfolio-creater/backend/domain.Work`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1226,9 +1196,9 @@ func (ec *executionContext) _Mutation_updateWork(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*domain.Work)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateWork(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1238,37 +1208,7 @@ func (ec *executionContext) fieldContext_Mutation_updateWork(ctx context.Context
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Work_id(ctx, field)
-			case "title":
-				return ec.fieldContext_Work_title(ctx, field)
-			case "summary":
-				return ec.fieldContext_Work_summary(ctx, field)
-			case "image_url":
-				return ec.fieldContext_Work_image_url(ctx, field)
-			case "duration":
-				return ec.fieldContext_Work_duration(ctx, field)
-			case "number_of_people":
-				return ec.fieldContext_Work_number_of_people(ctx, field)
-			case "language":
-				return ec.fieldContext_Work_language(ctx, field)
-			case "role":
-				return ec.fieldContext_Work_role(ctx, field)
-			case "url":
-				return ec.fieldContext_Work_url(ctx, field)
-			case "brief_story":
-				return ec.fieldContext_Work_brief_story(ctx, field)
-			case "created_at":
-				return ec.fieldContext_Work_created_at(ctx, field)
-			case "updated_at":
-				return ec.fieldContext_Work_updated_at(ctx, field)
-			case "is_delete":
-				return ec.fieldContext_Work_is_delete(ctx, field)
-			case "user":
-				return ec.fieldContext_Work_user(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Work", field.Name)
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	defer func() {
@@ -6792,10 +6732,6 @@ func (ec *executionContext) marshalNUserPagination2ᚖgithubᚗcomᚋshion0625�
 		return graphql.Null
 	}
 	return ec._UserPagination(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNWork2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx context.Context, sel ast.SelectionSet, v domain.Work) graphql.Marshaler {
-	return ec._Work(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkᚄ(ctx context.Context, sel ast.SelectionSet, v []*domain.Work) graphql.Marshaler {

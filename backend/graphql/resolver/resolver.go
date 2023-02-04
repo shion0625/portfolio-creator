@@ -12,14 +12,16 @@ import (
 )
 
 type Resolver struct {
-	userUserCase usecase.UserUseCase
+	userUseCase usecase.UserUseCase
+	workUseCase usecase.WorkUseCase
 	WorkLoader   *dataloader.WorkLoader
 	UserLoader   *dataloader.UserLoader
 	DB           *gorm.DB
 }
 
-func NewResolver(uu usecase.UserUseCase) *Resolver {
+func NewResolver(uu usecase.UserUseCase, wu usecase.WorkUseCase) *Resolver {
 	return &Resolver{
-		userUserCase: uu,
+		userUseCase: uu,
+		workUseCase: wu,
 	}
 }
