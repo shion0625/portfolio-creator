@@ -8,10 +8,10 @@ import (
 )
 
 type UserRepository struct {
-	db infrastructure.SQLHandler
+	db *infrastructure.SQLHandler
 }
 
-func NewUserRepository(db infrastructure.SQLHandler) domain.IUserRepository {
+func NewUserRepository(db *infrastructure.SQLHandler) domain.IUserRepository {
 	return &UserRepository{db}
 }
 

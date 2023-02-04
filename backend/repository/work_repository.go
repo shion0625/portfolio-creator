@@ -12,10 +12,10 @@ import (
 )
 
 type WorkRepository struct {
-	db infrastructure.SQLHandler
+	db *infrastructure.SQLHandler
 }
 
-func NewWorkRepository(db infrastructure.SQLHandler) domain.IWorkRepository {
+func NewWorkRepository(db *infrastructure.SQLHandler) domain.IWorkRepository {
 	return &WorkRepository{db}
 }
 

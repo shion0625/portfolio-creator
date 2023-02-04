@@ -11,14 +11,16 @@ type SQLHandler struct {
 	Conn *gorm.DB
 }
 
-func NewSQLHandler() *gorm.DB {
+func NewSQLHandler() *SQLHandler {
 	dsn := os.Getenv("DATABASE_URL")
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		panic(err.Error())
 	}
-	return conn
+	sqlHandler := new(SQLHandler)
+	sqlHandler.Conn = conn
+	return sqlHandler
 }
 
 // func ConnectDB() *gorm.DB {
