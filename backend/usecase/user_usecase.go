@@ -21,14 +21,14 @@ func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, erro
 	return u.userRepo.GetByID(ctx, id)
 }
 
-func (u UserUseCase) GetByEmail(ctx context.Context, email string)(*domain.User, error){
+func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	return u.userRepo.GetByEmail(ctx, email)
 }
 
-func (u UserUseCase) GetTotalCount(ctx context.Context)(int64, error){
+func (u UserUseCase) GetTotalCount(ctx context.Context) (int64, error) {
 	return u.userRepo.GetTotalCount(ctx)
 }
 
-func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int)([]*domain.User,int64, error){
+func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) ([]*domain.User, int64, error) {
 	return u.userRepo.GetAll(ctx, limit, offset)
 }

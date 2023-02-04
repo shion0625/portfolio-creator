@@ -45,7 +45,6 @@ func UserLogin(ctx context.Context, id string, email string) (interface{}, error
 		return nil, err
 	}
 
-
 	token, err := JwtGenerate(ctx, getUser.ID)
 	if err != nil {
 		return nil, err

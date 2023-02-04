@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo-contrib/session"
-	_"github.com/99designs/gqlgen/graphql"
+	_ "github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	_ "github.com/shion0625/portfolio-creater/backend/infrastructure"
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	_ "github.com/shion0625/portfolio-creater/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
 	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
+	_ "github.com/shion0625/portfolio-creater/backend/infrastructure"
 )
 
 func Welcome() echo.HandlerFunc {

@@ -1,9 +1,9 @@
 package directives
 
-import(
+import (
 	"context"
-	"github.com/shion0625/portfolio-creater/backend/middlewares"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/shion0625/portfolio-creater/backend/middlewares"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 

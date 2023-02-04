@@ -9,7 +9,6 @@ import (
 	"context"
 	"github.com/shion0625/portfolio-creater/backend/domain"
 	"gorm.io/gorm"
-
 )
 
 func WorkGetByID(ctx context.Context, db *gorm.DB, id string) (*domain.Work, error) {
@@ -29,17 +28,17 @@ func WorkTotalCountGet(ctx context.Context, db *gorm.DB) (int64, error) {
 	return totalCount, nil
 }
 
-func WorksGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*domain.Work,int64, error) {
+func WorksGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
 	result := db.Limit(limit).Offset(offset).Find(&works)
 	if result.Error != nil {
-		return nil,0, result.Error
+		return nil, 0, result.Error
 	}
 
-	return works,result.RowsAffected, nil
+	return works, result.RowsAffected, nil
 }
 
-func WorkCreate(ctx context.Context, db *gorm.DB,input domain.CreateWorkInput) (*domain.Work, error) {
+func WorkCreate(ctx context.Context, db *gorm.DB, input domain.CreateWorkInput) (*domain.Work, error) {
 	id := fmt.Sprintf("work:%d", rand.Int())
 	work := domain.Work{
 		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
@@ -84,8 +83,8 @@ func WorkUpdate(ctx context.Context, db *gorm.DB, work *domain.Work, input domai
 }
 
 func WorksDelete(ctx context.Context, db *gorm.DB, ids []*string) (*domain.Work, error) {
-	if err:= db.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
-		IsDelete: true,
+	if err := db.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
+		IsDelete:  true,
 		UpdatedAt: Time2str(time.Now()),
 	}).Error; err != nil {
 		return nil, err

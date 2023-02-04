@@ -7,9 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func UsersByIDs(db *gorm.DB) *UserLoader{
+func UsersByIDs(db *gorm.DB) *UserLoader {
 	userLoader := NewUserLoader(UserLoaderConfig{
-		MaxBatch: 100, // 溜める最大数、0を指定すると制限無し
+		MaxBatch: 100,                  // 溜める最大数、0を指定すると制限無し
 		Wait:     2 * time.Millisecond, // 溜める時間
 		Fetch: func(ids []string) ([]*domain.User, []error) {
 			users := make([]*domain.User, len(ids))
@@ -20,13 +20,13 @@ func UsersByIDs(db *gorm.DB) *UserLoader{
 			db.Debug().Table("users").Where("id IN ?", ids).Find(&usersTemp)
 
 			userById := map[string]*domain.User{}
-				for _, user := range usersTemp {
-						userById[user.ID] = user
-				}
+			for _, user := range usersTemp {
+				userById[user.ID] = user
+			}
 
-				for i, id := range ids {
-						users[i] = userById[id]
-				}
+			for i, id := range ids {
+				users[i] = userById[id]
+			}
 
 			// 引数のidsに対応する順番の配列で返す。
 			return users, errors
@@ -35,9 +35,9 @@ func UsersByIDs(db *gorm.DB) *UserLoader{
 	return userLoader
 }
 
-func WorksByIDs(db *gorm.DB) *WorkLoader{
+func WorksByIDs(db *gorm.DB) *WorkLoader {
 	workLoader := NewWorkLoader(WorkLoaderConfig{
-		MaxBatch: 100, // 溜める最大数、0を指定すると制限無し
+		MaxBatch: 100,                  // 溜める最大数、0を指定すると制限無し
 		Wait:     2 * time.Millisecond, // 溜める時間
 		Fetch: func(ids []string) ([][]*domain.Work, []error) {
 			works := make([][]*domain.Work, len(ids))
@@ -46,16 +46,16 @@ func WorksByIDs(db *gorm.DB) *WorkLoader{
 			db.Debug().Where("user_id IN ?", ids).Find(&worksTemp)
 
 			workByUserId := map[string][]*domain.Work{}
-				for _, work := range worksTemp {
-						workByUserId[work.UserID] = append(workByUserId[work.UserID], work)
-				}
+			for _, work := range worksTemp {
+				workByUserId[work.UserID] = append(workByUserId[work.UserID], work)
+			}
 
-				for i, id := range ids {
-						works[i] = workByUserId[id]
-				}
+			for i, id := range ids {
+				works[i] = workByUserId[id]
+			}
 
 			// 引数のidsに対応する順番の配列で返す。
-			return works , errors
+			return works, errors
 		},
 	})
 	return workLoader

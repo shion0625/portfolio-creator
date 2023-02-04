@@ -6,7 +6,6 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"gorm.io/gorm"
 	// "github.com/vektah/gqlparser/v2/gqlerror"
-
 )
 
 func UserGetByID(ctx context.Context, db *gorm.DB, id string) (*domain.User, error) {
@@ -27,7 +26,7 @@ func UserGetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	return &user, nil
 }
 
-func UserTotalCountGet(ctx context.Context,db *gorm.DB) (int64, error) {
+func UserTotalCountGet(ctx context.Context, db *gorm.DB) (int64, error) {
 	var totalCount int64
 	if err := db.Model(&domain.User{}).Count(&totalCount).Error; err != nil {
 		return 0, err
@@ -35,15 +34,16 @@ func UserTotalCountGet(ctx context.Context,db *gorm.DB) (int64, error) {
 	return totalCount, nil
 }
 
-func UsersGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*domain.User,int64, error) {
+func UsersGet(ctx context.Context, db *gorm.DB, limit int, offset int) ([]*domain.User, int64, error) {
 	var users []*domain.User
 	result := db.Limit(limit).Offset(offset).Find(&users)
 	if result.Error != nil {
-		return nil,0, result.Error
+		return nil, 0, result.Error
 	}
 
 	return users, result.RowsAffected, nil
 }
+
 // func UserUpdateByID(ctx context.Context, input domain.UpdateProfileInput) (*domain.User, error){
 // 	db := db.ConnectGORM()
 // 	user, err :=UserGetByID(ctx, input.ID)

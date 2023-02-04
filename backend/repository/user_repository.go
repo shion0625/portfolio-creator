@@ -6,11 +6,12 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/domain"
 	"gorm.io/gorm"
 )
+
 type UserRepository struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) domain.IUserRepository{
+func NewUserRepository(db *gorm.DB) domain.IUserRepository {
 	return &UserRepository{db}
 }
 
@@ -39,12 +40,11 @@ func (g *UserRepository) GetTotalCount(ctx context.Context) (int64, error) {
 	return totalCount, nil
 }
 
-
 func (g *UserRepository) GetAll(ctx context.Context, limit int, offset int) ([]*domain.User, int64, error) {
 	var users []*domain.User
 	result := g.db.Limit(limit).Offset(offset).Find(&users)
 	if result.Error != nil {
-		return nil,0, result.Error
+		return nil, 0, result.Error
 	}
 
 	return users, result.RowsAffected, nil

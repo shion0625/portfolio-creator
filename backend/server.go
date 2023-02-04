@@ -12,8 +12,8 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/config/dig"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
 	"github.com/shion0625/portfolio-creater/backend/handler"
-	"github.com/shion0625/portfolio-creater/backend/middlewares"
 	"github.com/shion0625/portfolio-creater/backend/infrastructure"
+	"github.com/shion0625/portfolio-creater/backend/middlewares"
 )
 
 func main() {

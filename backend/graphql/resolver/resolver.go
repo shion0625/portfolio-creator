@@ -13,9 +13,9 @@ import (
 
 type Resolver struct {
 	userUserCase usecase.UserUseCase
-	WorkLoader *dataloader.WorkLoader
-	UserLoader *dataloader.UserLoader
-	DB         *gorm.DB
+	WorkLoader   *dataloader.WorkLoader
+	UserLoader   *dataloader.UserLoader
+	DB           *gorm.DB
 }
 
 func NewResolver(uu usecase.UserUseCase) *Resolver {

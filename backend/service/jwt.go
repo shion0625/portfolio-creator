@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/golang-jwt/jwt/v4"
 	"os"
 	"time"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 type JwtCustomClaim struct {
@@ -33,7 +33,7 @@ func JwtGenerate(ctx context.Context, userID string) (string, error) {
 	})
 	token, err := t.SignedString(jwtSecret)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 	return token, nil
 }
