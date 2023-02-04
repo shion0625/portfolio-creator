@@ -1,5 +1,7 @@
 package domain
 
+import "context"
+
 type Work struct {
 	ID             string  `json:"id"`
 	Title          string  `json:"title"`
@@ -26,5 +28,10 @@ type IWorkUseCase interface {
 
 // WorkRepository represent the work's repository contract
 type IWorkRepository interface {
-
+	GetByID(ctx context.Context, id string)(*Work, error)
+	GetTotalCount(ctx context.Context)(int64, error)
+	GetAll(ctx context.Context, limit int, offset int)([]*Work, int64, error)
+	Create(ctx context.Context, input CreateWorkInput)error
+	Update(ctx context.Context, work *Work, input UpdateWorkInput)error
+	Delete(ctx context.Context, ids []*string)error
 }
