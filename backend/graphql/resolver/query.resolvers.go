@@ -5,7 +5,6 @@ package resolver
 
 import (
 	"context"
-	"math"
 
 	"github.com/shion0625/portfolio-creater/backend/domain"
 	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
@@ -73,17 +72,7 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, erro
 
 // Works is the resolver for the works field.
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*domain.WorkPagination, error) {
-	totalCount, err := r.workUseCase.GetTotalCount(ctx)
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, &gqlerror.Error{
-				Message: "work totalCount not found",
-			}
-		}
-		return nil, err
-	}
-
-	works, numRows, err := r.workUseCase.GetAll(ctx, limit, *offset)
+	workPagination, err := r.workUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -92,20 +81,7 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*dom
 		}
 		return nil, err
 	}
-
-	pageInfo := domain.PaginationInfo{
-		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
-		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      (int(totalCount) < limit+*offset),
-		HasPreviousPage:  limit < *offset,
-		Count:            int(numRows),
-		TotalCount:       int(totalCount),
-	}
-	pagination := domain.WorkPagination{
-		PageInfo: &pageInfo,
-		Nodes:    works,
-	}
-	return &pagination, nil
+	return workPagination, nil
 }
 
 // Query returns generated.QueryResolver implementation.

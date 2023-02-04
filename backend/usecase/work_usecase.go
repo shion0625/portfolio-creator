@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-
+	"math"
 	"github.com/shion0625/portfolio-creater/backend/domain"
 )
 
@@ -21,12 +21,30 @@ func (w WorkUseCase) GetByID(ctx context.Context, id string) (*domain.Work, erro
 	return w.workRepo.GetByID(ctx, id)
 }
 
-func (w WorkUseCase) GetTotalCount(ctx context.Context) (int64, error) {
-	return w.workRepo.GetTotalCount(ctx)
-}
+func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.WorkPagination, error) {
+	totalCount, err := w.workRepo.GetTotalCount(ctx)
+	if err != nil {
+		return nil, err
+	}
 
-func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) ([]*domain.Work, int64, error) {
-	return w.workRepo.GetAll(ctx, limit, offset)
+	works, numRows, err := w.workRepo.GetAll(ctx, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo := domain.PaginationInfo{
+		Page:             int(math.Ceil(float64(offset) / float64(limit))),
+		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
+		HasNextPage:      (int(totalCount) < limit+offset),
+		HasPreviousPage:  limit < offset,
+		Count:            int(numRows),
+		TotalCount:       int(totalCount),
+	}
+	workPagination := domain.WorkPagination{
+		PageInfo: &pageInfo,
+		Nodes:    works,
+	}
+	return &workPagination, nil
 }
 
 func (w WorkUseCase) Create(ctx context.Context, input domain.CreateWorkInput) error {
