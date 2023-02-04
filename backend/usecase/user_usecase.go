@@ -5,22 +5,29 @@ import (
 	"math"
 
 	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creater/backend/config/jwt"
 )
 
 type UserUseCase struct {
 	userRepo domain.IUserRepository
+	userLoader dataloader.UserLoader
 }
 
 // NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewUserUseCase(u domain.IUserRepository) domain.IUserUseCase {
+func NewUserUseCase(u domain.IUserRepository, ul dataloader.UserLoader) domain.IUserUseCase {
 	return &UserUseCase{
 		userRepo: u,
+		userLoader: ul,
 	}
 }
 
 func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, error) {
 	return u.userRepo.GetByID(ctx, id)
+}
+
+func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error){
+	return u.userLoader.Load(id)
 }
 
 func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {

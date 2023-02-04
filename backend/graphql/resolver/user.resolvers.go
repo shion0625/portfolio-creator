@@ -13,20 +13,8 @@ import (
 
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error) {
-	works, err := r.WorkLoader.Load(obj.ID)
-	pageInfo := domain.PaginationInfo{
-		Page:             1,
-		PaginationLength: 1,
-		HasNextPage:      false,
-		HasPreviousPage:  false,
-		Count:            len(works),
-		TotalCount:       len(works),
-	}
-	pagination := domain.WorkPagination{
-		PageInfo: &pageInfo,
-		Nodes:    works,
-	}
-	return &pagination, err
+	worksPagination, err := r.workUseCase.GetAllLoad(ctx, obj.ID)
+	return worksPagination, err
 }
 
 // Profile is the resolver for the profile field.
