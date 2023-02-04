@@ -17,3 +17,9 @@ type Resolver struct {
 	UserLoader *dataloader.UserLoader
 	DB         *gorm.DB
 }
+
+func NewResolver(uu usecase.UserUseCase) *Resolver {
+	return &Resolver{
+		userUserCase: uu,
+	}
+}
