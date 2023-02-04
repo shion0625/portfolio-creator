@@ -20,6 +20,7 @@ type IUserUseCase interface {
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetTotalCount(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, limit int, offset int) ([]*User, int64, error)
+	Login(ctx context.Context, id string, email string)(interface{}, error)
 }
 
 // UserRepository represent the user's repository contract

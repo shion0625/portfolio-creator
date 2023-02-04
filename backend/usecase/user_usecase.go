@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/config/jwt"
 )
 
 type UserUseCase struct {
@@ -31,4 +32,19 @@ func (u UserUseCase) GetTotalCount(ctx context.Context) (int64, error) {
 
 func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) ([]*domain.User, int64, error) {
 	return u.userRepo.GetAll(ctx, limit, offset)
+}
+
+func (u UserUseCase)Login(ctx context.Context, id string, email string)(interface{}, error) {
+	getUser, err := u.userRepo.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := jwt.JwtGenerate(ctx, getUser.ID)
+	if err != nil {
+		return nil, err
+	}
+	return map[string]interface{}{
+		"token": token,
+	}, nil
 }
