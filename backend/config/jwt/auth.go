@@ -1,8 +1,7 @@
-package middlewares
+package jwt
 
 import (
 	"context"
-	"github.com/shion0625/portfolio-creater/backend/service"
 	"net/http"
 )
 
@@ -19,12 +18,12 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		bearer := "Bearer "
 		auth = auth[len(bearer):]
 
-		validate, err := service.JwtValidate(context.Background(), auth)
+		validate, err := JwtValidate(context.Background(), auth)
 		if err != nil || !validate.Valid {
 			http.Error(w, "Invalid token", http.StatusForbidden)
 			return
 		}
-		customClaim, _ := validate.Claims.(*service.JwtCustomClaim)
+		customClaim, _ := validate.Claims.(JwtCustomClaim)
 
 		ctx := context.WithValue(r.Context(), authString("auth"), customClaim)
 
@@ -33,7 +32,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func CtxValue(ctx context.Context) *service.JwtCustomClaim {
-	raw, _ := ctx.Value(authString("auth")).(*service.JwtCustomClaim)
+func CtxValue(ctx context.Context) *JwtCustomClaim {
+	raw, _ := ctx.Value(authString("auth")).(*JwtCustomClaim)
 	return raw
 }

@@ -48,3 +48,58 @@ func (u UserUseCase)Login(ctx context.Context, id string, email string)(interfac
 		"token": token,
 	}, nil
 }
+
+// func UserRegister(ctx context.Context, input model.CreateUserInput) (interface{}, error) {
+// 	// Check Email
+// 	_, err := UserGetByEmail(ctx, input.Email)
+// 	if err == nil {
+// 		// if err != record not found
+// 		if err != gorm.ErrRecordNotFound {
+// 			return nil, err
+// 		}
+// 	}
+
+// 	createdUser, err := UserCreate(ctx, input)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	token, err := JwtGenerate(ctx, createdUser.ID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return map[string]interface{}{
+// 		"token": token,
+// 	}, nil
+// }
+
+
+// func UserUpdateByID(ctx context.Context, input domain.UpdateProfileInput) (*domain.User, error){
+// 	db := db.ConnectDB()
+// 	user, err :=UserGetByID(ctx, input.ID)
+// 	if err != nil {
+// 		// if user not found
+// 		if err == gorm.ErrRecordNotFound {
+// 			return nil, &gqlerror.Error{
+// 				Message: "id not found",
+// 			}
+// 		}
+// 		return nil, err
+// 	}
+
+// 	if input.Name == nil {
+// 		input.Name = user.Name
+// 	}
+// 	if input.Email == nil {
+// 		input.Email = user.Email
+// 	}
+
+// 	if err := db.Model(&user).Updates(domain.User{Name: input.Name, Email: input.Email}).Error; err != nil {
+// 		return nil, err
+// 	}
+// 	if err := db.Save(&user).Error; err != nil {
+// 		return nil, err
+// 	}
+// 	return user, nil
+// }

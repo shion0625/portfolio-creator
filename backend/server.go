@@ -13,7 +13,7 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
 	"github.com/shion0625/portfolio-creater/backend/handler"
 	"github.com/shion0625/portfolio-creater/backend/infrastructure"
-	"github.com/shion0625/portfolio-creater/backend/middlewares"
+	"github.com/shion0625/portfolio-creater/backend/config/jwt"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 
 		e.GET("/", handler.Playground())
 		g := e.Group("/api")
-		g.Use(echo.WrapMiddleware(middlewares.AuthMiddleware))
+		g.Use(echo.WrapMiddleware(jwt.AuthMiddleware))
 		g.POST("/query", handler.QueryPlayground(r))
 		return nil
 	})
