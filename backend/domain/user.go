@@ -18,7 +18,6 @@ func (this User) GetID() string { return this.ID }
 type IUserUseCase interface {
 	GetByID(ctx context.Context, id string) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
-	GetTotalCount(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, limit int, offset int) (*UserPagination, error)
 	Login(ctx context.Context, id string, email string)(interface{}, error)
 }
