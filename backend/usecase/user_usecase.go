@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"math"
 
 	"github.com/shion0625/portfolio-creater/backend/domain"
 	"github.com/shion0625/portfolio-creater/backend/config/jwt"
@@ -30,8 +31,31 @@ func (u UserUseCase) GetTotalCount(ctx context.Context) (int64, error) {
 	return u.userRepo.GetTotalCount(ctx)
 }
 
-func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) ([]*domain.User, int64, error) {
-	return u.userRepo.GetAll(ctx, limit, offset)
+func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.UserPagination, error) {
+	totalCount, err := u.userRepo.GetTotalCount(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	users, numRows, err :=  u.userRepo.GetAll(ctx, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	pageInfo := domain.PaginationInfo{
+		Page:             int(math.Ceil(float64(offset) / float64(limit))),
+		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
+		HasNextPage:      int(totalCount) < (limit + offset),
+		HasPreviousPage:  (limit < offset),
+		Count:            int(numRows),
+		TotalCount:       int(totalCount),
+	}
+
+	userPagination := domain.UserPagination{
+		PageInfo: &pageInfo,
+		Nodes:    users,
+	}
+
+	return &userPagination, nil
 }
 
 func (u UserUseCase)Login(ctx context.Context, id string, email string)(interface{}, error) {

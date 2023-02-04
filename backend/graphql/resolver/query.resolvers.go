@@ -45,17 +45,7 @@ func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, erro
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*domain.UserPagination, error) {
-	totalCount, err := r.userUseCase.GetTotalCount(ctx)
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, &gqlerror.Error{
-				Message: "userTotalCount not found",
-			}
-		}
-		return nil, err
-	}
-
-	users, numRows, err := r.userUseCase.GetAll(ctx, limit, *offset)
+	userPagination, err := r.userUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, &gqlerror.Error{
@@ -64,20 +54,7 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*dom
 		}
 		return nil, err
 	}
-
-	pageInfo := domain.PaginationInfo{
-		Page:             int(math.Ceil(float64(*offset) / float64(limit))),
-		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      int(totalCount) < (limit + *offset),
-		HasPreviousPage:  (limit < *offset),
-		Count:            int(numRows),
-		TotalCount:       int(totalCount),
-	}
-	pagination := domain.UserPagination{
-		PageInfo: &pageInfo,
-		Nodes:    users,
-	}
-	return &pagination, nil
+	return userPagination, nil
 }
 
 // Work is the resolver for the work field.
