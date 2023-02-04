@@ -46,6 +46,14 @@ func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*
 	return works, result.RowsAffected, nil
 }
 
+func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
+	var works []*domain.Work
+	if err := g.db.Conn.Where("user_id IN ?", ids).Find(&works).Error; err != nil {
+		return nil, err
+	}
+	return works, nil
+}
+
 func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInput) error {
 	id := fmt.Sprintf("work:%d", rand.Int())
 	work := domain.Work{

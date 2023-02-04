@@ -59,8 +59,11 @@ func (d DataLoader) WorksByIDs() *WorkLoader {
 		Fetch: func(ids []string) ([][]*domain.Work, []error) {
 			works := make([][]*domain.Work, len(ids))
 			errors := make([]error, len(ids))
-			var worksTemp []*domain.Work
-			db.Debug().Where("user_id IN ?", ids).Find(&worksTemp)
+
+			worksTemp, err := d.workRepo.GetByUserIDs(ids)
+			if err != nil {
+				errors = append(errors, err)
+			}
 
 			workByUserId := map[string][]*domain.Work{}
 			for _, work := range worksTemp {

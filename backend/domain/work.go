@@ -37,6 +37,8 @@ type IWorkRepository interface {
 	GetByID(ctx context.Context, id string) (*Work, error)
 	GetTotalCount(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, limit int, offset int) ([]*Work, int64, error)
+	GetByUserIDs(ids []string) ([]*Work, error)
+
 	Create(ctx context.Context, input CreateWorkInput) error
 	Update(ctx context.Context, work *Work, input UpdateWorkInput) error
 	Delete(ctx context.Context, ids []*string) error
