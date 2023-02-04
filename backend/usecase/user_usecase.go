@@ -4,20 +4,20 @@ import (
 	"context"
 	"math"
 
-	"github.com/shion0625/portfolio-creater/backend/domain"
 	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creater/backend/config/jwt"
+	"github.com/shion0625/portfolio-creater/backend/domain"
 )
 
 type UserUseCase struct {
-	userRepo domain.IUserRepository
-	userLoader dataloader.UserLoader
+	userRepo   domain.IUserRepository
+	userLoader dataloader.IUserLoader
 }
 
 // NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewUserUseCase(u domain.IUserRepository, ul dataloader.UserLoader) domain.IUserUseCase {
+func NewUserUseCase(u domain.IUserRepository, ul dataloader.IUserLoader) domain.IUserUseCase {
 	return &UserUseCase{
-		userRepo: u,
+		userRepo:   u,
 		userLoader: ul,
 	}
 }
@@ -26,7 +26,7 @@ func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, erro
 	return u.userRepo.GetByID(ctx, id)
 }
 
-func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error){
+func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error) {
 	return u.userLoader.Load(id)
 }
 
@@ -40,7 +40,7 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 		return nil, err
 	}
 
-	users, numRows, err :=  u.userRepo.GetAll(ctx, limit, offset)
+	users, numRows, err := u.userRepo.GetAll(ctx, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	return &userPagination, nil
 }
 
-func (u UserUseCase)Login(ctx context.Context, id string, email string)(interface{}, error) {
+func (u UserUseCase) Login(ctx context.Context, id string, email string) (interface{}, error) {
 	getUser, err := u.userRepo.GetByEmail(ctx, email)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,6 @@ func (u UserUseCase)Login(ctx context.Context, id string, email string)(interfac
 // 		"token": token,
 // 	}, nil
 // }
-
 
 // func UserUpdateByID(ctx context.Context, input domain.UpdateProfileInput) (*domain.User, error){
 // 	db := db.ConnectDB()

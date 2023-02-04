@@ -6,15 +6,15 @@ package resolver
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 import (
-	"github.com/shion0625/portfolio-creater/backend/usecase"
+	"github.com/shion0625/portfolio-creater/backend/domain"
 )
 
 type Resolver struct {
-	userUseCase usecase.UserUseCase
-	workUseCase usecase.WorkUseCase
+	userUseCase domain.IUserUseCase
+	workUseCase domain.IWorkUseCase
 }
 
-func NewResolver(uu usecase.UserUseCase, wu usecase.WorkUseCase) *Resolver {
+func NewResolver(uu domain.IUserUseCase, wu domain.IWorkUseCase) *Resolver {
 	return &Resolver{
 		userUseCase: uu,
 		workUseCase: wu,

@@ -2,7 +2,6 @@ package util
 
 import "os"
 
-
 func GetPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {

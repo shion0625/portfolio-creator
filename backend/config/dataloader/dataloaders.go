@@ -7,6 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type IUserLoader interface {
+	Load(key string) (*domain.User, error)
+}
+
+type IWorkLoader interface {
+	Load(key string) ([]*domain.Work, error)
+}
+
 func UsersByIDs(db *gorm.DB) *UserLoader {
 	userLoader := NewUserLoader(UserLoaderConfig{
 		MaxBatch: 100,                  // 溜める最大数、0を指定すると制限無し

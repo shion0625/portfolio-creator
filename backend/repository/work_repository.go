@@ -5,23 +5,23 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"github.com/shion0625/portfolio-creater/backend/util"
-	"gorm.io/gorm"
 	"math/rand"
 	"time"
 )
 
 type WorkRepository struct {
-	db *gorm.DB
+	db infrastructure.SQLHandler
 }
 
-func NewWorkRepository(db *gorm.DB) domain.IWorkRepository {
+func NewWorkRepository(db infrastructure.SQLHandler) domain.IWorkRepository {
 	return &WorkRepository{db}
 }
 
 func (g *WorkRepository) GetByID(ctx context.Context, id string) (*domain.Work, error) {
 	work := domain.Work{ID: id}
-	if err := g.db.Where("id = ?", id).First(&work).Error; err != nil {
+	if err := g.db.Conn.Where("id = ?", id).First(&work).Error; err != nil {
 		return nil, err
 	}
 
@@ -30,7 +30,7 @@ func (g *WorkRepository) GetByID(ctx context.Context, id string) (*domain.Work, 
 
 func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 	var totalCount int64
-	if err := g.db.Model(&domain.Work{}).Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
+	if err := g.db.Conn.Model(&domain.Work{}).Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
 		return 0, err
 	}
 	return totalCount, nil
@@ -38,7 +38,7 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 
 func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
-	result := g.db.Limit(limit).Offset(offset).Find(&works)
+	result := g.db.Conn.Limit(limit).Offset(offset).Find(&works)
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}
@@ -64,7 +64,7 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 		IsDelete:       false,
 		UserID:         input.UserID,
 	}
-	if err := g.db.Create(&work).Error; err != nil {
+	if err := g.db.Conn.Create(&work).Error; err != nil {
 		return err
 	}
 
@@ -72,7 +72,7 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 }
 
 func (g *WorkRepository) Update(ctx context.Context, work *domain.Work, input domain.UpdateWorkInput) error {
-	if err := g.db.Model(work).Updates(domain.Work{
+	if err := g.db.Conn.Model(work).Updates(domain.Work{
 		Title:          *input.Title,
 		Summary:        input.Summary,
 		ImageURL:       input.ImageURL,
@@ -91,7 +91,7 @@ func (g *WorkRepository) Update(ctx context.Context, work *domain.Work, input do
 }
 
 func (g *WorkRepository) Delete(ctx context.Context, ids []*string) error {
-	if err := g.db.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
+	if err := g.db.Conn.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
 		IsDelete:  true,
 		UpdatedAt: util.Time2str(time.Now()),
 	}).Error; err != nil {

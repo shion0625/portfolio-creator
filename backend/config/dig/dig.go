@@ -3,21 +3,22 @@ package dig
 import (
 	"github.com/pkg/errors"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
+	"github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"github.com/shion0625/portfolio-creater/backend/repository"
 	"github.com/shion0625/portfolio-creater/backend/usecase"
 	"go.uber.org/dig"
-	"gorm.io/gorm"
 )
 
-func BuildDigDependencies(db *gorm.DB) (*dig.Container, error) {
+func BuildDigDependencies() (*dig.Container, error) {
 	c := dig.New()
 
 	registerDependencies(
 		c,
-		repository.NewUserRepository(db),
+		infrastructure.NewSQLHandler,
+		repository.NewUserRepository,
 		usecase.NewUserUseCase,
 
-		repository.NewWorkRepository(db),
+		repository.NewWorkRepository,
 		usecase.NewWorkUseCase,
 
 		resolver.NewResolver,

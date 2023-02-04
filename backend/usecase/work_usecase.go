@@ -2,21 +2,20 @@ package usecase
 
 import (
 	"context"
-	"math"
-	"github.com/shion0625/portfolio-creater/backend/domain"
 	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creater/backend/domain"
+	"math"
 )
 
 type WorkUseCase struct {
-	workRepo domain.IWorkRepository
-	workLoader dataloader.WorkLoader
-
+	workRepo   domain.IWorkRepository
+	workLoader dataloader.IWorkLoader
 }
 
 // NewWorkUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewWorkUseCase(w domain.IWorkRepository, wl dataloader.WorkLoader) domain.IWorkUseCase {
+func NewWorkUseCase(w domain.IWorkRepository, wl dataloader.IWorkLoader) domain.IWorkUseCase {
 	return &WorkUseCase{
-		workRepo: w,
+		workRepo:   w,
 		workLoader: wl,
 	}
 }

@@ -4,22 +4,22 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/shion0625/portfolio-creater/backend/config/dig"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	"github.com/shion0625/portfolio-creater/backend/infrastructure"
+	// "github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"github.com/shion0625/portfolio-creater/backend/config/jwt"
-	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
+	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/util"
 )
 
 func main() {
 	util.LoadEnv()
-	db := infrastructure.ConnectDB()
+	// db := infrastructure.ConnectDB()
 
 	e := echo.New()
 	e.Use(middleware.Logger())
@@ -31,7 +31,7 @@ func main() {
 		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	c, _ := dig.BuildDigDependencies(db)
+	c, _ := dig.BuildDigDependencies()
 	err := c.Invoke(func(r *resolver.Resolver) error {
 
 		e.GET("/", Playground())
