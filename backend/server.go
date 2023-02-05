@@ -9,11 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shion0625/portfolio-creater/backend/config/dig"
-	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	// "github.com/shion0625/portfolio-creater/backend/infrastructure"
 	"github.com/shion0625/portfolio-creater/backend/config/jwt"
 	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
 	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
+	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
 	"github.com/shion0625/portfolio-creater/backend/util"
 )
 
@@ -65,9 +64,6 @@ func Playground() echo.HandlerFunc {
 
 func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// db := infrastructure.ConnectDB()
-		// userLoader := dataloader.UsersByIDs(db)
-		// workLoader := dataloader.WorksByIDs(db)
 		gc := generated.Config{Resolvers: r}
 		gc.Directives.Auth = directives.Auth
 		// gc.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []model.Role) (interface{}, error) {

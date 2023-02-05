@@ -50,10 +50,10 @@ func (g *UserRepository) GetAll(ctx context.Context, limit int, offset int) ([]*
 	return users, result.RowsAffected, nil
 }
 
-func(g *UserRepository)	GetByIDs(ids []string)([]*domain.User, error) {
+func (g *UserRepository) GetByIDs(ids []string) ([]*domain.User, error) {
 	var users []*domain.User
 
-	if err := g.db.Conn.Where("id IN ?", ids).Find(&users).Error; err!= nil {
+	if err := g.db.Conn.Where("id IN ?", ids).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil

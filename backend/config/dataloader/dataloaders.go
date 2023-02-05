@@ -6,7 +6,7 @@ import (
 	"github.com/shion0625/portfolio-creater/backend/domain"
 )
 
-type IDataLoader interface{
+type IDataLoader interface {
 	UsersByIDs() *UserLoader
 	WorksByIDs() *WorkLoader
 }
