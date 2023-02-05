@@ -25,10 +25,10 @@ server-run:
 	docker compose exec server go run server.go
 
 dataload-user:
-	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creater/backend/domain.User
+	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creator/backend/domain.User
 
 dataload-work:
-	docker compose exec server go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creater/backend/domain.Work
+	docker compose exec server go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creator/backend/domain.Work
 
 get:
 	docker compose exec server go get github.com/vektah/dataloaden

@@ -4,9 +4,9 @@ import (
 	"context"
 	"math"
 
-	"github.com/shion0625/portfolio-creater/backend/config/auth"
-	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
-	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/config/auth"
+	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type UserUseCase struct {

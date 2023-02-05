@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/shion0625/portfolio-creater/backend/domain"
-	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
+	"github.com/shion0625/portfolio-creator/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/graphql/generated"
 )
 
 // Works is the resolver for the works field.

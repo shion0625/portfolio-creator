@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/shion0625/portfolio-creater/backend/domain"
-	"github.com/shion0625/portfolio-creater/backend/infrastructure"
+	"github.com/shion0625/portfolio-creator/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 )
 
 type UserRepository struct {

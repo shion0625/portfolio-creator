@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
-	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
-	"github.com/shion0625/portfolio-creater/backend/domain"
 	"math"
+
+	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type WorkUseCase struct {

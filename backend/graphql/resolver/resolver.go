@@ -6,7 +6,7 @@ package resolver
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 import (
-	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type Resolver struct {

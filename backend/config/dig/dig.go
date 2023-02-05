@@ -2,11 +2,11 @@ package dig
 
 import (
 	"github.com/pkg/errors"
-	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
-	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	"github.com/shion0625/portfolio-creater/backend/infrastructure"
-	"github.com/shion0625/portfolio-creater/backend/repository"
-	"github.com/shion0625/portfolio-creater/backend/usecase"
+	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
+	"github.com/shion0625/portfolio-creator/backend/graphql/resolver"
+	"github.com/shion0625/portfolio-creator/backend/infrastructure"
+	"github.com/shion0625/portfolio-creator/backend/repository"
+	"github.com/shion0625/portfolio-creator/backend/usecase"
 	"go.uber.org/dig"
 )
 

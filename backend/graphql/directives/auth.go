@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/shion0625/portfolio-creater/backend/config/auth"
+	"github.com/shion0625/portfolio-creator/backend/config/auth"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 

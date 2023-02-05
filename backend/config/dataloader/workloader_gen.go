@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 // WorkLoaderConfig captures the config to create a new WorkLoader

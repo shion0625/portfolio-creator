@@ -8,12 +8,12 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/shion0625/portfolio-creater/backend/config/auth"
-	"github.com/shion0625/portfolio-creater/backend/config/dig"
-	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
-	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
-	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
-	"github.com/shion0625/portfolio-creater/backend/util"
+	"github.com/shion0625/portfolio-creator/backend/config/auth"
+	"github.com/shion0625/portfolio-creator/backend/config/dig"
+	"github.com/shion0625/portfolio-creator/backend/graphql/directives"
+	"github.com/shion0625/portfolio-creator/backend/graphql/generated"
+	"github.com/shion0625/portfolio-creator/backend/graphql/resolver"
+	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
 func main() {

@@ -6,8 +6,8 @@ package resolver
 import (
 	"context"
 
-	"github.com/shion0625/portfolio-creater/backend/domain"
-	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
+	"github.com/shion0625/portfolio-creator/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/graphql/generated"
 )
 
 // User is the resolver for the user field.

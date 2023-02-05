@@ -13,7 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/shion0625/portfolio-creater/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/domain"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -745,7 +745,7 @@ func (ec *executionContext) dir_hasRole_args(ctx context.Context, rawArgs map[st
 	var arg0 []domain.Role
 	if tmp, ok := rawArgs["role"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
-		arg0, err = ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRoleᚄ(ctx, tmp)
+		arg0, err = ec.unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRoleᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -760,7 +760,7 @@ func (ec *executionContext) field_Mutation_createWork_args(ctx context.Context, 
 	var arg0 domain.CreateWorkInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐCreateWorkInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐCreateWorkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -814,7 +814,7 @@ func (ec *executionContext) field_Mutation_updateProfile_args(ctx context.Contex
 	var arg0 domain.UpdateProfileInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateProfileInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUpdateProfileInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateProfileInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUpdateProfileInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -829,7 +829,7 @@ func (ec *executionContext) field_Mutation_updateWork_args(ctx context.Context, 
 	var arg0 domain.UpdateWorkInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUpdateWorkInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUpdateWorkInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1018,7 +1018,7 @@ func (ec *executionContext) _Mutation_updateProfile(ctx context.Context, field g
 		if data, ok := tmp.(*domain.User); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/portfolio-creater/backend/domain.User`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/portfolio-creator/backend/domain.User`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1032,7 +1032,7 @@ func (ec *executionContext) _Mutation_updateProfile(ctx context.Context, field g
 	}
 	res := resTmp.(*domain.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateProfile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1773,7 +1773,7 @@ func (ec *executionContext) _Profile_user(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*domain.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Profile_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1839,7 +1839,7 @@ func (ec *executionContext) _Query_userAuth(ctx context.Context, field graphql.C
 		if data, ok := tmp.(*domain.User); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/portfolio-creater/backend/domain.User`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/shion0625/portfolio-creator/backend/domain.User`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1853,7 +1853,7 @@ func (ec *executionContext) _Query_userAuth(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*domain.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_userAuth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1924,7 +1924,7 @@ func (ec *executionContext) _Query_user(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*domain.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1995,7 +1995,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*domain.UserPagination)
 	fc.Result = res
-	return ec.marshalNUserPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUserPagination(ctx, field.Selections, res)
+	return ec.marshalNUserPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUserPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2053,7 +2053,7 @@ func (ec *executionContext) _Query_work(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*domain.Work)
 	fc.Result = res
-	return ec.marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx, field.Selections, res)
+	return ec.marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWork(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_work(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2138,7 +2138,7 @@ func (ec *executionContext) _Query_works(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*domain.WorkPagination)
 	fc.Result = res
-	return ec.marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkPagination(ctx, field.Selections, res)
+	return ec.marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2533,7 +2533,7 @@ func (ec *executionContext) _User_works(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*domain.WorkPagination)
 	fc.Result = res
-	return ec.marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkPagination(ctx, field.Selections, res)
+	return ec.marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_works(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2580,7 +2580,7 @@ func (ec *executionContext) _User_profile(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*domain.Profile)
 	fc.Result = res
-	return ec.marshalOProfile2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐProfile(ctx, field.Selections, res)
+	return ec.marshalOProfile2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐProfile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_profile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2634,7 +2634,7 @@ func (ec *executionContext) _UserPagination_pageInfo(ctx context.Context, field 
 	}
 	res := resTmp.(*domain.PaginationInfo)
 	fc.Result = res
-	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐPaginationInfo(ctx, field.Selections, res)
+	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐPaginationInfo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserPagination_pageInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2692,7 +2692,7 @@ func (ec *executionContext) _UserPagination_nodes(ctx context.Context, field gra
 	}
 	res := resTmp.([]*domain.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUserᚄ(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUserᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserPagination_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3300,7 +3300,7 @@ func (ec *executionContext) _Work_user(ctx context.Context, field graphql.Collec
 	}
 	res := resTmp.(*domain.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Work_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3360,7 +3360,7 @@ func (ec *executionContext) _WorkPagination_pageInfo(ctx context.Context, field 
 	}
 	res := resTmp.(*domain.PaginationInfo)
 	fc.Result = res
-	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐPaginationInfo(ctx, field.Selections, res)
+	return ec.marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐPaginationInfo(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_WorkPagination_pageInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3418,7 +3418,7 @@ func (ec *executionContext) _WorkPagination_nodes(ctx context.Context, field gra
 	}
 	res := resTmp.([]*domain.Work)
 	fc.Result = res
-	return ec.marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkᚄ(ctx, field.Selections, res)
+	return ec.marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_WorkPagination_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6480,7 +6480,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐCreateWorkInput(ctx context.Context, v interface{}) (domain.CreateWorkInput, error) {
+func (ec *executionContext) unmarshalNCreateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐCreateWorkInput(ctx context.Context, v interface{}) (domain.CreateWorkInput, error) {
 	res, err := ec.unmarshalInputCreateWorkInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -6556,7 +6556,7 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐPaginationInfo(ctx context.Context, sel ast.SelectionSet, v *domain.PaginationInfo) graphql.Marshaler {
+func (ec *executionContext) marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐPaginationInfo(ctx context.Context, sel ast.SelectionSet, v *domain.PaginationInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6566,17 +6566,17 @@ func (ec *executionContext) marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625�
 	return ec._PaginationInfo(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRole(ctx context.Context, v interface{}) (domain.Role, error) {
+func (ec *executionContext) unmarshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRole(ctx context.Context, v interface{}) (domain.Role, error) {
 	var res domain.Role
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRole(ctx context.Context, sel ast.SelectionSet, v domain.Role) graphql.Marshaler {
+func (ec *executionContext) marshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRole(ctx context.Context, sel ast.SelectionSet, v domain.Role) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRoleᚄ(ctx context.Context, v interface{}) ([]domain.Role, error) {
+func (ec *executionContext) unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRoleᚄ(ctx context.Context, v interface{}) ([]domain.Role, error) {
 	var vSlice []interface{}
 	if v != nil {
 		vSlice = graphql.CoerceList(v)
@@ -6585,7 +6585,7 @@ func (ec *executionContext) unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfol
 	res := make([]domain.Role, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRole(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRole(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -6593,7 +6593,7 @@ func (ec *executionContext) unmarshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfol
 	return res, nil
 }
 
-func (ec *executionContext) marshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []domain.Role) graphql.Marshaler {
+func (ec *executionContext) marshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRoleᚄ(ctx context.Context, sel ast.SelectionSet, v []domain.Role) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6617,7 +6617,7 @@ func (ec *executionContext) marshalNRole2ᚕgithubᚗcomᚋshion0625ᚋportfolio
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐRole(ctx, sel, v[i])
+			ret[i] = ec.marshalNRole2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐRole(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6652,21 +6652,21 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpdateProfileInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUpdateProfileInput(ctx context.Context, v interface{}) (domain.UpdateProfileInput, error) {
+func (ec *executionContext) unmarshalNUpdateProfileInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUpdateProfileInput(ctx context.Context, v interface{}) (domain.UpdateProfileInput, error) {
 	res, err := ec.unmarshalInputUpdateProfileInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUpdateWorkInput(ctx context.Context, v interface{}) (domain.UpdateWorkInput, error) {
+func (ec *executionContext) unmarshalNUpdateWorkInput2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUpdateWorkInput(ctx context.Context, v interface{}) (domain.UpdateWorkInput, error) {
 	res, err := ec.unmarshalInputUpdateWorkInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUser2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v domain.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v domain.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*domain.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUserᚄ(ctx context.Context, sel ast.SelectionSet, v []*domain.User) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6690,7 +6690,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋportfo
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx, sel, v[i])
+			ret[i] = ec.marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6710,7 +6710,7 @@ func (ec *executionContext) marshalNUser2ᚕᚖgithubᚗcomᚋshion0625ᚋportfo
 	return ret
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v *domain.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUser(ctx context.Context, sel ast.SelectionSet, v *domain.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6720,11 +6720,11 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋshion0625ᚋportfolio
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v domain.UserPagination) graphql.Marshaler {
+func (ec *executionContext) marshalNUserPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v domain.UserPagination) graphql.Marshaler {
 	return ec._UserPagination(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUserPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v *domain.UserPagination) graphql.Marshaler {
+func (ec *executionContext) marshalNUserPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐUserPagination(ctx context.Context, sel ast.SelectionSet, v *domain.UserPagination) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6734,7 +6734,7 @@ func (ec *executionContext) marshalNUserPagination2ᚖgithubᚗcomᚋshion0625�
 	return ec._UserPagination(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkᚄ(ctx context.Context, sel ast.SelectionSet, v []*domain.Work) graphql.Marshaler {
+func (ec *executionContext) marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkᚄ(ctx context.Context, sel ast.SelectionSet, v []*domain.Work) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -6758,7 +6758,7 @@ func (ec *executionContext) marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfo
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx, sel, v[i])
+			ret[i] = ec.marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWork(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6778,7 +6778,7 @@ func (ec *executionContext) marshalNWork2ᚕᚖgithubᚗcomᚋshion0625ᚋportfo
 	return ret
 }
 
-func (ec *executionContext) marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx context.Context, sel ast.SelectionSet, v *domain.Work) graphql.Marshaler {
+func (ec *executionContext) marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWork(ctx context.Context, sel ast.SelectionSet, v *domain.Work) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -6788,11 +6788,11 @@ func (ec *executionContext) marshalNWork2ᚖgithubᚗcomᚋshion0625ᚋportfolio
 	return ec._Work(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNWorkPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v domain.WorkPagination) graphql.Marshaler {
+func (ec *executionContext) marshalNWorkPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v domain.WorkPagination) graphql.Marshaler {
 	return ec._WorkPagination(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v *domain.WorkPagination) graphql.Marshaler {
+func (ec *executionContext) marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v *domain.WorkPagination) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -7113,7 +7113,7 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
-func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐProfile(ctx context.Context, sel ast.SelectionSet, v *domain.Profile) graphql.Marshaler {
+func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐProfile(ctx context.Context, sel ast.SelectionSet, v *domain.Profile) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -7184,14 +7184,14 @@ func (ec *executionContext) marshalOTimestamp2ᚖstring(ctx context.Context, sel
 	return res
 }
 
-func (ec *executionContext) marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWork(ctx context.Context, sel ast.SelectionSet, v *domain.Work) graphql.Marshaler {
+func (ec *executionContext) marshalOWork2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWork(ctx context.Context, sel ast.SelectionSet, v *domain.Work) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Work(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreaterᚋbackendᚋdomainᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v *domain.WorkPagination) graphql.Marshaler {
+func (ec *executionContext) marshalOWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx context.Context, sel ast.SelectionSet, v *domain.WorkPagination) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
