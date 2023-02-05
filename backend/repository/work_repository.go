@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
@@ -54,6 +55,31 @@ func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
 	}
 	return works, nil
 }
+
+func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit int, offset int)([]*domain.Work, int64, error) {
+	var works []*domain.Work
+	columns := [...] string{"title" , "summary", "duration", "language", "role", "brief_story"}
+	keywords := strings.Fields(keyword)
+
+	var WhereQuery string
+	for i := 0; i < len(columns); i++ {
+		for j := 0; j < len(keywords); j++ {
+			WhereQuery += fmt.Sprintf("%s LIKE '%%%s%%'", columns[i], keywords[j])
+			if i != len(columns)-1 || j != len(keywords)-1 {
+				WhereQuery += " OR "
+			}
+		}
+  }
+
+	result := g.db.Conn.Debug().Limit(limit).Offset(offset).Where(WhereQuery).Find(&works)
+
+	if err := result.Error; err != nil {
+		return nil,0, err
+	}
+
+	return works, result.RowsAffected, nil
+}
+
 
 func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInput) error {
 	id := fmt.Sprintf("work:%d", rand.Int())

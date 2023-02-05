@@ -68,6 +68,28 @@ func (w WorkUseCase) GetAllLoad(ctx context.Context, id string) (*domain.WorkPag
 	return &workPagination, err
 }
 
+func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offset int) (*domain.WorkPagination, error) {
+
+	works, numRows, err :=w.workRepo.GetByKeyword(ctx, keyword, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	pageInfo := domain.PaginationInfo{
+		Page:             int(math.Ceil(float64(offset) / float64(limit))),
+		PaginationLength: int(math.Ceil(float64(numRows) / float64(limit))),
+		HasNextPage:      (int(numRows) < limit+offset),
+		HasPreviousPage:  limit < offset,
+		Count:            int(numRows),
+		TotalCount:       int(numRows),
+	}
+	workPagination := domain.WorkPagination{
+		PageInfo: &pageInfo,
+		Nodes:    works,
+	}
+	return &workPagination, nil
+}
+
 func (w WorkUseCase) Create(ctx context.Context, input domain.CreateWorkInput) error {
 	return w.workRepo.Create(ctx, input)
 }

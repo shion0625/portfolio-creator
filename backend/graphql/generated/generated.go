@@ -73,11 +73,12 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		User     func(childComplexity int, id string) int
-		UserAuth func(childComplexity int, id string) int
-		Users    func(childComplexity int, limit int, offset *int) int
-		Work     func(childComplexity int, id string) int
-		Works    func(childComplexity int, limit int, offset *int) int
+		SearchWorks func(childComplexity int, keyword string, limit int, offset *int) int
+		User        func(childComplexity int, id string) int
+		UserAuth    func(childComplexity int, id string) int
+		Users       func(childComplexity int, limit int, offset *int) int
+		Work        func(childComplexity int, id string) int
+		Works       func(childComplexity int, limit int, offset *int) int
 	}
 
 	User struct {
@@ -131,6 +132,7 @@ type QueryResolver interface {
 	Users(ctx context.Context, limit int, offset *int) (*domain.UserPagination, error)
 	Work(ctx context.Context, id string) (*domain.Work, error)
 	Works(ctx context.Context, limit int, offset *int) (*domain.WorkPagination, error)
+	SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error)
 }
 type UserResolver interface {
 	Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error)
@@ -284,6 +286,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Profile.User(childComplexity), true
+
+	case "Query.SearchWorks":
+		if e.complexity.Query.SearchWorks == nil {
+			break
+		}
+
+		args, err := ec.field_Query_SearchWorks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.SearchWorks(childComplexity, args["keyword"].(string), args["limit"].(int), args["offset"].(*int)), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
@@ -689,6 +703,7 @@ type Query {
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
   works(limit: Int!, offset: Int): WorkPagination!
+  SearchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
 }
 `, BuiltIn: false},
 	{Name: "../schema/user.graphqls", Input: `## user.graphqls ===============================================
@@ -835,6 +850,39 @@ func (ec *executionContext) field_Mutation_updateWork_args(ctx context.Context, 
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_SearchWorks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["keyword"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("keyword"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["keyword"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["limit"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["limit"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["offset"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["offset"] = arg2
 	return args, nil
 }
 
@@ -2165,6 +2213,67 @@ func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_works_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_SearchWorks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_SearchWorks(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().SearchWorks(rctx, fc.Args["keyword"].(string), fc.Args["limit"].(int), fc.Args["offset"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*domain.WorkPagination)
+	fc.Result = res
+	return ec.marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_SearchWorks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "pageInfo":
+				return ec.fieldContext_WorkPagination_pageInfo(ctx, field)
+			case "nodes":
+				return ec.fieldContext_WorkPagination_nodes(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type WorkPagination", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_SearchWorks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -5834,6 +5943,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_works(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "SearchWorks":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_SearchWorks(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

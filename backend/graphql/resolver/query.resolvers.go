@@ -84,6 +84,20 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*dom
 	return workPagination, nil
 }
 
+// SearchWorks is the resolver for the SearchWorks field.
+func (r *queryResolver) SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error) {
+	workPagination, err := r.workUseCase.Search(ctx, keyword, limit, *offset)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, &gqlerror.Error{
+				Message: "works not found",
+			}
+		}
+		return nil, err
+	}
+	return workPagination, nil
+}
+
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
