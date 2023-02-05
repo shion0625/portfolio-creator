@@ -4,8 +4,8 @@ import (
 	"context"
 	"math"
 
-	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creater/backend/config/auth"
+	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creater/backend/domain"
 )
 

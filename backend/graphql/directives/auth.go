@@ -2,7 +2,6 @@ package directives
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/shion0625/portfolio-creater/backend/config/auth"
@@ -10,9 +9,8 @@ import (
 )
 
 func Auth(ctx context.Context, obj interface{}, next graphql.Resolver) (interface{}, error) {
-	tokenData := auth.CtxValue(ctx)
-	fmt.Println(tokenData)
-	if tokenData == nil {
+	_, isExist := auth.CtxValue(ctx)
+	if !isExist {
 		return nil, &gqlerror.Error{
 			Message: "Access Denied",
 		}

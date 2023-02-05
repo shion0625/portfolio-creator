@@ -32,7 +32,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func CtxValue(ctx context.Context) *JwtCustomClaim {
-	raw, _ := ctx.Value(authString("auth")).(*JwtCustomClaim)
-	return raw
+func CtxValue(ctx context.Context) (JwtCustomClaim, bool) {
+	raw, isExist := ctx.Value(authString("auth")).(JwtCustomClaim)
+	return raw, isExist
 }
