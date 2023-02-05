@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/shion0625/portfolio-creater/backend/config/dig"
-	"github.com/shion0625/portfolio-creater/backend/config/jwt"
+	"github.com/shion0625/portfolio-creater/backend/config/auth"
 	"github.com/shion0625/portfolio-creater/backend/graphql/directives"
 	"github.com/shion0625/portfolio-creater/backend/graphql/generated"
 	"github.com/shion0625/portfolio-creater/backend/graphql/resolver"
@@ -35,7 +35,7 @@ func main() {
 
 		e.GET("/", Playground())
 		g := e.Group("/api")
-		g.Use(echo.WrapMiddleware(jwt.AuthMiddleware))
+		g.Use(echo.WrapMiddleware(auth.AuthMiddleware))
 		g.POST("/query", QueryPlayground(r))
 		return nil
 	})

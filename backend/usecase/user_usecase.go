@@ -5,7 +5,7 @@ import (
 	"math"
 
 	"github.com/shion0625/portfolio-creater/backend/config/dataloader"
-	"github.com/shion0625/portfolio-creater/backend/config/jwt"
+	"github.com/shion0625/portfolio-creater/backend/config/auth"
 	"github.com/shion0625/portfolio-creater/backend/domain"
 )
 
@@ -67,7 +67,7 @@ func (u UserUseCase) Login(ctx context.Context, id string, email string) (interf
 		return nil, err
 	}
 
-	token, err := jwt.JwtGenerate(ctx, getUser.ID)
+	token, err := auth.JwtGenerate(ctx, getUser.ID)
 	if err != nil {
 		return nil, err
 	}
