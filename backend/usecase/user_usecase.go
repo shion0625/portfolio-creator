@@ -11,11 +11,11 @@ import (
 
 type UserUseCase struct {
 	userRepo   domain.IUserRepository
-	userLoader *dataloader.UserLoader
+	userLoader dataloader.IDataLoader
 }
 
 // NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewUserUseCase(u domain.IUserRepository, ul *dataloader.UserLoader) domain.IUserUseCase {
+func NewUserUseCase(u domain.IUserRepository, ul dataloader.IDataLoader) domain.IUserUseCase {
 	return &UserUseCase{
 		userRepo:   u,
 		userLoader: ul,
@@ -27,7 +27,7 @@ func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, erro
 }
 
 func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error) {
-	return u.userLoader.Load(id)
+	return u.userLoader.UsersByIDs().Load(id)
 }
 
 func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {

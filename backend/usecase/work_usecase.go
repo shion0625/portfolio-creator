@@ -9,11 +9,11 @@ import (
 
 type WorkUseCase struct {
 	workRepo   domain.IWorkRepository
-	workLoader *dataloader.WorkLoader
+	workLoader dataloader.IDataLoader
 }
 
 // NewWorkUseCase will create new an userUseCase object representation of domain.UserUseCase interface
-func NewWorkUseCase(w domain.IWorkRepository, wl *dataloader.WorkLoader) domain.IWorkUseCase {
+func NewWorkUseCase(w domain.IWorkRepository, wl dataloader.IDataLoader) domain.IWorkUseCase {
 	return &WorkUseCase{
 		workRepo:   w,
 		workLoader: wl,
@@ -51,7 +51,7 @@ func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 }
 
 func (w WorkUseCase) GetAllLoad(ctx context.Context, id string) (*domain.WorkPagination, error) {
-	works, err := w.workLoader.Load(id)
+	works, err := w.workLoader.WorksByIDs().Load(id)
 	pageInfo := domain.PaginationInfo{
 		Page:             1,
 		PaginationLength: 1,

@@ -17,11 +17,9 @@ func BuildDigDependencies() (*dig.Container, error) {
 		c,
 		infrastructure.NewSQLHandler,
 		repository.NewUserRepository,
-		dataloader.NewUserLoader,
-		usecase.NewUserUseCase,
-
 		repository.NewWorkRepository,
-		dataloader.NewWorkLoader,
+		dataloader.NewDataLoader,
+		usecase.NewUserUseCase,
 		usecase.NewWorkUseCase,
 
 		resolver.NewResolver,
