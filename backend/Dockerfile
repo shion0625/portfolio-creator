@@ -7,8 +7,6 @@ ENV APP_ROOT /app
 
 RUN mkdir $APP_ROOT
 
-RUN apk update &&  apk add git
-
 WORKDIR $APP_ROOT
 
 ENV CGO_ENABLED=1 \
@@ -19,8 +17,13 @@ ENV CGO_ENABLED=1 \
 COPY ./go.mod $APP_ROOT/go.mod
 COPY ./go.sum $APP_ROOT/go.sum
 
-RUN go mod download
-
 COPY . $APP_ROOT
 
+RUN go mod download
+
 EXPOSE 8080
+
+RUN go install github.com/cosmtrek/air@v1.29.0
+
+# # air -c [tomlファイル名] // 設定ファイルを指定してair実行(WORKDIRに.air.tomlを配置しておくこと)
+CMD ["air", "-c", ".air.toml"]
