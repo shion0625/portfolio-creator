@@ -7,5 +7,5 @@ import (
 	_ "github.com/99designs/gqlgen"
 	_ "github.com/cosmtrek/air"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	// - "sourcegraph.com/sqs/goreturns"
+	// - "github.com/sqs/goreturns"
 )

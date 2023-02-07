@@ -16,7 +16,7 @@ func NewSQLHandler() *SQLHandler {
 	dsn := os.Getenv("DATABASE_URL")
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if errors.Is(err,nil) {
+	if !errors.Is(err,nil) {
 		panic(err.Error())
 	}
 
