@@ -24,6 +24,9 @@ gqlgen:
 server-run:
 	docker compose exec server go run server.go
 
+air-run:
+docker compose exec server air -c .air.toml
+
 dataload-user:
 	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creator/backend/domain.User
 
