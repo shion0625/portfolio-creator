@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -90,7 +91,7 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 	var random int64
 	err := binary.Read(rand.Reader, binary.LittleEndian, &random)
 
-	if err != nil {
+	if !errors.Is(err, nil) {
 		return fmt.Errorf("random int: %w", err)
 	}
 

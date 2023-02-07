@@ -48,7 +48,6 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	}
 
 	users, numRows, err := u.userRepo.GetAll(ctx, limit, offset)
-
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}

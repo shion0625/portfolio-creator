@@ -28,11 +28,10 @@ go-lint:
 	docker compose exec server golangci-lint run
 
 go-lint-fix:
-	docker compose exec server golangci-lint run --fix
+	docker compose exec server golangci-lint run ./... --fix
 
 go-fix:
 	docker compose exec server goreturns -w ./**/*.go
-
 
 dataload-user:
 	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creator/backend/domain.User
@@ -54,6 +53,7 @@ fmt:
 
 mod-tidy:
 	docker compose exec server go mod tidy
+
 db:
 	docker compose exec db sh
 

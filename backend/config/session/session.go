@@ -10,8 +10,9 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
+var maxAge = 86400 * 7
+
 func LoginSession(c echo.Context, user []domain.User) error {
-	var maxAge = 86400 * 7
 	// sessionの作成
 	session, _ := session.Get("session", c)
 	session.Options = &sessions.Options{

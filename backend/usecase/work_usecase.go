@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"context"
-	"math"
 	"fmt"
+	"math"
 
 	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creator/backend/domain"

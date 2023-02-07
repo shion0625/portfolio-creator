@@ -10,6 +10,8 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
+var threeDays = time.Hour * 72
+
 type JwtCustomClaim struct {
 	ID string `json:"id"`
 	jwt.StandardClaims
@@ -27,10 +29,6 @@ func getJwtSecret() string {
 }
 
 func JwtGenerate(ctx context.Context, userID string) (string, error) {
-	var(
-		threeDays = time.Hour * 72
-	)
-
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, &JwtCustomClaim{
 		ID: userID,
 		StandardClaims: jwt.StandardClaims{

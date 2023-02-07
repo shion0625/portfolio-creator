@@ -18,11 +18,9 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
-func main() {
-	var (
-		timeout = 3 * time.Second
-	)
+var timeout = 3 * time.Second
 
+func main() {
 	util.LoadEnv()
 
 	cEcho := echo.New()
@@ -59,7 +57,7 @@ func main() {
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 
 	server := &http.Server{
-		Addr:    ":" + port,
+		Addr:              ":" + port,
 		ReadHeaderTimeout: timeout,
 	}
 

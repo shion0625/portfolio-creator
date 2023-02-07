@@ -2,8 +2,9 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"errors"
+	"fmt"
+
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 )
@@ -47,7 +48,7 @@ func (g *UserRepository) GetAll(ctx context.Context, limit int, offset int) ([]*
 	var users []*domain.User
 	result := g.db.Conn.Limit(limit).Offset(offset).Find(&users)
 
-	if !errors.Is(result.Error,nil) {
+	if !errors.Is(result.Error, nil) {
 		return nil, 0, result.Error
 	}
 

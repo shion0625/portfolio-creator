@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	wait = 2 * time.Millisecond
+	wait     = 2 * time.Millisecond
 	maxBatch = 100
 )
 
@@ -30,8 +30,8 @@ func NewDataLoader(u domain.IUserRepository, w domain.IWorkRepository) IDataLoad
 
 func (d DataLoader) UsersByIDs() *UserLoader {
 	userLoader := NewUserLoader(UserLoaderConfig{
-		MaxBatch: maxBatch,                  // 溜める最大数、0を指定すると制限無し
-		Wait:     wait, // 溜める時間
+		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
+		Wait:     wait,     // 溜める時間
 		Fetch: func(ids []string) ([]*domain.User, []error) {
 			users := make([]*domain.User, 0, len(ids))
 			errors := make([]error, 0, len(ids))
@@ -60,8 +60,8 @@ func (d DataLoader) UsersByIDs() *UserLoader {
 
 func (d DataLoader) WorksByIDs() *WorkLoader {
 	workLoader := NewWorkLoader(WorkLoaderConfig{
-		MaxBatch: maxBatch,                  // 溜める最大数、0を指定すると制限無し
-		Wait:     wait, // 溜める時間
+		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
+		Wait:     wait,     // 溜める時間
 		Fetch: func(ids []string) ([][]*domain.Work, []error) {
 			works := make([][]*domain.Work, 0, len(ids))
 			errors := make([]error, 0, len(ids))

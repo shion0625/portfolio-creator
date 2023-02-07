@@ -5,12 +5,13 @@ package resolver
 
 import (
 	"context"
+	"errors"
 	"fmt"
+
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/graphql/generated"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
-	"errors"
 )
 
 // UserAuth is the resolver for the userAuth field.
@@ -33,7 +34,7 @@ func (r *queryResolver) UserAuth(ctx context.Context, id string) (*domain.User, 
 func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, error) {
 	user, err := r.userUseCase.GetByID(ctx, id)
 	if err != nil {
-		if errors.Is(err,gorm.ErrRecordNotFound) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "user id not found",
 			}
@@ -81,7 +82,7 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, erro
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*domain.WorkPagination, error) {
 	workPagination, err := r.workUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
-		if errors.Is(err,gorm.ErrRecordNotFound) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "works not found",
 			}
