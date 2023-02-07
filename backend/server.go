@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -17,47 +19,58 @@ import (
 )
 
 func main() {
-	util.LoadEnv()
-	// db := infrastructure.ConnectDB()
+	var (
+		timeout = 3 * time.Second
+	)
 
-	e := echo.New()
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	util.LoadEnv()
+
+	cEcho := echo.New()
+	cEcho.Use(middleware.Logger())
+	cEcho.Use(middleware.Recover())
 	// cors設定
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	cEcho.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	c, _ := dig.BuildDigDependencies()
-	err := c.Invoke(func(r *resolver.Resolver) error {
-
-		e.GET("/", Playground())
-		g := e.Group("/api")
+	cDig, _ := dig.BuildDigDependencies()
+	err := cDig.Invoke(func(r *resolver.Resolver) error {
+		cEcho.GET("/", Playground())
+		g := cEcho.Group("/api")
 		g.Use(echo.WrapMiddleware(auth.AuthMiddleware))
 		g.POST("/query", QueryPlayground(r))
+
 		return nil
 	})
 
-	if err != nil {
+	if !errors.Is(err, nil) {
 		panic(err)
 	}
 
 	port := util.GetPort()
-	errPort := e.Start(port)
-	if errPort == nil {
+	errPort := cEcho.Start(port)
+
+	if errors.Is(errPort, nil) {
 		log.Fatalln(errPort)
 	}
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+
+	server := &http.Server{
+		Addr:    ":" + port,
+		ReadHeaderTimeout: timeout,
+	}
+
+	log.Fatal(server.ListenAndServe())
 }
 
 func Playground() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		playgroundHandler := playground.Handler("GraphQL playground", "/api/query")
 		playgroundHandler.ServeHTTP(c.Response(), c.Request())
+
 		return nil
 	}
 }
@@ -88,6 +101,7 @@ func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 			),
 		)
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
+
 		return nil
 	}
 }

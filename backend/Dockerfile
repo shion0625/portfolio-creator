@@ -24,6 +24,6 @@ RUN go mod download
 EXPOSE 8080
 
 RUN go install github.com/cosmtrek/air@v1.29.0
-
+RUN go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.51.1
 # # air -c [tomlファイル名] // 設定ファイルを指定してair実行(WORKDIRに.air.tomlを配置しておくこと)
 CMD ["air", "-c", ".air.toml"]

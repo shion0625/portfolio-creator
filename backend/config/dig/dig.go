@@ -11,10 +11,10 @@ import (
 )
 
 func BuildDigDependencies() (*dig.Container, error) {
-	c := dig.New()
+	cDig := dig.New()
 
 	registerDependencies(
-		c,
+		cDig,
 		infrastructure.NewSQLHandler,
 		repository.NewUserRepository,
 		repository.NewWorkRepository,
@@ -25,14 +25,14 @@ func BuildDigDependencies() (*dig.Container, error) {
 		resolver.NewResolver,
 	)
 
-	return c, nil
+	return cDig, nil
 }
 
 func registerDependencies(c *dig.Container, constructors ...interface{}) {
 	for i := 0; i < len(constructors); i++ {
 		err := c.Provide(constructors[i])
 		if err != nil {
-			panic(errors.Wrapf(err, "On #%v/%v elms:", i, len(constructors)))
+			panic(errors.Wrapf(err, "on #%v/%v elms", i, len(constructors)))
 		}
 	}
 }

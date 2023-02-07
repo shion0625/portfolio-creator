@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"errors"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -15,11 +16,13 @@ func NewSQLHandler() *SQLHandler {
 	dsn := os.Getenv("DATABASE_URL")
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err != nil {
+	if errors.Is(err,nil) {
 		panic(err.Error())
 	}
+
 	sqlHandler := new(SQLHandler)
 	sqlHandler.Conn = conn
+
 	return sqlHandler
 }
 

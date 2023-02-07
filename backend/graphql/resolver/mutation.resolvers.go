@@ -6,6 +6,7 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"errors"
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/graphql/generated"
@@ -22,8 +23,9 @@ func (r *mutationResolver) UpdateProfile(ctx context.Context, input domain.Updat
 func (r *mutationResolver) CreateWork(ctx context.Context, input domain.CreateWorkInput) (bool, error) {
 	err := r.workUseCase.Create(ctx, input)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("CreateWork: %w", err)
 	}
+
 	return true, nil
 }
 
@@ -31,19 +33,23 @@ func (r *mutationResolver) CreateWork(ctx context.Context, input domain.CreateWo
 func (r *mutationResolver) UpdateWork(ctx context.Context, input domain.UpdateWorkInput) (bool, error) {
 	work, err := r.workUseCase.GetByID(ctx, input.ID)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return false, &gqlerror.Error{
 				Message: "work not found",
 			}
 		}
-		return false, err
+
+		return false, fmt.Errorf("UpdateWork: %w", err)
 	}
+
 	if input.Title == nil {
 		input.Title = &work.Title
 	}
+
 	err = r.workUseCase.Update(ctx, work, input)
+
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("UpdateWork: %w", err)
 	}
 
 	return true, nil
@@ -53,8 +59,9 @@ func (r *mutationResolver) UpdateWork(ctx context.Context, input domain.UpdateWo
 func (r *mutationResolver) DeleteWorks(ctx context.Context, ids []*string) (bool, error) {
 	err := r.workUseCase.Delete(ctx, ids)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("DeleteWorks: %w", err)
 	}
+
 	return true, nil
 }
 
@@ -62,8 +69,9 @@ func (r *mutationResolver) DeleteWorks(ctx context.Context, ids []*string) (bool
 func (r *mutationResolver) Login(ctx context.Context, id string, email string) (interface{}, error) {
 	token, err := r.userUseCase.Login(ctx, id, email)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Login: %w", err)
 	}
+
 	return token, nil
 }
 

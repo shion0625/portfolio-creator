@@ -7,5 +7,6 @@ func GetPort() string {
 	if port == "" {
 		port = "8080"
 	}
+
 	return port
 }

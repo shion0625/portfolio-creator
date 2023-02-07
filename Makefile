@@ -21,11 +21,18 @@ server:
 gqlgen:
 	docker compose exec server go run github.com/99designs/gqlgen generate
 
-server-run:
-	docker compose exec server go run server.go
+go-run:
+	docker compose exec server air -c .air.toml
 
-air-run:
-docker compose exec server air -c .air.toml
+go-lint:
+	docker compose exec server golangci-lint run
+
+go-lint-fix:
+	docker compose exec server golangci-lint run --fix
+
+go-fix:
+	docker compose exec server goreturns -w ./**/*.go
+
 
 dataload-user:
 	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creator/backend/domain.User
