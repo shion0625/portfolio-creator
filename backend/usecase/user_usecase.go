@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"math"
 
 	"github.com/shion0625/portfolio-creator/backend/config/auth"
@@ -14,7 +15,7 @@ type UserUseCase struct {
 	userLoader dataloader.IDataLoader
 }
 
-// NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface
+// NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface.
 func NewUserUseCase(u domain.IUserRepository, ul dataloader.IDataLoader) domain.IUserUseCase {
 	return &UserUseCase{
 		userRepo:   u,
@@ -23,27 +24,35 @@ func NewUserUseCase(u domain.IUserRepository, ul dataloader.IDataLoader) domain.
 }
 
 func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, error) {
-	return u.userRepo.GetByID(ctx, id)
+	user, err := u.userRepo.GetByID(ctx, id)
+
+	return user, fmt.Errorf("GetByID - usecase: %w", err)
 }
 
 func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error) {
-	return u.userLoader.UsersByIDs().Load(id)
+	user, err := u.userLoader.UsersByIDs().Load(id)
+
+	return user, fmt.Errorf("GetByIDLoad - usecase: %w", err)
 }
 
 func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
-	return u.userRepo.GetByEmail(ctx, email)
+	user, err := u.userRepo.GetByEmail(ctx, email)
+
+	return user, fmt.Errorf("GetByEmail - usecase: %w", err)
 }
 
 func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.UserPagination, error) {
 	totalCount, err := u.userRepo.GetTotalCount(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GetAll - GetTotalCount - usecase: %w", err)
 	}
 
 	users, numRows, err := u.userRepo.GetAll(ctx, limit, offset)
+
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
+
 	pageInfo := domain.PaginationInfo{
 		Page:             int(math.Ceil(float64(offset) / float64(limit))),
 		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
@@ -64,13 +73,14 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 func (u UserUseCase) Login(ctx context.Context, id string, email string) (interface{}, error) {
 	getUser, err := u.userRepo.GetByEmail(ctx, email)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Login - GetByEmail - usecase: %w", err)
 	}
 
 	token, err := auth.JwtGenerate(ctx, getUser.ID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Login - JwtGenerate - usecase: %w", err)
 	}
+
 	return map[string]interface{}{
 		"token": token,
 	}, nil

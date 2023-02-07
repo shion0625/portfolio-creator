@@ -4,9 +4,9 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
-type contextKey string
+// type contextKey string
 
-const roleContextKey contextKey = "roleKey"
+// const roleContextKey contextKey = "roleKey"
 
 func HasRole(directive string, role []domain.Role) bool {
 	for _, v := range role {
@@ -15,5 +15,6 @@ func HasRole(directive string, role []domain.Role) bool {
 			return true
 		}
 	}
+
 	return false
 }

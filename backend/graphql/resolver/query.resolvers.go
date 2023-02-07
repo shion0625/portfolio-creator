@@ -5,23 +5,25 @@ package resolver
 
 import (
 	"context"
-
+	"fmt"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/graphql/generated"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"gorm.io/gorm"
+	"errors"
 )
 
 // UserAuth is the resolver for the userAuth field.
 func (r *queryResolver) UserAuth(ctx context.Context, id string) (*domain.User, error) {
 	user, err := r.userUseCase.GetByID(ctx, id)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "user id not found",
 			}
 		}
-		return nil, err
+
+		return nil, fmt.Errorf("UserAuth - queryResolver: %w", err)
 	}
 
 	return user, nil
@@ -31,12 +33,13 @@ func (r *queryResolver) UserAuth(ctx context.Context, id string) (*domain.User, 
 func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, error) {
 	user, err := r.userUseCase.GetByID(ctx, id)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err,gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "user id not found",
 			}
 		}
-		return nil, err
+
+		return nil, fmt.Errorf("User - queryResolver: %w", err)
 	}
 
 	return user, nil
@@ -46,13 +49,15 @@ func (r *queryResolver) User(ctx context.Context, id string) (*domain.User, erro
 func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*domain.UserPagination, error) {
 	userPagination, err := r.userUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "users not found",
 			}
 		}
-		return nil, err
+
+		return nil, fmt.Errorf("Users - queryResolver: %w", err)
 	}
+
 	return userPagination, nil
 }
 
@@ -60,13 +65,15 @@ func (r *queryResolver) Users(ctx context.Context, limit int, offset *int) (*dom
 func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, error) {
 	work, err := r.workUseCase.GetByID(ctx, id)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "work id not found",
 			}
 		}
-		return nil, err
+
+		return nil, fmt.Errorf("Work - queryResolver: %w", err)
 	}
+
 	return work, nil
 }
 
@@ -74,13 +81,15 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, erro
 func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*domain.WorkPagination, error) {
 	workPagination, err := r.workUseCase.GetAll(ctx, limit, *offset)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err,gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "works not found",
 			}
 		}
-		return nil, err
+
+		return nil, fmt.Errorf("Works - queryResolver: %w", err)
 	}
+
 	return workPagination, nil
 }
 
@@ -88,13 +97,15 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*dom
 func (r *queryResolver) SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error) {
 	workPagination, err := r.workUseCase.Search(ctx, keyword, limit, *offset)
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
 				Message: "works not found",
 			}
 		}
-		return nil, err
+
+		return nil, fmt.Errorf("SearchWorks - queryResolver: %w", err)
 	}
+
 	return workPagination, nil
 }
 

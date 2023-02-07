@@ -2,14 +2,15 @@ package repository
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/base64"
+	"encoding/binary"
 	"fmt"
-	"math/rand"
 	"strings"
 	"time"
 
-	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 	"github.com/shion0625/portfolio-creator/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
@@ -22,9 +23,9 @@ func NewWorkRepository(db *infrastructure.SQLHandler) domain.IWorkRepository {
 }
 
 func (g *WorkRepository) GetByID(ctx context.Context, id string) (*domain.Work, error) {
-	work := domain.Work{ID: id}
+	var work domain.Work
 	if err := g.db.Conn.Where("id = ?", id).First(&work).Error; err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GetByID - repository: %w", err)
 	}
 
 	return &work, nil
@@ -32,15 +33,17 @@ func (g *WorkRepository) GetByID(ctx context.Context, id string) (*domain.Work, 
 
 func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 	var totalCount int64
-	if err := g.db.Conn.Model(&domain.Work{}).Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
-		return 0, err
+	if err := g.db.Conn.Table("works").Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
+		return 0, fmt.Errorf("GetTotalCount - repository: %w", err)
 	}
+
 	return totalCount, nil
 }
 
 func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
 	result := g.db.Conn.Limit(limit).Offset(offset).Find(&works)
+
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}
@@ -51,20 +54,23 @@ func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*
 func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
 	var works []*domain.Work
 	if err := g.db.Conn.Where("user_id IN ?", ids).Find(&works).Error; err != nil {
-		return nil, err
+		return nil, fmt.Errorf("GetByUserIDs - repository: %w", err)
 	}
+
 	return works, nil
 }
 
 func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit int, offset int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
-	columns := [...]string{"title", "summary", "duration", "language", "role", "brief_story"}
+
 	keywords := strings.Fields(keyword)
+	columns := [...]string{"title", "summary", "duration", "language", "role", "brief_story"}
 
 	var WhereQuery string
-	for i := 0; i < len(columns); i++ {
-		for j := 0; j < len(keywords); j++ {
-			WhereQuery += fmt.Sprintf("%s LIKE '%%%s%%'", columns[i], keywords[j])
+
+	for i, column := range columns {
+		for j, keyword := range keywords {
+			WhereQuery += fmt.Sprintf("%s LIKE '%%%s%%'", column, keyword)
 			if i != len(columns)-1 || j != len(keywords)-1 {
 				WhereQuery += " OR "
 			}
@@ -74,14 +80,21 @@ func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit
 	result := g.db.Conn.Debug().Limit(limit).Offset(offset).Where(WhereQuery).Find(&works)
 
 	if err := result.Error; err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("GetByKeyword - repository: %w", err)
 	}
 
 	return works, result.RowsAffected, nil
 }
 
 func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInput) error {
-	id := fmt.Sprintf("work:%d", rand.Int())
+	var random int64
+	err := binary.Read(rand.Reader, binary.LittleEndian, &random)
+
+	if err != nil {
+		return fmt.Errorf("random int: %w", err)
+	}
+
+	id := fmt.Sprintf("work:%d", random)
 	work := domain.Work{
 		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
 		Title:          input.Title,
@@ -98,8 +111,9 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 		IsDelete:       false,
 		UserID:         input.UserID,
 	}
+
 	if err := g.db.Conn.Create(&work).Error; err != nil {
-		return err
+		return fmt.Errorf("Create - repository: %w", err)
 	}
 
 	return nil
@@ -118,7 +132,7 @@ func (g *WorkRepository) Update(ctx context.Context, work *domain.Work, input do
 		BriefStory:     input.BriefStory,
 		UpdatedAt:      util.Time2str(time.Now()),
 	}).Error; err != nil {
-		return err
+		return fmt.Errorf("Update - repository: %w", err)
 	}
 
 	return nil
@@ -129,7 +143,8 @@ func (g *WorkRepository) Delete(ctx context.Context, ids []*string) error {
 		IsDelete:  true,
 		UpdatedAt: util.Time2str(time.Now()),
 	}).Error; err != nil {
-		return err
+		return fmt.Errorf("Delete - repository: %w", err)
 	}
+
 	return nil
 }

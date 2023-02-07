@@ -1,6 +1,7 @@
 package session
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -10,10 +11,11 @@ import (
 )
 
 func LoginSession(c echo.Context, user []domain.User) error {
+	var maxAge = 86400 * 7
 	// sessionの作成
 	session, _ := session.Get("session", c)
 	session.Options = &sessions.Options{
-		MaxAge:   86400 * 7,
+		MaxAge:   maxAge,
 		HttpOnly: true,
 	}
 	session.Values["auth"] = true
@@ -22,19 +24,21 @@ func LoginSession(c echo.Context, user []domain.User) error {
 	// } else {
 	// 	session.Values["role"] = "USER"
 	// }
-	//状態保存
+
 	if err := session.Save(c.Request(), c.Response()); err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+		return fmt.Errorf("%w", c.JSON(http.StatusInternalServerError, "session save error"))
 	}
-	return c.NoContent(http.StatusOK)
+
+	return nil
 }
 
 func LogoutSession(c echo.Context) error {
 	session, _ := session.Get("session", c)
 	session.Values["auth"] = false
-	//状態を保存
+
 	if err := session.Save(c.Request(), c.Response()); err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+		return fmt.Errorf("%w", c.JSON(http.StatusInternalServerError, "auth session save error"))
 	}
-	return c.NoContent(http.StatusOK)
+
+	return nil
 }

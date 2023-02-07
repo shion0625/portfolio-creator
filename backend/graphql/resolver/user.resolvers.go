@@ -14,7 +14,8 @@ import (
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error) {
 	worksPagination, err := r.workUseCase.GetAllLoad(ctx, obj.ID)
-	return worksPagination, err
+
+	return worksPagination, fmt.Errorf("Works - useResolver: %w", err)
 }
 
 // Profile is the resolver for the profile field.

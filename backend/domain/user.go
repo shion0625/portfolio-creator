@@ -2,7 +2,7 @@ package domain
 
 import "context"
 
-// User is representing the User data struct
+// User is representing the User data struct.
 type User struct {
 	ID            string    `json:"id" gorm:"type:text"`
 	Name          *string   `json:"name" gorm:"type:text"`
@@ -14,7 +14,7 @@ type User struct {
 func (User) IsNode()            {}
 func (this User) GetID() string { return this.ID }
 
-// UserUseCase represent the user's usecases
+// UserUseCase represent the user's usecases.
 type IUserUseCase interface {
 	GetByID(ctx context.Context, id string) (*User, error)
 	GetByIDLoad(ctx context.Context, id string) (*User, error)
@@ -23,7 +23,7 @@ type IUserUseCase interface {
 	Login(ctx context.Context, id string, email string) (interface{}, error)
 }
 
-// UserRepository represent the user's repository contract
+// UserRepository represent the user's repository contract.
 type IUserRepository interface {
 	GetByID(ctx context.Context, id string) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
