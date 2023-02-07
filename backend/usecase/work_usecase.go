@@ -70,7 +70,7 @@ func (w WorkUseCase) GetAllLoad(ctx context.Context, id string) (*domain.WorkPag
 
 func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offset int) (*domain.WorkPagination, error) {
 
-	works, numRows, err :=w.workRepo.GetByKeyword(ctx, keyword, limit, offset)
+	works, numRows, err := w.workRepo.GetByKeyword(ctx, keyword, limit, offset)
 	if err != nil {
 		return nil, err
 	}
