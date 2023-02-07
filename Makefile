@@ -30,8 +30,12 @@ go-lint:
 go-lint-fix:
 	docker compose exec server golangci-lint run ./... --fix
 
-go-fix:
+go-returns:
 	docker compose exec server goreturns -w ./**/*.go
+
+go-fix:
+	@make go-lint-fix
+	@make go-returns
 
 dataload-user:
 	docker compose exec server go run github.com/vektah/dataloaden UserLoader string *github.com/shion0625/portfolio-creator/backend/domain.User
