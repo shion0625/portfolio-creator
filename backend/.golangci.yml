@@ -54,16 +54,12 @@ linters:
     - exhaustivestruct
     - rowserrcheck
     - wastedassign
-    # - gci
-    # - gofumpt
-    # - gofmt
     - exhaustruct
     - varnamelen
     - forbidigo
-    - goimports
     - ireturn
-    - goerr113
     - gochecknoglobals
     - revive
-    - stylecheck
-    - staticcheck # 非推奨を教えてくれる
+    - stylecheck #  一時的 解決したい
+    - staticcheck # 非推奨を教えてくれる 一時的
+    - goerr113 #  一時的
