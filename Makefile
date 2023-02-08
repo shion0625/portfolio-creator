@@ -43,17 +43,11 @@ dataload-user:
 dataload-work:
 	docker compose exec server go run github.com/vektah/dataloaden WorkLoader string []*github.com/shion0625/portfolio-creator/backend/domain.Work
 
-get:
-	docker compose exec server go get github.com/vektah/dataloaden
-
 graphql:
 	docker compose exec server go run github.com/99designs/gqlgen
 
 go-gen:
 	docker compose exec server go generate ./...
-
-fmt:
-	docker compose exec server go fmt ./...
 
 mod-tidy:
 	docker compose exec server go mod tidy
@@ -73,10 +67,10 @@ migrate-user:
 	docker-compose exec web npx prisma generate
 
 migrate-server-up:
-	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/db/migrations up
+	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/infrastructure/migrations up
 
 migrate-server-down:
-	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/db/migrations down
+	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/infrastructure/migrations down
 
 migrate-server-force:
-	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/db/migrations force 3
+	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/infrastructure/migrations force 3
