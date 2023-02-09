@@ -33,8 +33,8 @@ func (d DataLoader) UsersByIDs() *UserLoader {
 		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
 		Wait:     wait,     // 溜める時間
 		Fetch: func(ids []string) ([]*domain.User, []error) {
-			users := make([]*domain.User, 0, len(ids))
-			errors := make([]error, 0, len(ids))
+			users := make([]*domain.User, len(ids))
+			errors := make([]error, len(ids))
 
 			usersTemp, err := d.userRepo.GetByIDs(ids)
 			if err != nil {
@@ -63,8 +63,8 @@ func (d DataLoader) WorksByIDs() *WorkLoader {
 		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
 		Wait:     wait,     // 溜める時間
 		Fetch: func(ids []string) ([][]*domain.Work, []error) {
-			works := make([][]*domain.Work, 0, len(ids))
-			errors := make([]error, 0, len(ids))
+			works := make([][]*domain.Work, len(ids))
+			errors := make([]error, len(ids))
 
 			worksTemp, err := d.workRepo.GetByUserIDs(ids)
 			if err != nil {
