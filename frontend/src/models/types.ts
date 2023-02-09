@@ -67,7 +67,7 @@ export type Node = {
 };
 
 export type Pagination = {
-  nodes: Array<Node>;
+  nodes: Array<Maybe<Node>>;
   pageInfo: PaginationInfo;
 };
 
@@ -93,7 +93,7 @@ export type Query = {
   userAuth: User;
   users: UserPagination;
   work?: Maybe<Work>;
-  workNodes: Array<Work>;
+  workNodes: Array<Maybe<Work>>;
   works: WorkPagination;
 };
 

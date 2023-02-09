@@ -14,12 +14,25 @@ import (
 
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error) {
-	worksPagination, err := r.workUseCase.GetAllLoad(ctx, obj.ID)
+	works, err := r.dataLoaderUseCase.WorksByIDs().Load(obj.ID)
 	if !errors.Is(err, nil) {
-		return nil, fmt.Errorf("Works - useResolver: %w", err)
+		return nil, fmt.Errorf("GetAllLoad - usecase: %w", err)
 	}
 
-	return worksPagination, nil
+	pageInfo := domain.PaginationInfo{
+		Page:             1,
+		PaginationLength: 1,
+		HasNextPage:      false,
+		HasPreviousPage:  false,
+		Count:            len(works),
+		TotalCount:       len(works),
+	}
+	workPagination := domain.WorkPagination{
+		PageInfo: &pageInfo,
+		Nodes:    works,
+	}
+
+	return &workPagination, nil
 }
 
 // Profile is the resolver for the profile field.

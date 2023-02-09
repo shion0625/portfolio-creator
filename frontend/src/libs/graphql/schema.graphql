@@ -14,7 +14,7 @@ directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
-  nodes: [Node!]! # Node型の配列という意味
+  nodes: [Node]! # Node型の配列という意味
 }
 
 type PaginationInfo {
@@ -93,7 +93,7 @@ type Query {
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
   works(limit: Int!, offset: Int): WorkPagination!
-  workNodes(limit: Int!, offset: Int): [Work!]!
+  workNodes(limit: Int!, offset: Int): [Work]!
   SearchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
 }
 ## user.graphqls ===============================================

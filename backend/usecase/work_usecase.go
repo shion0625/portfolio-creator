@@ -6,20 +6,17 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type WorkUseCase struct {
-	workRepo   domain.IWorkRepository
-	workLoader dataloader.IDataLoader
+	workRepo domain.IWorkRepository
 }
 
 // NewWorkUseCase will create new an userUseCase object representation of domain.UserUseCase interface.
-func NewWorkUseCase(w domain.IWorkRepository, wl dataloader.IDataLoader) domain.IWorkUseCase {
+func NewWorkUseCase(w domain.IWorkRepository) domain.IWorkUseCase {
 	return &WorkUseCase{
-		workRepo:   w,
-		workLoader: wl,
+		workRepo: w,
 	}
 }
 
@@ -63,28 +60,6 @@ func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, offset int) ([]
 	}
 
 	return works, nil
-}
-
-func (w WorkUseCase) GetAllLoad(ctx context.Context, id string) (*domain.WorkPagination, error) {
-	works, err := w.workLoader.WorksByIDs().Load(id)
-	if err != nil {
-		return nil, fmt.Errorf("GetAllLoad - usecase: %w", err)
-	}
-
-	pageInfo := domain.PaginationInfo{
-		Page:             1,
-		PaginationLength: 1,
-		HasNextPage:      false,
-		HasPreviousPage:  false,
-		Count:            len(works),
-		TotalCount:       len(works),
-	}
-	workPagination := domain.WorkPagination{
-		PageInfo: &pageInfo,
-		Nodes:    works,
-	}
-
-	return &workPagination, nil
 }
 
 func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offset int) (*domain.WorkPagination, error) {

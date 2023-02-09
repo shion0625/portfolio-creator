@@ -7,20 +7,17 @@ import (
 	"math"
 
 	"github.com/shion0625/portfolio-creator/backend/config/auth"
-	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type UserUseCase struct {
-	userRepo   domain.IUserRepository
-	userLoader dataloader.IDataLoader
+	userRepo domain.IUserRepository
 }
 
 // NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface.
-func NewUserUseCase(u domain.IUserRepository, ul dataloader.IDataLoader) domain.IUserUseCase {
+func NewUserUseCase(u domain.IUserRepository) domain.IUserUseCase {
 	return &UserUseCase{
-		userRepo:   u,
-		userLoader: ul,
+		userRepo: u,
 	}
 }
 
@@ -28,15 +25,6 @@ func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, erro
 	user, err := u.userRepo.GetByID(ctx, id)
 	if !errors.Is(err, nil) {
 		return nil, fmt.Errorf("GetByID - usecase: %w", err)
-	}
-
-	return user, nil
-}
-
-func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error) {
-	user, err := u.userLoader.UsersByIDs().Load(id)
-	if !errors.Is(err, nil) {
-		return nil, fmt.Errorf("GetByIDLoad - usecase: %w", err)
 	}
 
 	return user, nil

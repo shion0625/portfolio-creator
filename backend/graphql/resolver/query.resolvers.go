@@ -97,7 +97,18 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*dom
 
 // WorkNodes is the resolver for the workNodes field.
 func (r *queryResolver) WorkNodes(ctx context.Context, limit int, offset *int) ([]*domain.Work, error) {
-	panic(fmt.Errorf("not implemented: WorkNodes - workNodes"))
+	workNodes, err := r.workUseCase.GetAllNodes(ctx, limit, *offset)
+	if !errors.Is(err, nil) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, &gqlerror.Error{
+				Message: "works not found",
+			}
+		}
+
+		return nil, fmt.Errorf("Works - queryResolver: %w", err)
+	}
+
+	return workNodes, nil
 }
 
 // SearchWorks is the resolver for the SearchWorks field.
@@ -120,24 +131,3 @@ func (r *queryResolver) SearchWorks(ctx context.Context, keyword string, limit i
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *queryResolver) WorksNodes(ctx context.Context, limit int, offset *int) ([]*domain.Work, error) {
-	workNodes, err := r.workUseCase.GetAllNodes(ctx, limit, *offset)
-	if !errors.Is(err, nil) {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, &gqlerror.Error{
-				Message: "works not found",
-			}
-		}
-
-		return nil, fmt.Errorf("Works - queryResolver: %w", err)
-	}
-
-	return workNodes, nil
-}
