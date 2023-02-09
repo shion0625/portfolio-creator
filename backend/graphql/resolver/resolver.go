@@ -11,16 +11,24 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
+type Loader struct {
+	UsersByIDs     *dataloader.UserLoader
+	WorksByUserIDs *dataloader.WorkLoader
+}
+
 type Resolver struct {
 	userUseCase       domain.IUserUseCase
 	workUseCase       domain.IWorkUseCase
-	dataLoaderUseCase dataloader.IDataLoaderUseCase
+	dataLoaderUseCase Loader
 }
 
 func NewResolver(uu domain.IUserUseCase, wu domain.IWorkUseCase, dlu dataloader.IDataLoaderUseCase) *Resolver {
 	return &Resolver{
-		userUseCase:       uu,
-		workUseCase:       wu,
-		dataLoaderUseCase: dlu,
+		userUseCase: uu,
+		workUseCase: wu,
+		dataLoaderUseCase: Loader{
+			UsersByIDs:     dlu.UsersByIDs(),
+			WorksByUserIDs: dlu.WorksByUserIDs(),
+		},
 	}
 }

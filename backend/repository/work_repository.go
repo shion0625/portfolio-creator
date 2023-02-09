@@ -54,7 +54,7 @@ func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*
 
 func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
 	var works []*domain.Work
-	if err := g.db.Conn.Where("user_id IN ?", ids).Find(&works).Error; err != nil {
+	if err := g.db.Conn.Debug().Where("user_id IN ?", ids).Take(&works).Error; err != nil {
 		return nil, fmt.Errorf("GetByUserIDs - repository: %w", err)
 	}
 

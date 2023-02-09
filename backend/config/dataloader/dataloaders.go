@@ -7,14 +7,15 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
-var (
-	wait     = 2 * time.Millisecond
-	maxBatch = 100
+const (
+	maxBatch   = 100
+	wait       = 2 * time.Millisecond
+	loadersKey = "dataLoaders"
 )
 
 type IDataLoaderUseCase interface {
 	UsersByIDs() *UserLoader
-	WorksByIDs() *WorkLoader
+	WorksByUserIDs() *WorkLoader
 }
 
 type DataLoaderUseCase struct {
@@ -36,6 +37,7 @@ func (d DataLoaderUseCase) UsersByIDs() *UserLoader {
 		Fetch: func(ids []string) ([]*domain.User, []error) {
 			users := make([]*domain.User, len(ids))
 			errors := make([]error, len(ids))
+
 			usersTemp, err := d.userRepo.GetByIDs(ids)
 			if err != nil {
 				errors = append(errors, err)
@@ -58,7 +60,7 @@ func (d DataLoaderUseCase) UsersByIDs() *UserLoader {
 	return userLoader
 }
 
-func (d DataLoaderUseCase) WorksByIDs() *WorkLoader {
+func (d DataLoaderUseCase) WorksByUserIDs() *WorkLoader {
 	workLoader := NewWorkLoader(WorkLoaderConfig{
 		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
 		Wait:     wait,     // 溜める時間

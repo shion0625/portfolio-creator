@@ -14,7 +14,7 @@ import (
 
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error) {
-	works, err := r.dataLoaderUseCase.WorksByIDs().Load(obj.ID)
+	works, err := r.dataLoaderUseCase.WorksByUserIDs.Load(obj.ID)
 	if !errors.Is(err, nil) {
 		return nil, fmt.Errorf("GetAllLoad - usecase: %w", err)
 	}

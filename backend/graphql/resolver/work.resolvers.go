@@ -14,7 +14,7 @@ import (
 
 // User is the resolver for the user field.
 func (r *workResolver) User(ctx context.Context, obj *domain.Work) (*domain.User, error) {
-	user, err := r.dataLoaderUseCase.UsersByIDs().Load(obj.UserID)
+	user, err := r.dataLoaderUseCase.UsersByIDs.Load(obj.UserID)
 	if !errors.Is(err, nil) {
 		return nil, fmt.Errorf("GetByIDLoad - usecase: %w", err)
 	}
