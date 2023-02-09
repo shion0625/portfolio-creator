@@ -29,11 +29,11 @@ export type CreateWorkInput = {
 };
 
 export type Mutation = {
-  createWork: Work;
-  deleteWorks?: Maybe<Scalars['Boolean']>;
+  createWork: Scalars['Boolean'];
+  deleteWorks: Scalars['Boolean'];
   login: Scalars['Any'];
   updateProfile: User;
-  updateWork: Work;
+  updateWork: Scalars['Boolean'];
 };
 
 
@@ -43,7 +43,7 @@ export type MutationCreateWorkArgs = {
 
 
 export type MutationDeleteWorksArgs = {
-  id: Array<InputMaybe<Scalars['ID']>>;
+  ids: Array<InputMaybe<Scalars['ID']>>;
 };
 
 
@@ -88,11 +88,20 @@ export type Profile = {
 };
 
 export type Query = {
+  SearchWorks: WorkPagination;
   user: User;
   userAuth: User;
   users: UserPagination;
   work?: Maybe<Work>;
+  workNodes: Array<Work>;
   works: WorkPagination;
+};
+
+
+export type QuerySearchWorksArgs = {
+  keyword: Scalars['String'];
+  limit: Scalars['Int'];
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -114,6 +123,12 @@ export type QueryUsersArgs = {
 
 export type QueryWorkArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryWorkNodesArgs = {
+  limit: Scalars['Int'];
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 

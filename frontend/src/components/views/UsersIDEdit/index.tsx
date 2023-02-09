@@ -16,7 +16,6 @@ type UserIDEditViewProps = {
 }
 
 const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
-
   const removeWorkIds = useRef<string[]>([''])
   //データの取得
   const { userData, onUpdate } = useGetUserWork(id)

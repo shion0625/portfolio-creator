@@ -1,25 +1,24 @@
 import * as Types from '../../../models/types';
 
 import { gql } from '@apollo/client';
+import { WorkFragmentFragmentDoc } from './work.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
-
-export type WorkFragmentFragment = { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any };
 
 export type GetUserQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
 
-export type GetUserQuery = { user: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any }> } | null } };
+export type GetUserQuery = { user: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean }> } | null } };
 
 export type GetUserAuthQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
 
-export type GetUserAuthQuery = { userAuth: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any }> } | null } };
+export type GetUserAuthQuery = { userAuth: { id: string, name?: string | null, email?: string | null, works?: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean }> } | null } };
 
 export type GetUsersQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
@@ -27,7 +26,7 @@ export type GetUsersQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetUsersQuery = { users: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, user: { id: string, name?: string | null } }> } | null }> } };
+export type GetUsersQuery = { users: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, works?: { nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean, user: { id: string, name?: string | null } }> } | null }> } };
 
 export type GetUsersNameQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
@@ -61,22 +60,6 @@ export const PaginationFragmentFragmentDoc = gql`
   totalCount
   paginationLength
   hasPreviousPage
-}
-    `;
-export const WorkFragmentFragmentDoc = gql`
-    fragment WorkFragment on Work {
-  id
-  title
-  summary
-  image_url
-  duration
-  number_of_people
-  language
-  role
-  url
-  brief_story
-  created_at
-  updated_at
 }
     `;
 export const GetUserDocument = gql`

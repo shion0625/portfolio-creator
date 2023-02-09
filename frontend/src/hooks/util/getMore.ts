@@ -1,19 +1,42 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useGetWorks } from '~/hooks/Work/query'
-import { GetWorksQuery } from '~/models/client'
-const useGetMore = () => {
-  const [works, setWorks] = useState<GetWorksQuery>()
-  const [offset, setOffset] = useState(0)
+import { Work } from '~/models/types'
+
+type State =
+  | { _tag: "init" }
+  | { _tag: "loading" }
+  | { _tag: "success", contents: Work[]}
+
+export const useGetMore = () =>
+{
+  const defaultVolumes = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
+  const limit = 20
+  const [works, setWorks] = useState<Work[]>([])
+  const [status, setStatus] = useState<State>({ _tag: "init" });
+  const [offset, setOffset] = useState(defaultVolumes)
+  const { getWorks, worksData, loading, error } = useGetWorks()
 
   useEffect(() => {
-    const { data, loading, error } = useGetWorks(offset, 20)
-    setWorks(data)
-  }, [offset])
-  const defaultVolumes = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
+    if (status._tag === "success") {
+    setWorks((current) => [...current, ...status.contents])
+    }
+  }, [status])
+
+  useEffect(() => {
+    getWorks({ variables: { offset, limit } })
+    if (!loading && worksData) {
+      setStatus({
+      _tag: "success",
+      contents: worksData
+    })
+    }
+
+  }, [offset, loading])
+
 
   const onClick = useCallback(() => {
-    setOffset(offset + defaultVolumes)
+    setOffset(offset + limit)
   }, [offset])
 
-  return {onClick, works}
+  return {data: works, status, onClick}
 }

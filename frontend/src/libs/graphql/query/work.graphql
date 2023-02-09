@@ -15,6 +15,7 @@ fragment WorkFragment on Work {
   brief_story
   created_at
   updated_at
+  is_delete
 }
 
 query GetWork($id: ID!) {
@@ -47,18 +48,24 @@ query GetWorks($limit: Int!, $offset:Int) {
   }
 }
 
-mutation CreateWork($input: CreateWorkInput!) {
-  createWork(input: $input) {
+query GetWorkNodes($limit: Int!, $offset: Int) {
+  workNodes(limit: $limit, offset: $offset) {
     ...WorkFragment
+    user {
+      id
+      name
+    }
   }
+}
+
+mutation CreateWork($input: CreateWorkInput!) {
+  createWork(input: $input)
 }
 
 mutation UpdateWork($input: UpdateWorkInput!) {
-  updateWork(input: $input) {
-    ...WorkFragment
-  }
+  updateWork(input: $input)
 }
 
-mutation DeleteWorks($id: [ID]!) {
-  deleteWorks(id: $id)
+mutation DeleteWorks($ids: [ID]!) {
+  deleteWorks(ids: $ids)
 }
