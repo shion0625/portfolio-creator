@@ -55,6 +55,15 @@ func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	return &workPagination, nil
 }
 
+func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, offset int) ([]*domain.Work, error) {
+	works, _, err := w.workRepo.GetAll(ctx, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("GetAllNodes - usecase: %w", err)
+	}
+
+	return works, nil
+}
+
 func (w WorkUseCase) GetAllLoad(ctx context.Context, id string) (*domain.WorkPagination, error) {
 	works, err := w.workLoader.WorksByIDs().Load(id)
 	if err != nil {

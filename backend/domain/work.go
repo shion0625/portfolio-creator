@@ -26,6 +26,7 @@ func (this Work) GetID() string { return this.ID }
 type IWorkUseCase interface {
 	GetByID(ctx context.Context, id string) (*Work, error)
 	GetAll(ctx context.Context, limit int, offset int) (*WorkPagination, error)
+	GetAllNodes(ctx context.Context, limit int, offset int) ([]*Work, error)
 	GetAllLoad(ctx context.Context, id string) (*WorkPagination, error)
 	Search(ctx context.Context, keyword string, limit int, offset int) (*WorkPagination, error)
 	Create(ctx context.Context, input CreateWorkInput) error

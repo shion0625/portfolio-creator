@@ -94,6 +94,22 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int) (*dom
 	return workPagination, nil
 }
 
+// WorksNodes is the resolver for the worksNodes field.
+func (r *queryResolver) WorksNodes(ctx context.Context, limit int, offset *int) ([]*domain.Work, error) {
+	workNodes, err := r.workUseCase.GetAllNodes(ctx, limit, *offset)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, &gqlerror.Error{
+				Message: "works not found",
+			}
+		}
+
+		return nil, fmt.Errorf("Works - queryResolver: %w", err)
+	}
+
+	return workNodes, nil
+}
+
 // SearchWorks is the resolver for the SearchWorks field.
 func (r *queryResolver) SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error) {
 	workPagination, err := r.workUseCase.Search(ctx, keyword, limit, *offset)
