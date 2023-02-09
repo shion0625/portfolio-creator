@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
@@ -25,20 +26,30 @@ func NewUserUseCase(u domain.IUserRepository, ul dataloader.IDataLoader) domain.
 
 func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, error) {
 	user, err := u.userRepo.GetByID(ctx, id)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("GetByID - usecase: %w", err)
+	}
 
-	return user, fmt.Errorf("GetByID - usecase: %w", err)
+	return user, nil
 }
 
 func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error) {
 	user, err := u.userLoader.UsersByIDs().Load(id)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("GetByIDLoad - usecase: %w", err)
+	}
 
-	return user, fmt.Errorf("GetByIDLoad - usecase: %w", err)
+	return user, nil
 }
 
 func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	user, err := u.userRepo.GetByEmail(ctx, email)
 
-	return user, fmt.Errorf("GetByEmail - usecase: %w", err)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("GetByEmail - usecase: %w", err)
+	}
+
+	return user, nil
 }
 
 func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.UserPagination, error) {

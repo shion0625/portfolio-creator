@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
@@ -109,19 +110,25 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offs
 }
 
 func (w WorkUseCase) Create(ctx context.Context, input domain.CreateWorkInput) error {
-	err := w.workRepo.Create(ctx, input)
+	if err := w.workRepo.Create(ctx, input); !errors.Is(err, nil) {
+		return fmt.Errorf("Create - usecase: %w", err)
+	}
 
-	return fmt.Errorf("Create - usecase: %w", err)
+	return nil
 }
 
 func (w WorkUseCase) Update(ctx context.Context, work *domain.Work, input domain.UpdateWorkInput) error {
-	err := w.workRepo.Update(ctx, work, input)
+	if err := w.workRepo.Update(ctx, work, input); !errors.Is(err, nil) {
+		return fmt.Errorf("Update - usecase: %w", err)
+	}
 
-	return fmt.Errorf("Update - usecase: %w", err)
+	return nil
 }
 
 func (w WorkUseCase) Delete(ctx context.Context, ids []*string) error {
-	err := w.workRepo.Delete(ctx, ids)
+	if err := w.workRepo.Delete(ctx, ids); !errors.Is(err, nil) {
+		return fmt.Errorf("Delete - usecase: %w", err)
+	}
 
-	return fmt.Errorf("Delete - usecase: %w", err)
+	return nil
 }
