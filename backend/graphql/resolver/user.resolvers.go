@@ -5,6 +5,7 @@ package resolver
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
@@ -14,8 +15,11 @@ import (
 // Works is the resolver for the works field.
 func (r *userResolver) Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error) {
 	worksPagination, err := r.workUseCase.GetAllLoad(ctx, obj.ID)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("Works - useResolver: %w", err)
+	}
 
-	return worksPagination, fmt.Errorf("Works - useResolver: %w", err)
+	return worksPagination, nil
 }
 
 // Profile is the resolver for the profile field.
