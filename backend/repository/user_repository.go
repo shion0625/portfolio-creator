@@ -19,7 +19,7 @@ func NewUserRepository(db *infrastructure.SQLHandler) domain.IUserRepository {
 
 func (g *UserRepository) GetByID(ctx context.Context, id string) (*domain.User, error) {
 	var user domain.User
-	if err := g.db.Conn.Where("id = ?", id).Find(&user).Error; err != nil {
+	if err := g.db.Conn.Where("id = ?", id).Take(&user).Error; err != nil {
 		return nil, fmt.Errorf("GetByID - repository: %w", err)
 	}
 
