@@ -28,6 +28,7 @@ services:
       - db
     volumes:
       - ./backend:/app
+      - ./backend:/usr/local/go/src/app
       - go-data:/go
 
   db:

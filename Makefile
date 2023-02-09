@@ -24,6 +24,10 @@ gqlgen:
 go-run:
 	docker compose exec server air -c .air.toml
 
+go-doc:
+	docker compose exec server godoc
+# http://localhost:6060/pkg/app/
+
 go-lint:
 	docker compose exec server golangci-lint run
 
