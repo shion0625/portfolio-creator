@@ -43,7 +43,7 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 
 func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
-	result := g.db.Conn.Limit(limit).Offset(offset).Find(&works)
+	result := g.db.Conn.Debug().Limit(limit).Offset(offset).Joins("INNER JOIN users on users.id = works.user_id").Find(&works)
 
 	if result.Error != nil {
 		return nil, 0, result.Error
