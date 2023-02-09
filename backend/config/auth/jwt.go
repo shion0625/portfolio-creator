@@ -53,6 +53,9 @@ func JwtValidate(ctx context.Context, token string) (*jwt.Token, error) {
 
 		return jwtSecret, nil
 	})
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("JwtValidate: %w", err)
+	}
 
-	return jwtToken, fmt.Errorf("JwtValidate: %w", err)
+	return jwtToken, nil
 }

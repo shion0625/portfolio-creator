@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+	"errors"
+	"log"
 	"net/http"
 )
 
@@ -21,7 +23,8 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		ctxBackground := r.Context()
 		validate, err := JwtValidate(ctxBackground, auth)
-		if err != nil || !validate.Valid {
+		log.Print(err)
+		if !errors.Is(err, nil) || !validate.Valid {
 			http.Error(w, "Invalid token", http.StatusForbidden)
 
 			return
