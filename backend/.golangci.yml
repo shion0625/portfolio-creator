@@ -60,6 +60,7 @@ linters:
     - ireturn
     - gochecknoglobals
     - revive
+    - makezero
     - stylecheck #  一時的 解決したい
     - staticcheck # 非推奨を教えてくれる 一時的
     - goerr113 #  一時的
