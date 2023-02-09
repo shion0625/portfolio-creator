@@ -5,6 +5,7 @@ package resolver
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
@@ -13,9 +14,12 @@ import (
 
 // User is the resolver for the user field.
 func (r *workResolver) User(ctx context.Context, obj *domain.Work) (*domain.User, error) {
-	user, err := r.userUseCase.GetByIDLoad(ctx, obj.UserID)
+	user, err := r.dataLoaderUseCase.UsersByIDs.Load(obj.UserID)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("GetByIDLoad - usecase: %w", err)
+	}
 
-	return user, fmt.Errorf("User - queryResolver: %w", err)
+	return user, nil
 }
 
 // Work returns generated.WorkResolver implementation.

@@ -2,43 +2,42 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
 	"github.com/shion0625/portfolio-creator/backend/config/auth"
-	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type UserUseCase struct {
-	userRepo   domain.IUserRepository
-	userLoader dataloader.IDataLoader
+	userRepo domain.IUserRepository
 }
 
 // NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface.
-func NewUserUseCase(u domain.IUserRepository, ul dataloader.IDataLoader) domain.IUserUseCase {
+func NewUserUseCase(u domain.IUserRepository) domain.IUserUseCase {
 	return &UserUseCase{
-		userRepo:   u,
-		userLoader: ul,
+		userRepo: u,
 	}
 }
 
 func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, error) {
 	user, err := u.userRepo.GetByID(ctx, id)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("GetByID - usecase: %w", err)
+	}
 
-	return user, fmt.Errorf("GetByID - usecase: %w", err)
-}
-
-func (u UserUseCase) GetByIDLoad(ctx context.Context, id string) (*domain.User, error) {
-	user, err := u.userLoader.UsersByIDs().Load(id)
-
-	return user, fmt.Errorf("GetByIDLoad - usecase: %w", err)
+	return user, nil
 }
 
 func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	user, err := u.userRepo.GetByEmail(ctx, email)
 
-	return user, fmt.Errorf("GetByEmail - usecase: %w", err)
+	if !errors.Is(err, nil) {
+		return nil, fmt.Errorf("GetByEmail - usecase: %w", err)
+	}
+
+	return user, nil
 }
 
 func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.UserPagination, error) {

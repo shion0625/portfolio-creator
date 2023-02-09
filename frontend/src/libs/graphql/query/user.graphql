@@ -11,22 +11,6 @@ fragment PaginationFragment on PaginationInfo {
   hasPreviousPage
 }
 
-fragment WorkFragment on Work {
-  # 取得するフィールド
-  id
-  title
-  summary
-  image_url
-  duration
-  number_of_people
-  language
-  role
-  url
-  brief_story
-  created_at
-  updated_at
-}
-
 query GetUser($id: ID!) {
   user(id: $id) {
     id

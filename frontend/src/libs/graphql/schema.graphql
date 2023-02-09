@@ -14,7 +14,7 @@ directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
-  nodes: [Node!]! # Node型の配列という意味
+  nodes: [Node]! # Node型の配列という意味
 }
 
 type PaginationInfo {
@@ -30,9 +30,9 @@ type PaginationInfo {
 ### Mutation(更新系)の定義
 type Mutation {
   updateProfile(input: UpdateProfileInput!): User! @auth
-  createWork(input: CreateWorkInput!): Work!  @auth
-  updateWork(input: UpdateWorkInput!): Work! @auth
-  deleteWorks(id: [ID]!): Boolean @auth
+  createWork(input: CreateWorkInput!): Boolean! @auth
+  updateWork(input: UpdateWorkInput!): Boolean! @auth
+  deleteWorks(ids: [ID]!): Boolean! @auth
   login(id: String!, email: String!): Any!
 }
 
@@ -93,6 +93,8 @@ type Query {
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
   works(limit: Int!, offset: Int): WorkPagination!
+  workNodes(limit: Int!, offset: Int): [Work]!
+  SearchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
 }
 ## user.graphqls ===============================================
 

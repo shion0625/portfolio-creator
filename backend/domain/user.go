@@ -17,7 +17,6 @@ func (this User) GetID() string { return this.ID }
 // UserUseCase represent the user's usecases.
 type IUserUseCase interface {
 	GetByID(ctx context.Context, id string) (*User, error)
-	GetByIDLoad(ctx context.Context, id string) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetAll(ctx context.Context, limit int, offset int) (*UserPagination, error)
 	Login(ctx context.Context, id string, email string) (interface{}, error)

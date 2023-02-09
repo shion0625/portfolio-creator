@@ -2,23 +2,21 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
-	"github.com/shion0625/portfolio-creator/backend/config/dataloader"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
 type WorkUseCase struct {
-	workRepo   domain.IWorkRepository
-	workLoader dataloader.IDataLoader
+	workRepo domain.IWorkRepository
 }
 
 // NewWorkUseCase will create new an userUseCase object representation of domain.UserUseCase interface.
-func NewWorkUseCase(w domain.IWorkRepository, wl dataloader.IDataLoader) domain.IWorkUseCase {
+func NewWorkUseCase(w domain.IWorkRepository) domain.IWorkUseCase {
 	return &WorkUseCase{
-		workRepo:   w,
-		workLoader: wl,
+		workRepo: w,
 	}
 }
 
@@ -55,26 +53,13 @@ func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	return &workPagination, nil
 }
 
-func (w WorkUseCase) GetAllLoad(ctx context.Context, id string) (*domain.WorkPagination, error) {
-	works, err := w.workLoader.WorksByIDs().Load(id)
+func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, offset int) ([]*domain.Work, error) {
+	works, _, err := w.workRepo.GetAll(ctx, limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("GetAllLoad - usecase: %w", err)
+		return nil, fmt.Errorf("GetAllNodes - usecase: %w", err)
 	}
 
-	pageInfo := domain.PaginationInfo{
-		Page:             1,
-		PaginationLength: 1,
-		HasNextPage:      false,
-		HasPreviousPage:  false,
-		Count:            len(works),
-		TotalCount:       len(works),
-	}
-	workPagination := domain.WorkPagination{
-		PageInfo: &pageInfo,
-		Nodes:    works,
-	}
-
-	return &workPagination, nil
+	return works, nil
 }
 
 func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offset int) (*domain.WorkPagination, error) {
@@ -100,19 +85,25 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offs
 }
 
 func (w WorkUseCase) Create(ctx context.Context, input domain.CreateWorkInput) error {
-	err := w.workRepo.Create(ctx, input)
+	if err := w.workRepo.Create(ctx, input); !errors.Is(err, nil) {
+		return fmt.Errorf("Create - usecase: %w", err)
+	}
 
-	return fmt.Errorf("Create - usecase: %w", err)
+	return nil
 }
 
 func (w WorkUseCase) Update(ctx context.Context, work *domain.Work, input domain.UpdateWorkInput) error {
-	err := w.workRepo.Update(ctx, work, input)
+	if err := w.workRepo.Update(ctx, work, input); !errors.Is(err, nil) {
+		return fmt.Errorf("Update - usecase: %w", err)
+	}
 
-	return fmt.Errorf("Update - usecase: %w", err)
+	return nil
 }
 
 func (w WorkUseCase) Delete(ctx context.Context, ids []*string) error {
-	err := w.workRepo.Delete(ctx, ids)
+	if err := w.workRepo.Delete(ctx, ids); !errors.Is(err, nil) {
+		return fmt.Errorf("Delete - usecase: %w", err)
+	}
 
-	return fmt.Errorf("Delete - usecase: %w", err)
+	return nil
 }

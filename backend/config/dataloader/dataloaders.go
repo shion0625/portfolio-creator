@@ -1,40 +1,42 @@
 package dataloader
 
 import (
+	"log"
 	"time"
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
 )
 
-var (
-	wait     = 2 * time.Millisecond
-	maxBatch = 100
+const (
+	maxBatch   = 100
+	wait       = 2 * time.Millisecond
+	loadersKey = "dataLoaders"
 )
 
-type IDataLoader interface {
+type IDataLoaderUseCase interface {
 	UsersByIDs() *UserLoader
-	WorksByIDs() *WorkLoader
+	WorksByUserIDs() *WorkLoader
 }
 
-type DataLoader struct {
+type DataLoaderUseCase struct {
 	userRepo domain.IUserRepository
 	workRepo domain.IWorkRepository
 }
 
-func NewDataLoader(u domain.IUserRepository, w domain.IWorkRepository) IDataLoader {
-	return &DataLoader{
+func NewDataLoader(u domain.IUserRepository, w domain.IWorkRepository) IDataLoaderUseCase {
+	return &DataLoaderUseCase{
 		userRepo: u,
 		workRepo: w,
 	}
 }
 
-func (d DataLoader) UsersByIDs() *UserLoader {
+func (d DataLoaderUseCase) UsersByIDs() *UserLoader {
 	userLoader := NewUserLoader(UserLoaderConfig{
 		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
 		Wait:     wait,     // 溜める時間
 		Fetch: func(ids []string) ([]*domain.User, []error) {
-			users := make([]*domain.User, 0, len(ids))
-			errors := make([]error, 0, len(ids))
+			users := make([]*domain.User, len(ids))
+			errors := make([]error, len(ids))
 
 			usersTemp, err := d.userRepo.GetByIDs(ids)
 			if err != nil {
@@ -58,13 +60,14 @@ func (d DataLoader) UsersByIDs() *UserLoader {
 	return userLoader
 }
 
-func (d DataLoader) WorksByIDs() *WorkLoader {
+func (d DataLoaderUseCase) WorksByUserIDs() *WorkLoader {
 	workLoader := NewWorkLoader(WorkLoaderConfig{
 		MaxBatch: maxBatch, // 溜める最大数、0を指定すると制限無し
 		Wait:     wait,     // 溜める時間
 		Fetch: func(ids []string) ([][]*domain.Work, []error) {
-			works := make([][]*domain.Work, 0, len(ids))
-			errors := make([]error, 0, len(ids))
+			works := make([][]*domain.Work, len(ids))
+			errors := make([]error, len(ids))
+			log.Print("works :%w", works)
 
 			worksTemp, err := d.workRepo.GetByUserIDs(ids)
 			if err != nil {

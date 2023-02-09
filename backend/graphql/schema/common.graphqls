@@ -14,7 +14,7 @@ directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
-  nodes: [Node!]! # Node型の配列という意味
+  nodes: [Node]! # Node型の配列という意味
 }
 
 type PaginationInfo {
