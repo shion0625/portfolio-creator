@@ -10,13 +10,20 @@ import (
 )
 
 type UserRepository struct {
+	// Dealing with databases
 	db *infrastructure.SQLHandler
 }
 
+// NewUserRepository will create new an UserRepository object representation of domain.IUserRepository.
 func NewUserRepository(db *infrastructure.SQLHandler) domain.IUserRepository {
 	return &UserRepository{db}
 }
 
+/*
+GetByID is based on the entered id and retrieves information about the user matching that id.
+Returns the domain.User structure if the user specified in the argument is in the database, or nil otherwise.
+If an unexpected error occurs, the error wrapped in GetByID-usecase: is returned.
+*/
 func (g *UserRepository) GetByID(ctx context.Context, id string) (*domain.User, error) {
 	var user domain.User
 	if err := g.db.Conn.Where("id = ?", id).Take(&user).Error; err != nil {
@@ -26,6 +33,11 @@ func (g *UserRepository) GetByID(ctx context.Context, id string) (*domain.User, 
 	return &user, nil
 }
 
+/*
+GetByEmail is based on the entered email and retrieves information about the user matching that email.
+Returns the domain.User structure if the user specified in the argument is in the database, or nil otherwise.
+If an unexpected error occurs, the error wrapped in GetByEmail-usecase: is returned.
+*/
 func (g *UserRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	var user domain.User
 	if err := g.db.Conn.Where("email LIKE ?", email).Find(&user).Error; err != nil {
@@ -44,6 +56,13 @@ func (g *UserRepository) GetTotalCount(ctx context.Context) (int64, error) {
 	return totalCount, nil
 }
 
+/*
+GetAll retrieves information for multiple users based on the limit and offset entered.
+The limit is the number of data to retrieve.
+The offset is the number of data to start retrieving.
+It returns a []*domain.User if the user specified in the argument exists in the database, or nil otherwise.
+If an unexpected error occurs, an error wrapped in GetAll-usecase is returned.
+*/
 func (g *UserRepository) GetAll(ctx context.Context, limit int, offset int) ([]*domain.User, int64, error) {
 	var users []*domain.User
 	result := g.db.Conn.Limit(limit).Offset(offset).Find(&users)
