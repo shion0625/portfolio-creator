@@ -11,6 +11,7 @@ import (
 )
 
 type UserUseCase struct {
+	// User's repository interface.
 	userRepo domain.IUserRepository
 }
 
@@ -21,6 +22,11 @@ func NewUserUseCase(u domain.IUserRepository) domain.IUserUseCase {
 	}
 }
 
+/*
+GetByID is based on the entered id and retrieves information about the user matching that id.
+Returns the domain.User structure if the user specified in the argument is in the database, or nil otherwise.
+If an unexpected error occurs, the error wrapped in GetByID-usecase: is returned.
+*/
 func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, error) {
 	user, err := u.userRepo.GetByID(ctx, id)
 	if !errors.Is(err, nil) {
@@ -30,6 +36,11 @@ func (u UserUseCase) GetByID(ctx context.Context, id string) (*domain.User, erro
 	return user, nil
 }
 
+/*
+GetByEmail is based on the entered email and retrieves information about the user matching that email.
+Returns the domain.User structure if the user specified in the argument is in the database, or nil otherwise.
+If an unexpected error occurs, the error wrapped in GetByEmail-usecase: is returned.
+*/
 func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	user, err := u.userRepo.GetByEmail(ctx, email)
 
@@ -40,6 +51,13 @@ func (u UserUseCase) GetByEmail(ctx context.Context, email string) (*domain.User
 	return user, nil
 }
 
+/*
+GetAll retrieves information for multiple users based on the limit and offset entered.
+The limit is the number of data to retrieve.
+The offset is the number of data to start retrieving.
+It returns a domain.UserPagination structure if the user specified in the argument exists in the database, or nil otherwise.
+If an unexpected error occurs, an error wrapped in GetAll-usecase or GetAll - GetTotalCount - usecase: is returned.
+*/
 func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.UserPagination, error) {
 	totalCount, err := u.userRepo.GetTotalCount(ctx)
 	if err != nil {
@@ -68,6 +86,11 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	return &userPagination, nil
 }
 
+/*
+Login retrieves the token of the matching user based on the entered id and email.
+If the user specified in the argument exists in the database, return a token in the form map[string]interface{}, otherwise return nil
+If an unexpected error occurs, an error wrapped in Login-GetByEmail-usecase or Login-JwtGenerate-usecase: is returned.
+*/
 func (u UserUseCase) Login(ctx context.Context, id string, email string) (interface{}, error) {
 	getUser, err := u.userRepo.GetByEmail(ctx, email)
 	if err != nil {
