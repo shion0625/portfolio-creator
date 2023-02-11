@@ -11,11 +11,11 @@ import (
 )
 
 type UserUseCase struct {
-	// User's repository interface.
+	// User's repository.
 	userRepo domain.IUserRepository
 }
 
-// NewUserUseCase will create new an userUseCase object representation of domain.UserUseCase interface.
+// NewUserUseCase will create new an userUseCase object representation of domain.IUserUseCase.
 func NewUserUseCase(u domain.IUserRepository) domain.IUserUseCase {
 	return &UserUseCase{
 		userRepo: u,
