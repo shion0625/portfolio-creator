@@ -15,6 +15,7 @@ fragment WorkFragment on Work {
   brief_story
   created_at
   updated_at
+  number_of_work
   is_delete
 }
 
@@ -28,8 +29,8 @@ query GetWork($id: ID!) {
   }
 }
 
-query GetWorks($limit: Int!, $offset:Int) {
-  works(limit: $limit, offset: $offset){
+query GetWorks($limit: Int!, $order: String! ,$searched:  String!, $num: Int!) {
+  works(limit: $limit, order: $order, searched: $searched, num: $num){
     pageInfo{
       page,
       paginationLength,
@@ -48,8 +49,8 @@ query GetWorks($limit: Int!, $offset:Int) {
   }
 }
 
-query GetWorkNodes($limit: Int!, $offset: Int) {
-  workNodes(limit: $limit, offset: $offset) {
+query GetWorkNodes($limit: Int!, $order:String! ,$searched: String!, $num: Int!) {
+  workNodes(limit: $limit, order: $order, searched: $searched, num: $num) {
     ...WorkFragment
     user {
       id

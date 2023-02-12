@@ -92,8 +92,8 @@ type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
-  works(limit: Int!, offset: Int): WorkPagination!
-  workNodes(limit: Int!, offset: Int): [Work!]!
+  works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
+  workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
   searchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
 }
 ## user.graphqls ===============================================
@@ -128,6 +128,7 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
+  number_of_work: Int!
   user: User!
   }
 

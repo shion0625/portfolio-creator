@@ -3,30 +3,34 @@ import * as Types from '../../../models/types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type WorkFragmentFragment = { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean };
+export type WorkFragmentFragment = { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work: number, is_delete: boolean };
 
 export type GetWorkQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
 
-export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean, user: { id: string, name?: string | null } } | null };
+export type GetWorkQuery = { work?: { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work: number, is_delete: boolean, user: { id: string, name?: string | null } } | null };
 
 export type GetWorksQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  order: Types.Scalars['String'];
+  searched: Types.Scalars['String'];
+  num: Types.Scalars['Int'];
 }>;
 
 
-export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean, user: { id: string, name?: string | null } }> } };
+export type GetWorksQuery = { works: { pageInfo: { page: number, paginationLength: number, hasPreviousPage: boolean, hasNextPage: boolean, count: number, totalCount: number }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work: number, is_delete: boolean, user: { id: string, name?: string | null } }> } };
 
 export type GetWorkNodesQueryVariables = Types.Exact<{
   limit: Types.Scalars['Int'];
-  offset?: Types.InputMaybe<Types.Scalars['Int']>;
+  order: Types.Scalars['String'];
+  searched: Types.Scalars['String'];
+  num: Types.Scalars['Int'];
 }>;
 
 
-export type GetWorkNodesQuery = { workNodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean, user: { id: string, name?: string | null } }> };
+export type GetWorkNodesQuery = { workNodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work: number, is_delete: boolean, user: { id: string, name?: string | null } }> };
 
 export type CreateWorkMutationVariables = Types.Exact<{
   input: Types.CreateWorkInput;
@@ -63,6 +67,7 @@ export const WorkFragmentFragmentDoc = gql`
   brief_story
   created_at
   updated_at
+  number_of_work
   is_delete
 }
     `;
@@ -106,8 +111,8 @@ export type GetWorkQueryHookResult = ReturnType<typeof useGetWorkQuery>;
 export type GetWorkLazyQueryHookResult = ReturnType<typeof useGetWorkLazyQuery>;
 export type GetWorkQueryResult = Apollo.QueryResult<GetWorkQuery, GetWorkQueryVariables>;
 export const GetWorksDocument = gql`
-    query GetWorks($limit: Int!, $offset: Int) {
-  works(limit: $limit, offset: $offset) {
+    query GetWorks($limit: Int!, $order: String!, $searched: String!, $num: Int!) {
+  works(limit: $limit, order: $order, searched: $searched, num: $num) {
     pageInfo {
       page
       paginationLength
@@ -140,7 +145,9 @@ export const GetWorksDocument = gql`
  * const { data, loading, error } = useGetWorksQuery({
  *   variables: {
  *      limit: // value for 'limit'
- *      offset: // value for 'offset'
+ *      order: // value for 'order'
+ *      searched: // value for 'searched'
+ *      num: // value for 'num'
  *   },
  * });
  */
@@ -156,8 +163,8 @@ export type GetWorksQueryHookResult = ReturnType<typeof useGetWorksQuery>;
 export type GetWorksLazyQueryHookResult = ReturnType<typeof useGetWorksLazyQuery>;
 export type GetWorksQueryResult = Apollo.QueryResult<GetWorksQuery, GetWorksQueryVariables>;
 export const GetWorkNodesDocument = gql`
-    query GetWorkNodes($limit: Int!, $offset: Int) {
-  workNodes(limit: $limit, offset: $offset) {
+    query GetWorkNodes($limit: Int!, $order: String!, $searched: String!, $num: Int!) {
+  workNodes(limit: $limit, order: $order, searched: $searched, num: $num) {
     ...WorkFragment
     user {
       id
@@ -180,7 +187,9 @@ export const GetWorkNodesDocument = gql`
  * const { data, loading, error } = useGetWorkNodesQuery({
  *   variables: {
  *      limit: // value for 'limit'
- *      offset: // value for 'offset'
+ *      order: // value for 'order'
+ *      searched: // value for 'searched'
+ *      num: // value for 'num'
  *   },
  * });
  */

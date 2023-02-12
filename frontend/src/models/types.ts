@@ -128,13 +128,17 @@ export type QueryWorkArgs = {
 
 export type QueryWorkNodesArgs = {
   limit: Scalars['Int'];
-  offset?: InputMaybe<Scalars['Int']>;
+  num: Scalars['Int'];
+  order: Scalars['String'];
+  searched: Scalars['String'];
 };
 
 
 export type QueryWorksArgs = {
   limit: Scalars['Int'];
-  offset?: InputMaybe<Scalars['Int']>;
+  num: Scalars['Int'];
+  order: Scalars['String'];
+  searched: Scalars['String'];
 };
 
 export enum Role {
@@ -186,6 +190,7 @@ export type Work = Node & {
   is_delete: Scalars['Boolean'];
   language?: Maybe<Scalars['String']>;
   number_of_people?: Maybe<Scalars['Int']>;
+  number_of_work: Scalars['Int'];
   role?: Maybe<Scalars['String']>;
   summary?: Maybe<Scalars['String']>;
   title: Scalars['String'];

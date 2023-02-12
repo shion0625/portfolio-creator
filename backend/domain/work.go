@@ -17,6 +17,7 @@ type Work struct {
 	UpdatedAt      string  `json:"updatedAt"`
 	IsDelete       bool    `json:"isDelete"`
 	UserID         string  `json:"userId"`
+	NumberOfWork   int     `json:"numberOfWork"`
 }
 
 func (Work) IsNode()            {}
