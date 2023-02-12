@@ -2,17 +2,16 @@ package repository
 
 import (
 	"context"
-	"crypto/rand"
-	"encoding/base64"
-	"encoding/binary"
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
+	"time"
+
+	"github.com/google/uuid"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 	"github.com/shion0625/portfolio-creator/backend/util"
-	"strings"
-	"time"
 	"gorm.io/gorm"
 )
 
@@ -26,7 +25,7 @@ func NewWorkRepository(db *infrastructure.SQLHandler) domain.IWorkRepository {
 
 func (g *WorkRepository) GetByID(ctx context.Context, id string) (*domain.Work, error) {
 	var work domain.Work
-	if err := g.db.Conn.Where("id = ?", id).First(&work).Error; err != nil {
+	if err := g.db.Conn.Where("id = ?", id).First(&work).Error; !errors.Is(err, nil) {
 		return nil, fmt.Errorf("GetByID - repository: %w", err)
 	}
 
@@ -45,7 +44,7 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int, order string) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
 	result := g.db.Conn.Debug().Limit(limit).Offset(offset).
-	Joins("INNER JOIN users on users.id = works.user_id").Scopes(func(ddb *gorm.DB) *gorm.DB {
+		Joins("INNER JOIN users on users.id = works.user_id").Scopes(func(ddb *gorm.DB) *gorm.DB {
 		if order == "latest" {
 			return ddb.Order("products.created_at DESC")
 		}
@@ -59,7 +58,7 @@ func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int, orde
 		return ddb
 	}).Find(&works)
 
-	if result.Error != nil {
+	if !errors.Is(result.Error, nil) {
 		return nil, 0, result.Error
 	}
 
@@ -68,7 +67,7 @@ func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int, orde
 
 func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
 	var works []*domain.Work
-	if err := g.db.Conn.Debug().Where("user_id IN ?", ids).Take(&works).Error; err != nil {
+	if err := g.db.Conn.Debug().Where("user_id IN ?", ids).Take(&works).Error; !errors.Is(err, nil) {
 		return nil, fmt.Errorf("GetByUserIDs - repository: %w", err)
 	}
 
@@ -94,7 +93,7 @@ func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit
 
 	result := g.db.Conn.Debug().Limit(limit).Offset(offset).Where(WhereQuery).Find(&works)
 
-	if err := result.Error; err != nil {
+	if err := result.Error; !errors.Is(err, nil) {
 		return nil, 0, fmt.Errorf("GetByKeyword - repository: %w", err)
 	}
 
@@ -102,17 +101,11 @@ func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit
 }
 
 func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInput) error {
-	for i := 0; i < 100; i++ {
-		var random int64
-		err := binary.Read(rand.Reader, binary.LittleEndian, &random)
-
-		if !errors.Is(err, nil) {
-			return fmt.Errorf("random int: %w", err)
-		}
-
-		id := fmt.Sprintf("work:%d", random)
+	for i := 0; i < 5; i++ {
+		uuidWithHyphen := uuid.New()
+		uuid := strings.ReplaceAll(uuidWithHyphen.String(), "-", "")
 		work := domain.Work{
-			ID: base64.StdEncoding.EncodeToString([]byte(id)),
+			ID: uuid,
 			// Title:          input.Title,
 			Title:          strconv.Itoa(i),
 			Summary:        input.Summary,
@@ -129,7 +122,7 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 			UserID:         input.UserID,
 		}
 
-		if err := g.db.Conn.Create(&work).Error; err != nil {
+		if err := g.db.Conn.Create(&work).Error; !errors.Is(err, nil) {
 			return fmt.Errorf("Create - repository: %w", err)
 		}
 	}
@@ -149,7 +142,7 @@ func (g *WorkRepository) Update(ctx context.Context, work *domain.Work, input do
 		URL:            input.URL,
 		BriefStory:     input.BriefStory,
 		UpdatedAt:      util.Time2str(time.Now()),
-	}).Error; err != nil {
+	}).Error; !errors.Is(err, nil) {
 		return fmt.Errorf("Update - repository: %w", err)
 	}
 
@@ -160,7 +153,7 @@ func (g *WorkRepository) Delete(ctx context.Context, ids []*string) error {
 	if err := g.db.Conn.Model(domain.Work{}).Where("id IN ?", ids).Updates(domain.Work{
 		IsDelete:  true,
 		UpdatedAt: util.Time2str(time.Now()),
-	}).Error; err != nil {
+	}).Error; !errors.Is(err, nil) {
 		return fmt.Errorf("Delete - repository: %w", err)
 	}
 
