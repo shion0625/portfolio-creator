@@ -12,7 +12,6 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 	"github.com/shion0625/portfolio-creator/backend/util"
-	"gorm.io/gorm"
 )
 
 type WorkRepository struct {
@@ -41,22 +40,10 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 	return totalCount, nil
 }
 
-func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int, order string) ([]*domain.Work, int64, error) {
+func (g *WorkRepository) GetAll(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
-	result := g.db.Conn.Debug().Limit(limit).Offset(offset).
-		Joins("INNER JOIN users on users.id = works.user_id").Scopes(func(ddb *gorm.DB) *gorm.DB {
-		if order == "latest" {
-			return ddb.Order("products.created_at DESC")
-		}
-		if order == "low" {
-			return ddb.Order("price ASC")
-		}
-		if order == "high" {
-			return ddb.Order("price DESC")
-		}
-
-		return ddb
-	}).Find(&works)
+	result := g.db.Conn.Debug().Limit(limit).
+		Joins("INNER JOIN users on users.id = works.user_id").Scopes(util.SortWork(order, searched, num)).Find(&works)
 
 	if !errors.Is(result.Error, nil) {
 		return nil, 0, result.Error

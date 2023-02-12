@@ -78,8 +78,8 @@ type ComplexityRoot struct {
 		UserAuth    func(childComplexity int, id string) int
 		Users       func(childComplexity int, limit int, offset *int) int
 		Work        func(childComplexity int, id string) int
-		WorkNodes   func(childComplexity int, limit int, offset *int, order *string) int
-		Works       func(childComplexity int, limit int, offset *int, order *string) int
+		WorkNodes   func(childComplexity int, limit int, order string, searched string, num int) int
+		Works       func(childComplexity int, limit int, order string, searched string, num int) int
 	}
 
 	User struct {
@@ -132,8 +132,8 @@ type QueryResolver interface {
 	User(ctx context.Context, id string) (*domain.User, error)
 	Users(ctx context.Context, limit int, offset *int) (*domain.UserPagination, error)
 	Work(ctx context.Context, id string) (*domain.Work, error)
-	Works(ctx context.Context, limit int, offset *int, order *string) (*domain.WorkPagination, error)
-	WorkNodes(ctx context.Context, limit int, offset *int, order *string) ([]*domain.Work, error)
+	Works(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error)
+	WorkNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error)
 	SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error)
 }
 type UserResolver interface {
@@ -359,7 +359,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.WorkNodes(childComplexity, args["limit"].(int), args["offset"].(*int), args["order"].(*string)), true
+		return e.complexity.Query.WorkNodes(childComplexity, args["limit"].(int), args["order"].(string), args["searched"].(string), args["num"].(int)), true
 
 	case "Query.works":
 		if e.complexity.Query.Works == nil {
@@ -371,7 +371,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Works(childComplexity, args["limit"].(int), args["offset"].(*int), args["order"].(*string)), true
+		return e.complexity.Query.Works(childComplexity, args["limit"].(int), args["order"].(string), args["searched"].(string), args["num"].(int)), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -716,8 +716,8 @@ type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
-  works(limit: Int!, offset: Int, order:String): WorkPagination!
-  workNodes(limit: Int!, offset: Int, order:String): [Work!]!
+  works(limit: Int!, order:String! ,searched: String!, num: Int!): WorkPagination!
+  workNodes(limit: Int!, order:String! ,searched: String!, num: Int!): [Work!]!
   searchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
 }
 `, BuiltIn: false},
@@ -982,24 +982,33 @@ func (ec *executionContext) field_Query_workNodes_args(ctx context.Context, rawA
 		}
 	}
 	args["limit"] = arg0
-	var arg1 *int
-	if tmp, ok := rawArgs["offset"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
-		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["offset"] = arg1
-	var arg2 *string
+	var arg1 string
 	if tmp, ok := rawArgs["order"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order"))
-		arg2, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["order"] = arg2
+	args["order"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["searched"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("searched"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["searched"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["num"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("num"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["num"] = arg3
 	return args, nil
 }
 
@@ -1030,24 +1039,33 @@ func (ec *executionContext) field_Query_works_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["limit"] = arg0
-	var arg1 *int
-	if tmp, ok := rawArgs["offset"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
-		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["offset"] = arg1
-	var arg2 *string
+	var arg1 string
 	if tmp, ok := rawArgs["order"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order"))
-		arg2, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["order"] = arg2
+	args["order"] = arg1
+	var arg2 string
+	if tmp, ok := rawArgs["searched"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("searched"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["searched"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["num"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("num"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["num"] = arg3
 	return args, nil
 }
 
@@ -2229,7 +2247,7 @@ func (ec *executionContext) _Query_works(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Works(rctx, fc.Args["limit"].(int), fc.Args["offset"].(*int), fc.Args["order"].(*string))
+		return ec.resolvers.Query().Works(rctx, fc.Args["limit"].(int), fc.Args["order"].(string), fc.Args["searched"].(string), fc.Args["num"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2290,7 +2308,7 @@ func (ec *executionContext) _Query_workNodes(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().WorkNodes(rctx, fc.Args["limit"].(int), fc.Args["offset"].(*int), fc.Args["order"].(*string))
+		return ec.resolvers.Query().WorkNodes(rctx, fc.Args["limit"].(int), fc.Args["order"].(string), fc.Args["searched"].(string), fc.Args["num"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

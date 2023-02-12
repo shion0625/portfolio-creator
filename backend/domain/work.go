@@ -25,8 +25,8 @@ func (this Work) GetID() string { return this.ID }
 // WorkUseCase represent the work's usecases.
 type IWorkUseCase interface {
 	GetByID(ctx context.Context, id string) (*Work, error)
-	GetAll(ctx context.Context, limit int, offset int) (*WorkPagination, error)
-	GetAllNodes(ctx context.Context, limit int, offset int, order string) ([]*Work, error)
+	GetAll(ctx context.Context, limit int, order string, searched string, num int) (*WorkPagination, error)
+	GetAllNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*Work, error)
 	Search(ctx context.Context, keyword string, limit int, offset int) (*WorkPagination, error)
 	Create(ctx context.Context, input CreateWorkInput) error
 	Update(ctx context.Context, work *Work, input UpdateWorkInput) error
@@ -37,7 +37,7 @@ type IWorkUseCase interface {
 type IWorkRepository interface {
 	GetByID(ctx context.Context, id string) (*Work, error)
 	GetTotalCount(ctx context.Context) (int64, error)
-	GetAll(ctx context.Context, limit int, offset int, order string) ([]*Work, int64, error)
+	GetAll(ctx context.Context, limit int, order string, searched string, num int) ([]*Work, int64, error)
 	GetByUserIDs(ids []string) ([]*Work, error)
 	GetByKeyword(ctx context.Context, keyword string, limit int, offset int) ([]*Work, int64, error)
 	Create(ctx context.Context, input CreateWorkInput) error

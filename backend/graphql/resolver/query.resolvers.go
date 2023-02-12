@@ -80,8 +80,8 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, erro
 }
 
 // Works is the resolver for the works field.
-func (r *queryResolver) Works(ctx context.Context, limit int, offset *int, order *string) (*domain.WorkPagination, error) {
-	workPagination, err := r.workUseCase.GetAll(ctx, limit, *offset)
+func (r *queryResolver) Works(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error) {
+	workPagination, err := r.workUseCase.GetAll(ctx, limit, order, searched, num)
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
@@ -96,8 +96,8 @@ func (r *queryResolver) Works(ctx context.Context, limit int, offset *int, order
 }
 
 // WorkNodes is the resolver for the workNodes field.
-func (r *queryResolver) WorkNodes(ctx context.Context, limit int, offset *int, order *string) ([]*domain.Work, error) {
-	workNodes, err := r.workUseCase.GetAllNodes(ctx, limit, *offset, *order)
+func (r *queryResolver) WorkNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error) {
+	workNodes, err := r.workUseCase.GetAllNodes(ctx, limit, order, searched, num)
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
