@@ -5,15 +5,17 @@ import { WorkList } from '~/components/templates/WorkList'
 import { WorkNodesList } from '~/components/templates/WorkNodesList'
 import { WorkPagination } from '~/models/types'
 import { useGetMore } from './hooks'
+import CircularProgress from '@mui/material/CircularProgress';
+import { Work } from '~/models/types'
+import { useState, useEffect, useCallback, memo } from 'react'
 
 type Props = {
   works: WorkPagination
 }
 
-const WorksView: React.FC<Props> = ({ works }) => {
+const WorksView: React.FC<Props> = memo(({ works }) => {
 
   const { staticData, status, onClick } = useGetMore()
-
   return (
     <>
       <NavBar />
@@ -22,12 +24,12 @@ const WorksView: React.FC<Props> = ({ works }) => {
         <WorkNodesList works={staticData} />
         {status._tag === "success" ?
           <WorkNodesList works={status.contents} /> :　
-          "loading"
+          <CircularProgress />
         }　
       </Box>
       <button onClick={onClick}>もっと</button>
     </>
   )
-}
+})
 
 export default WorksView

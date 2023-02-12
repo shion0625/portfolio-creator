@@ -16,10 +16,10 @@ const Works: NextPage<Props> = ({ works }) => {
 
 export default Works
 
-export const getStaticProps: GetStaticProps = async () => {
-  const { works } = await GetWorksServer()
-  return {
-    props: { works: works },
-    revalidate: 1,
-  }
-}
+// export const getStaticProps: GetStaticProps = async () => {
+//   const { works } = await GetWorksServer()
+//   return {
+//     props: { works: works },
+//     revalidate: 1,
+//   }
+// }

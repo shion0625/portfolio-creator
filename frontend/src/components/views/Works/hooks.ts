@@ -8,41 +8,49 @@ const useGetWorks = () => {
   return {getWorks, worksData: data?.workNodes, loading, error}
 }
 
-type State =
+type Last =
+  | { order: "update", searched: string, num: number }
+  | { order: "create", searched: string, num: number }
+
+  type State =
   | { _tag: "init" }
   | { _tag: "loading" }
-  | { _tag: "success", contents: Work[]}
+  | { _tag: "success", contents: Work[] }
 
 export const useGetMore = () =>
 {
   const DEFAULT_VOLUMES = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
+  const CURRENT_TIME = new Date().toISOString().replace('T', ' ').replace('Z', '');
   const [works, setWorks] = useState<Work[]>([])
+  const [last, setLast] = useState<Last>({ order: "create", searched: CURRENT_TIME, num: 9999 })
   const [status, setStatus] = useState<State>({ _tag: "init" });
-  const [offset, setOffset] = useState(0)
   let { getWorks, error } = useGetWorks()
+  let keepData: Work
 
   useEffect(() => {
     if (status._tag === "success") {
-      setWorks((current) => [
-        ...current,
-        ...status.contents])
+    setWorks((current) => [
+      ...current,
+      ...status.contents])
     }
-    setStatus({ _tag: "loading" });
+    setStatus({_tag: "loading"})
     getWorks({
-      variables: { offset, limit: DEFAULT_VOLUMES },
+      variables: { limit: DEFAULT_VOLUMES, order: last.order, searched: last.searched, num: last.num },
       onCompleted: (data) => {
         setStatus({
           _tag: "success",
           contents: data.workNodes
         })
+        keepData = data.workNodes.slice(-1)[0]
       }
     })
-  }, [offset])
+  }, [last])
 
-
-  const onClick = useCallback(() => {
-    setOffset(offset + DEFAULT_VOLUMES)
-  }, [offset])
+  const onClick = useCallback((): void => {
+    if (keepData) {
+      setLast({order: "create", searched: keepData.created_at, num: keepData.number_of_work })
+    }
+  }, [last])
 
   return {staticData: works, status, onClick}
 }

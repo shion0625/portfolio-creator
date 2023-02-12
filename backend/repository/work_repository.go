@@ -88,7 +88,7 @@ func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit
 }
 
 func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInput) error {
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 100; i++ {
 		uuidWithHyphen := uuid.New()
 		uuid := strings.ReplaceAll(uuidWithHyphen.String(), "-", "")
 		work := domain.Work{
@@ -112,6 +112,7 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 		if err := g.db.Conn.Create(&work).Error; !errors.Is(err, nil) {
 			return fmt.Errorf("Create - repository: %w", err)
 		}
+		time.Sleep(time.Second * 1)
 	}
 
 	return nil
