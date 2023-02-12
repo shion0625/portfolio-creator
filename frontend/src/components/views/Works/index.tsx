@@ -4,8 +4,7 @@ import NavBar from '~/components/templates/NavBar'
 import { WorkList } from '~/components/templates/WorkList'
 import { WorkNodesList } from '~/components/templates/WorkNodesList'
 import { WorkPagination } from '~/models/types'
-import { useGetMore } from '~/hooks/util/getMore'
-import { useGetWorks } from '~/hooks/Work/query'
+import { useGetMore } from './hooks'
 
 type Props = {
   works: WorkPagination
@@ -13,21 +12,20 @@ type Props = {
 
 const WorksView: React.FC<Props> = ({ works }) => {
 
-  const { data, status, onClick } = useGetMore()
+  const { staticData, status, onClick } = useGetMore()
 
   return (
     <>
       <NavBar />
       <Box component='main' sx={{ m: 2 }}>
-        <WorkList works={works} />
-        {data &&
-          <WorkNodesList works={data} />
-        }
-        {/* {status._tag === "success" ?
+        {/* <WorkList works={works} /> */}
+        <WorkNodesList works={staticData} />
+        {status._tag === "success" ?
           <WorkNodesList works={status.contents} /> :　
           "loading"
-        }　最新のデータ */}
+        }　
       </Box>
+      <button onClick={onClick}>もっと</button>
     </>
   )
 }

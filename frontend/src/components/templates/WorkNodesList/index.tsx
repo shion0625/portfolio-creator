@@ -13,7 +13,7 @@ export const WorkNodesList: React.FC<Props> = ({ works }): JSX.Element => {
       <Grid container spacing={2}>
         {works.map((work: Work, i) => {
           return (
-            <Grid item key={work.id} xs={6} md={4} lg={3}>
+            <Grid item key={`work.id${i}`} xs={6} md={4} lg={3}>
               <WorkImageCard work={work} />
             </Grid>
           )

@@ -88,12 +88,12 @@ export type Profile = {
 };
 
 export type Query = {
-  SearchWorks: WorkPagination;
+  searchWorks: WorkPagination;
   user: User;
   userAuth: User;
   users: UserPagination;
   work?: Maybe<Work>;
-  workNodes: Array<Maybe<Work>>;
+  workNodes: Array<Work>;
   works: WorkPagination;
 };
 

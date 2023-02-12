@@ -7,12 +7,13 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"strings"
-	"time"
-
+	"strconv"
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/infrastructure"
 	"github.com/shion0625/portfolio-creator/backend/util"
+	"strings"
+	"time"
+	"gorm.io/gorm"
 )
 
 type WorkRepository struct {
@@ -41,9 +42,22 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
 	return totalCount, nil
 }
 
-func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int) ([]*domain.Work, int64, error) {
+func (g *WorkRepository) GetAll(ctx context.Context, limit int, offset int, order string) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
-	result := g.db.Conn.Debug().Limit(limit).Offset(offset).Joins("INNER JOIN users on users.id = works.user_id").Find(&works)
+	result := g.db.Conn.Debug().Limit(limit).Offset(offset).
+	Joins("INNER JOIN users on users.id = works.user_id").Scopes(func(ddb *gorm.DB) *gorm.DB {
+		if order == "latest" {
+			return ddb.Order("products.created_at DESC")
+		}
+		if order == "low" {
+			return ddb.Order("price ASC")
+		}
+		if order == "high" {
+			return ddb.Order("price DESC")
+		}
+
+		return ddb
+	}).Find(&works)
 
 	if result.Error != nil {
 		return nil, 0, result.Error
@@ -88,33 +102,36 @@ func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit
 }
 
 func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInput) error {
-	var random int64
-	err := binary.Read(rand.Reader, binary.LittleEndian, &random)
+	for i := 0; i < 100; i++ {
+		var random int64
+		err := binary.Read(rand.Reader, binary.LittleEndian, &random)
 
-	if !errors.Is(err, nil) {
-		return fmt.Errorf("random int: %w", err)
-	}
+		if !errors.Is(err, nil) {
+			return fmt.Errorf("random int: %w", err)
+		}
 
-	id := fmt.Sprintf("work:%d", random)
-	work := domain.Work{
-		ID:             base64.StdEncoding.EncodeToString([]byte(id)),
-		Title:          input.Title,
-		Summary:        input.Summary,
-		ImageURL:       input.ImageURL,
-		Duration:       input.Duration,
-		NumberOfPeople: input.NumberOfPeople,
-		Language:       input.Language,
-		Role:           input.Role,
-		URL:            input.URL,
-		BriefStory:     input.BriefStory,
-		CreatedAt:      util.Time2str(time.Now()),
-		UpdatedAt:      util.Time2str(time.Now()),
-		IsDelete:       false,
-		UserID:         input.UserID,
-	}
+		id := fmt.Sprintf("work:%d", random)
+		work := domain.Work{
+			ID: base64.StdEncoding.EncodeToString([]byte(id)),
+			// Title:          input.Title,
+			Title:          strconv.Itoa(i),
+			Summary:        input.Summary,
+			ImageURL:       input.ImageURL,
+			Duration:       input.Duration,
+			NumberOfPeople: input.NumberOfPeople,
+			Language:       input.Language,
+			Role:           input.Role,
+			URL:            input.URL,
+			BriefStory:     input.BriefStory,
+			CreatedAt:      util.Time2str(time.Now()),
+			UpdatedAt:      util.Time2str(time.Now()),
+			IsDelete:       false,
+			UserID:         input.UserID,
+		}
 
-	if err := g.db.Conn.Create(&work).Error; err != nil {
-		return fmt.Errorf("Create - repository: %w", err)
+		if err := g.db.Conn.Create(&work).Error; err != nil {
+			return fmt.Errorf("Create - repository: %w", err)
+		}
 	}
 
 	return nil

@@ -45,7 +45,7 @@ func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 		return nil, fmt.Errorf("GetAll - GetTotalCount - usecase: %w", err)
 	}
 
-	works, numRows, err := w.workRepo.GetAll(ctx, limit, offset)
+	works, numRows, err := w.workRepo.GetAll(ctx, limit, offset, "order")
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
@@ -73,8 +73,8 @@ The offset is the number of data to start retrieving.
 It returns a []*domain.Work if the user specified in the argument exists in the database, or nil otherwise.
 If an unexpected error occurs, an error wrapped in GetAllNodes-usecase: is returned.
 */
-func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, offset int) ([]*domain.Work, error) {
-	works, _, err := w.workRepo.GetAll(ctx, limit, offset)
+func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, offset int, order string) ([]*domain.Work, error) {
+	works, _, err := w.workRepo.GetAll(ctx, limit, offset, order)
 	if err != nil {
 		return nil, fmt.Errorf("GetAllNodes - usecase: %w", err)
 	}

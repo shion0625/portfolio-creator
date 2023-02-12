@@ -26,7 +26,7 @@ export type GetWorkNodesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetWorkNodesQuery = { workNodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean, user: { id: string, name?: string | null } } | null> };
+export type GetWorkNodesQuery = { workNodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, is_delete: boolean, user: { id: string, name?: string | null } }> };
 
 export type CreateWorkMutationVariables = Types.Exact<{
   input: Types.CreateWorkInput;
