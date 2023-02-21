@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Work } from '~/models/types'
 import { GetWorkNodesQuery, GetWorkNodesDocument } from '~/models/client'
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery,  } from '@apollo/client';
 
 const useGetWorks = () => {
   const [ getWorks,{ data, loading, error } ]= useLazyQuery<GetWorkNodesQuery>(GetWorkNodesDocument)
@@ -22,35 +22,28 @@ export const useGetMore = () =>
   const DEFAULT_VOLUMES = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
   const CURRENT_TIME = new Date().toISOString().replace('T', ' ').replace('Z', '');
   const [works, setWorks] = useState<Work[]>([])
-  const [last, setLast] = useState<Last>({ order: "create", searched: CURRENT_TIME, num: 9999 })
-  const [status, setStatus] = useState<State>({ _tag: "init" });
+  const [variable, setVariable] = useState<Last>({ order: "create", searched: CURRENT_TIME, num: 9999 })
   let { getWorks, error } = useGetWorks()
-  let keepData: Work
+  let lastData: Work
 
   useEffect(() => {
-    if (status._tag === "success") {
+    getWorks({
+      variables: { limit: DEFAULT_VOLUMES, order: variable.order, searched: variable.searched, num: variable.num },
+      onCompleted: (data) => {
     setWorks((current) => [
       ...current,
-      ...status.contents])
-    }
-    setStatus({_tag: "loading"})
-    getWorks({
-      variables: { limit: DEFAULT_VOLUMES, order: last.order, searched: last.searched, num: last.num },
-      onCompleted: (data) => {
-        setStatus({
-          _tag: "success",
-          contents: data.workNodes
-        })
-        keepData = data.workNodes.slice(-1)[0]
+      ...data.workNodes])
+        lastData = data.workNodes.slice(-1)[0]
       }
     })
-  }, [last])
+  }, [variable])
 
   const onClick = useCallback((): void => {
-    if (keepData) {
-      setLast({order: "create", searched: keepData.created_at, num: keepData.number_of_work })
+    console.log(lastData)
+    if (lastData) {
+      setVariable({order: "create", searched: lastData.created_at, num: lastData.number_of_work })
     }
-  }, [last])
+  }, [variable])
 
-  return {staticData: works, status, onClick}
+  return {allData: works, onClick}
 }
