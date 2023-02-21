@@ -3,9 +3,9 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useState } from 'react'
 import UserIDEditView from '~/components/views/UsersIDEdit'
 import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
-import { useState } from 'react'
 
 // const useForceUpdate = () => {
 //   const [count, setCount] = useState(0);
@@ -13,7 +13,7 @@ import { useState } from 'react'
 // }
 
 const UserIDEdit: NextPage = () => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
   const router = useRouter()
   const { data: session, status } = useSession()
 
@@ -68,6 +68,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return {
     props: {
       user: 'success',
-    }
+    },
   }
 }

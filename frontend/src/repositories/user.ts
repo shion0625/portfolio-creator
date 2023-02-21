@@ -1,9 +1,5 @@
 import { useQuery } from '@apollo/client'
-import {
-  GetUserQuery,
-  GetUserIdsQuery,
-  GetUsersNameQuery,
-} from '~/models/client'
+import { GetUserQuery, GetUserIdsQuery, GetUsersNameQuery } from '~/models/client'
 import { fetcherSSG } from '~/repositories/server'
 
 type UserWorksReturn = {

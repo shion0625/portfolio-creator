@@ -48,8 +48,6 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
     onUpdate()
   }
 
-
-
   return (
     <>
       <PrimarySearchAppBar />
