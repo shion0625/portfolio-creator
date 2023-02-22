@@ -14,7 +14,7 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
-  number_of_work: Int!
+  number_of_work: Int
   user: User!
   }
 

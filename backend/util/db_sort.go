@@ -11,7 +11,7 @@ func SortWork(order string, searched string, num int) func(ddb *gorm.DB) *gorm.D
 		}
 
 		if order == "create" {
-			return ddb.Where("works.created_at < ?", searched).Not("works.created_at = ? AND works.number_of_work >= ?", searched, num).Order("works.created_at DESC").Order("works.number_of_work DESC")
+			return ddb.Where("works.created_at < ?", searched).Not("works.created_at = ?", searched).Order("works.created_at DESC")
 		}
 
 		if order == "low" {

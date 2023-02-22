@@ -724,8 +724,8 @@ type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
-  works(limit: Int!, order:String! ,searched: String!, num: Int!): WorkPagination!
-  workNodes(limit: Int!, order:String! ,searched: String!, num: Int!): [Work!]!
+  works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
+  workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
   searchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
 }
 `, BuiltIn: false},
@@ -762,7 +762,7 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
-  number_of_work: Int!
+  number_of_work: Int
   user: User!
   }
 
@@ -3575,14 +3575,11 @@ func (ec *executionContext) _Work_number_of_work(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalOInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Work_number_of_work(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6438,9 +6435,6 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._Work_number_of_work(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "user":
 			field := field
 
@@ -7475,6 +7469,16 @@ func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.Se
 		return graphql.Null
 	}
 	res := graphql.MarshalID(*v)
+	return res
+}
+
+func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
 	return res
 }
 
