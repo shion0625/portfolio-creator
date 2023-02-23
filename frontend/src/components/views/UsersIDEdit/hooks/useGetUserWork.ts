@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import React, { useCallback, useRef, useState } from 'react'
 import { GetUserAuthQuery, GetUserAuthDocument } from '~/models/client'
 
 // export const GetUserAuth = (id: string) => {
@@ -13,7 +12,7 @@ import { GetUserAuthQuery, GetUserAuthDocument } from '~/models/client'
 //   return [data, refetch]
 // }
 
-export function useGetUserWork(id: string) {
+export const useGetUserWork = (id: string) => {
   const { data, refetch, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
     variables: { id: id },
   })
