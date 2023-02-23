@@ -1,19 +1,19 @@
 import { Box } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
-import { Virtualizer } from '@tanstack/react-virtual'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { WorkImageCard } from '~/components/parts/WorkImageCard'
-import { useGetMore } from '~/components/views/Works/hooks'
+import { useGetMore } from '~/components/templates/WorksInfScroll/hooks/useGetMore'
 import { Work } from '~/models/types'
 
-type Props = {
-  works: Work[]
+type State = {
+  message: string
 }
 
-export const Virtual: React.FC = (): JSX.Element => {
+const WorksInfScroll: React.FC = (): JSX.Element => {
   const parentRef = React.useRef<Element>(null)
+  const [state, setState] = useState<State>({ message: '' })
   const { works, onClick } = useGetMore()
 
   const rowVirtualizer = useVirtualizer({
@@ -23,28 +23,20 @@ export const Virtual: React.FC = (): JSX.Element => {
     overscan: 12,
   })
 
-  const onScroll = useCallback(() => {
-    const el = parentRef.current
-    if (el) {
-      const rate = window.pageYOffset / (el.scrollHeight - el.scrollTop)
-      // スクロール位置の割合が8割を超えている場合は描画するアイテムを追加
-      if (rate > 0.6) {
-        const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
-
-        if (!lastItem) {
-          return
-        }
-
-        if (lastItem.index >= works.contents.length - 1 && works.hasNextPage) {
-          onClick()
-        }
-      }
-    }
-  }, [])
-
   useEffect(() => {
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
+    let queue: NodeJS.Timeout
+    window.addEventListener('scroll', () => {
+      clearTimeout(queue)
+      queue = setTimeout(() => {
+        const scroll_Y = document.documentElement.scrollTop + window.innerHeight
+        const offsetHeight = document.documentElement.offsetHeight
+        if (offsetHeight - scroll_Y <= 1000 && state.message !== 'loading...' && offsetHeight > 1500) {
+          setState({ message: 'loading...' })
+          onClick()
+          setState({ message: '' })
+        }
+      }, 1000)
+    })
   }, [])
 
   return (
@@ -64,7 +56,7 @@ export const Virtual: React.FC = (): JSX.Element => {
               {isLoaderRow ? (
                 <CircularProgress />
               ) : (
-                <Grid item key={post.id + virtualRow.index} xs={6} md={4} lg={3}>
+                <Grid item key={virtualRow.index} xs={6} md={4} lg={3}>
                   <WorkImageCard work={post} />
                 </Grid>
               )}
@@ -72,7 +64,8 @@ export const Virtual: React.FC = (): JSX.Element => {
           )
         })}
       </Grid>
-      {/* <button onClick={onClick}>もっと</button>　 */}
     </Box>
   )
 }
+
+export default WorksInfScroll
