@@ -2,29 +2,12 @@ import { useMutation } from '@apollo/client'
 import {
   GetUserQuery,
   CreateWorkMutation,
-  UpdateWorkMutation,
-  DeleteWorksMutation,
   CreateWorkDocument,
-  UpdateWorkDocument,
-  DeleteWorksDocument,
   GetUserDocument,
 } from '~/models/client'
 
-// update work mutation
-export const useUpdateWork = () => {
-  const [UpdateWork, { loading, error }] = useMutation<UpdateWorkMutation>(UpdateWorkDocument)
-
-  return [UpdateWork, loading, error]
-}
-
-// delete work mutation
-export function useDeleteWorks() {
-  const [DeleteWorks, { loading, error }] = useMutation<DeleteWorksMutation>(DeleteWorksDocument)
-  return [DeleteWorks, loading, error]
-}
-
 // create work mutation
-export function useCreateWork(id: string) {
+export const useCreateWork = (id: string) => {
   const [CreateWork, { loading, error }] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
     // ミューテーション後に実行される処理
     update(cache, { data }) {

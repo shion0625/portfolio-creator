@@ -39,22 +39,22 @@ The offset is the number of data to start retrieving.
 It returns a domain.UserPagination structure if the user specified in the argument exists in the database, or nil otherwise.
 If an unexpected error occurs, an error wrapped in GetAll-usecase or GetAll - GetTotalCount - usecase: is returned.
 */
-func (w WorkUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.WorkPagination, error) {
+func (w WorkUseCase) GetAll(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error) {
 	totalCount, err := w.workRepo.GetTotalCount(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - GetTotalCount - usecase: %w", err)
 	}
 
-	works, numRows, err := w.workRepo.GetAll(ctx, limit, offset)
+	works, numRows, err := w.workRepo.GetAll(ctx, limit, order, searched, num)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
 
 	pageInfo := domain.PaginationInfo{
-		Page:             int(math.Ceil(float64(offset) / float64(limit))),
+		Page:             0,
 		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      (int(totalCount) < limit+offset),
-		HasPreviousPage:  limit < offset,
+		HasNextPage:      false,
+		HasPreviousPage:  false,
 		Count:            int(numRows),
 		TotalCount:       int(totalCount),
 	}
@@ -73,8 +73,8 @@ The offset is the number of data to start retrieving.
 It returns a []*domain.Work if the user specified in the argument exists in the database, or nil otherwise.
 If an unexpected error occurs, an error wrapped in GetAllNodes-usecase: is returned.
 */
-func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, offset int) ([]*domain.Work, error) {
-	works, _, err := w.workRepo.GetAll(ctx, limit, offset)
+func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error) {
+	works, _, err := w.workRepo.GetAll(ctx, limit, order, searched, num)
 	if err != nil {
 		return nil, fmt.Errorf("GetAllNodes - usecase: %w", err)
 	}

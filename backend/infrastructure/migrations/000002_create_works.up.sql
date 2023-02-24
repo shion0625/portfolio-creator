@@ -13,6 +13,7 @@ BEGIN;
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
     is_delete bool DEFAULT FALSE,
+    number_of_work SERIAL NOT NULL,
     user_id VARCHAR (255) NOT NULL
   );
   CREATE INDEX on works(id);

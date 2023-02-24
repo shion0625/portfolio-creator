@@ -19,9 +19,6 @@ run:
 
 # All available settings of specific linters.
 linters-settings:
-  lll:
-    line-length: 150
-    tab-width: 1
   tagliatelle:
     # Check the struct tag name case.
     case:
@@ -60,6 +57,7 @@ linters:
     - ireturn
     - gochecknoglobals
     - revive
+    - lll
     - makezero
     - stylecheck #  一時的 解決したい
     - staticcheck # 非推奨を教えてくれる 一時的

@@ -8,7 +8,7 @@ import * as React from 'react'
 import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
 import BasicModal from '~/components/parts/Modal'
 import WorkFormItem from '~/components/parts/WorkFormItem'
-import { WorkFormInterface } from '~/models/WorkForm'
+import { WorkFormInterface } from '~/models/Work'
 
 type Props = {
   workIndex: number

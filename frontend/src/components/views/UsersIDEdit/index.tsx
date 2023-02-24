@@ -1,4 +1,3 @@
-import { resultCreateWork, resultUpdateWork, resultDeleteWork, useForceUpdate } from './hooks'
 import { CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box'
 import lo from 'lodash'
@@ -6,9 +5,8 @@ import { Session } from 'next-auth'
 import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
-import { useGetUserWork } from '~/hooks/User/query'
-import { useCreateWork, useUpdateWork, useDeleteWorks } from '~/hooks/Work/mutation'
-import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
+import { useGetUserWork, useCreateWork, useUpdateWork, useDeleteWorks, useForceUpdate, database } from '~/components/views/UsersIDEdit/hooks'
+import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/Work'
 
 type UserIDEditViewProps = {
   id: string
@@ -31,11 +29,11 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
         chunked.map((work: WorkFormI, index: number) => {
           //新規作成
           if (!work.id) {
-            resultCreateWork(session, work, createWork)
+            database.createWork(session, work, createWork)
           }
           //更新
           if (work.id && dirtyWorks && dirtyWorks[chunkedIndex + index]) {
-            resultUpdateWork(session, work, updateWork)
+            database.updateWork(session, work, updateWork)
           }
         }),
       )
@@ -43,12 +41,10 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
 
     //初期状態で空の文字列が配列に入っているので1より大きかったらremoveメソッドを呼び出す。
     if (removeWorkIds.current.length > 1) {
-      resultDeleteWork(session, removeWorkIds.current, deleteWorks)
+      database.deleteWork(session, removeWorkIds.current, deleteWorks)
     }
     onUpdate()
   }
-
-
 
   return (
     <>

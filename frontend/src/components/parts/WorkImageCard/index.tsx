@@ -22,7 +22,7 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
 
   return (
     <>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 345, height: 300 }}>
         <CardActionArea onClick={handleOpen}>
           <CardMedia
             component='img'
