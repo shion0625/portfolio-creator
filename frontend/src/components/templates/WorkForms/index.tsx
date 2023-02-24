@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import ImageCard from '~/components/templates/ImageCard'
 import { WorkFormContext } from '~/context/workForm'
-import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/WorkForm'
+import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/Work'
 import { GetUserAuthQuery } from '~/models/client'
 
 type Props = GetUserAuthQuery & {

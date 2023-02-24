@@ -5,7 +5,6 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import React, { useEffect, useState } from 'react'
 import { WorkImageCard } from '~/components/parts/WorkImageCard'
 import { useGetMore } from '~/components/templates/WorksInfScroll/hooks/useGetMore'
-import { Work } from '~/models/types'
 
 type State = {
   message: string
@@ -14,10 +13,10 @@ type State = {
 const WorksInfScroll: React.FC = (): JSX.Element => {
   const parentRef = React.useRef<Element>(null)
   const [state, setState] = useState<State>({ message: '' })
-  const { works, onClick } = useGetMore()
+  const { pageInfo, works, onScroll } = useGetMore()
 
   const rowVirtualizer = useVirtualizer({
-    count: works.hasNextPage ? works.contents.length + 1 : works.contents.length,
+    count: pageInfo.hasNextPage ? works.length + 1 : works.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 100,
     overscan: 12,
@@ -32,7 +31,7 @@ const WorksInfScroll: React.FC = (): JSX.Element => {
         const offsetHeight = document.documentElement.offsetHeight
         if (offsetHeight - scroll_Y <= 1000 && state.message !== 'loading...' && offsetHeight > 1500) {
           setState({ message: 'loading...' })
-          onClick()
+          onScroll()
           setState({ message: '' })
         }
       }, 1000)
@@ -49,18 +48,16 @@ const WorksInfScroll: React.FC = (): JSX.Element => {
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const isLoaderRow = virtualRow.index > works.contents.length - 1
-          const post: Work = works.contents[virtualRow.index]
+          const isLoaderRow = virtualRow.index > works.length - 1
+          const post = works[virtualRow.index]
           return (
-            <>
+            <Grid item key={"works:" + virtualRow.index} xs={6} md={4} lg={3}>
               {isLoaderRow ? (
-                <CircularProgress />
+                <CircularProgress key={virtualRow.index} />
               ) : (
-                <Grid item key={virtualRow.index} xs={6} md={4} lg={3}>
                   <WorkImageCard work={post} />
-                </Grid>
-              )}
-            </>
+                )}
+            </Grid>
           )
         })}
       </Grid>

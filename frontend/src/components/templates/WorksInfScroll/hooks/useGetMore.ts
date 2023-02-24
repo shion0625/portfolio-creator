@@ -1,12 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Work, PaginationInfo } from '~/models/types'
+import { Work, WorkPagination } from '~/models/types'
 import { useGetWorks } from './useGetWorks'
 
 type Variable = { order: 'update'; searched: string; num: number } | { order: 'create'; searched: string; num: number }
 
-type Works = PaginationInfo & {
-  contents: Work[]
-}
 const CURRENT_TIME = new Date().toISOString().replace('T', ' ').replace('Z', '')
 
 let lastData: Work = {
@@ -23,14 +20,16 @@ let lastData: Work = {
 
 export const useGetMore = () => {
   const DEFAULT_VOLUMES = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
-  const [works, setWorks] = useState<Works>({
-    count: 0,
-    hasNextPage: true,
-    hasPreviousPage: false,
-    page: 0,
-    paginationLength: 0,
-    totalCount: 0,
-    contents: [],
+  const [works, setWorks] = useState<WorkPagination>({
+    pageInfo: {
+      count: 0,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      page: 0,
+      paginationLength: 0,
+      totalCount: 0,
+    },
+    nodes: [],
   })
   const [variable, setVariable] = useState<Variable>({ order: 'create', searched: CURRENT_TIME, num: 9999 })
 
@@ -41,9 +40,11 @@ export const useGetMore = () => {
       variables: { limit: DEFAULT_VOLUMES, order: variable.order, searched: variable.searched, num: variable.num },
       onCompleted: (data) => {
         setWorks({
-          ...works,
+          pageInfo: {
+          ...works.pageInfo,
           hasNextPage: data.works.pageInfo.hasNextPage,
-          contents: [...works.contents, ...data.works.nodes],
+          },
+          nodes: [...works.nodes, ...data.works.nodes],
         })
         if (data.works.nodes.length != 0) {
           lastData = data.works.nodes.slice(-1)[0]
@@ -52,12 +53,12 @@ export const useGetMore = () => {
     })
   }, [variable])
 
-  const onClick = useCallback((): void => {
+  const onScroll = useCallback((): void => {
     console.log(lastData)
     if (lastData) {
       setVariable({ order: 'create', searched: lastData.created_at, num: lastData.number_of_work })
     }
   }, [variable, lastData])
 
-  return { works: works, onClick }
+  return { pageInfo: works.pageInfo, works: works.nodes, onScroll }
 }

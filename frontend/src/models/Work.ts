@@ -1,4 +1,4 @@
-import { CreateWorkInput } from '~/models/types'
+import { Work, PaginationInfo, CreateWorkInput } from '~/models/types'
 import { Weaken } from '~/utils/extendType'
 
 export interface WorkFormI extends CreateWorkInput {
@@ -55,4 +55,8 @@ export const resetNewWorks = {
       user_id: '',
     },
   ],
+}
+
+export type Works = PaginationInfo & {
+  contents: Work[]
 }

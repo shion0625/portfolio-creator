@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/templates/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
 import { useGetUserWork, useCreateWork, useUpdateWork, useDeleteWorks, useForceUpdate, database } from '~/components/views/UsersIDEdit/hooks'
-import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/WorkForm'
+import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/Work'
 
 type UserIDEditViewProps = {
   id: string

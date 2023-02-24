@@ -1,5 +1,5 @@
 import { Session } from 'next-auth'
-import { WorkFormI } from '~/models/WorkForm'
+import { WorkFormI } from '~/models/Work'
 import { CreateWorkInput } from '~/models/types'
 
 const createWorkDB = (session: Session, work: WorkFormI, createWork: any): Promise<void> =>
