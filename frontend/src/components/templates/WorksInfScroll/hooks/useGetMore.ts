@@ -45,7 +45,9 @@ export const useGetMore = () => {
           hasNextPage: data.works.pageInfo.hasNextPage,
           contents: [...works.contents, ...data.works.nodes],
         })
-        lastData = data.works.nodes.slice(-1)[0]
+        if (data.works.nodes.length != 0) {
+          lastData = data.works.nodes.slice(-1)[0]
+        }
       },
     })
   }, [variable])
