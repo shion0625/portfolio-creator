@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useState } from 'react'
 import UserIDEditView from '~/components/views/UsersIDEdit'
-import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
+import { userRepository } from '~/repositories/index'
 
 // const useForceUpdate = () => {
 //   const [count, setCount] = useState(0);
@@ -33,7 +33,7 @@ const UserIDEdit: NextPage = () => {
 export default UserIDEdit
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { users } = await GetUserIdsServer(10, 0)
+  const { users } = await userRepository.getUserIds(10, 0)
   const paths = users.nodes.map((user: { id: string }) => ({
     params: {
       id: user.id,
