@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -45,29 +45,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  if (!params || !params.id) {
-    return {
-      props: {
-        user: 'error',
-      },
-    }
-  }
-  //配列として扱われたら連結をする
-  if (Array.isArray(params.id)) {
-    params.id = params.id.join()
-  }
-
-  // const { user } = await GetUserServer(params?.id)
-  // return {
-  //   props: {
-  //     user,
-  //   },
-  //   notFound: !user,
-  // }
+export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext) => {
   return {
-    props: {
-      user: 'success',
-    },
+    props: {},
   }
 }
