@@ -1,3 +1,4 @@
+import { useOnEnterKey } from './hooks'
 import {
   AccountCircle,
   Mail as MailIcon,
@@ -7,7 +8,7 @@ import {
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import Link from 'next/link'
-import React, { useContext, useState, MouseEvent } from 'react'
+import React, { useContext, useState, MouseEvent, useRef } from 'react'
 import MobileMenu from '~/components/parts/MobileMenu'
 import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
@@ -22,6 +23,7 @@ export default function NavBar() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
+  const searchElement = useRef(null) //searchAreaの入力DOM要素を取得
 
   const isMenuOpen = Boolean(anchorEl) //メニューの状態を管理
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl) //モバイルメニューの状態を管理
@@ -43,25 +45,23 @@ export default function NavBar() {
     handleMobileMenuClose()
   }
 
+  const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => console.log('enter'))
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
         <Toolbar>
-          {/* <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
             <Link href='/' passHref>
               <MuiLink>portfolio</MuiLink>
             </Link>
           </Typography>
-          <SearchArea />
+          <SearchArea
+            inputElement={searchElement}
+            onEnterKey={onEnterKey}
+            startComposition={startComposition}
+            endComposition={endComposition}
+          />
           <IconButton color='inherit' onClick={colorMode.toggleColorMode}>
             <InvertColorsIcon />
           </IconButton>
