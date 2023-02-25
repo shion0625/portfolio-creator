@@ -1,8 +1,5 @@
 import { useMutation } from '@apollo/client'
-import {
-  DeleteWorksMutation,
-  DeleteWorksDocument,
-} from '~/models/client'
+import { DeleteWorksMutation, DeleteWorksDocument } from '~/models/client'
 
 // delete work mutation
 export function useDeleteWorks() {

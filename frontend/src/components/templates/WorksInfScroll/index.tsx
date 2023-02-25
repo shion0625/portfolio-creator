@@ -51,12 +51,8 @@ const WorksInfScroll: React.FC = (): JSX.Element => {
           const isLoaderRow = virtualRow.index > works.length - 1
           const post = works[virtualRow.index]
           return (
-            <Grid item key={"works:" + virtualRow.index} xs={6} md={4} lg={3}>
-              {isLoaderRow ? (
-                <CircularProgress key={virtualRow.index} />
-              ) : (
-                  <WorkImageCard work={post} />
-                )}
+            <Grid item key={'works:' + virtualRow.index} xs={6} md={4} lg={3}>
+              {isLoaderRow ? <CircularProgress key={virtualRow.index} /> : <WorkImageCard work={post} />}
             </Grid>
           )
         })}

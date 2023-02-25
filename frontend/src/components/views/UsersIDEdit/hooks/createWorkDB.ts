@@ -32,7 +32,7 @@ const createWorkDB = (session: Session, work: WorkFormI, createWork: any): Promi
     resolve()
   })
 
-  export const resultCreateWork = async (session: Session, work: WorkFormI, createWork: any): Promise<void> => {
+export const resultCreateWork = async (session: Session, work: WorkFormI, createWork: any): Promise<void> => {
   await createWorkDB(session, work, createWork)
   return
 }

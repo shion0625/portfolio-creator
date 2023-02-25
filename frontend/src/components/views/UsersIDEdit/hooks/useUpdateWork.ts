@@ -1,8 +1,5 @@
 import { useMutation } from '@apollo/client'
-import {
-  UpdateWorkMutation,
-  UpdateWorkDocument,
-} from '~/models/client'
+import { UpdateWorkMutation, UpdateWorkDocument } from '~/models/client'
 
 // update work mutation
 export const useUpdateWork = () => {
