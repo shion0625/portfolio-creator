@@ -1,11 +1,11 @@
 import type { NextPage } from 'next'
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetStaticProps, GetStaticPaths, GetStaticPropsContext } from 'next'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useState } from 'react'
 import UserIDEditView from '~/components/views/UsersIDEdit'
-import { GetUserServer, GetUserIdsServer } from '~/repositories/user'
+import { userRepository } from '~/repositories/index'
 
 // const useForceUpdate = () => {
 //   const [count, setCount] = useState(0);
@@ -33,7 +33,7 @@ const UserIDEdit: NextPage = () => {
 export default UserIDEdit
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { users } = await GetUserIdsServer(10, 0)
+  const { users } = await userRepository.getUserIds(10, 0)
   const paths = users.nodes.map((user: { id: string }) => ({
     params: {
       id: user.id,
@@ -45,29 +45,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  if (!params || !params.id) {
-    return {
-      props: {
-        user: 'error',
-      },
-    }
-  }
-  //配列として扱われたら連結をする
-  if (Array.isArray(params.id)) {
-    params.id = params.id.join()
-  }
-
-  // const { user } = await GetUserServer(params?.id)
-  // return {
-  //   props: {
-  //     user,
-  //   },
-  //   notFound: !user,
-  // }
+export const getStaticProps: GetStaticProps = async (context: GetStaticPropsContext) => {
   return {
-    props: {
-      user: 'success',
-    },
+    props: {},
   }
 }

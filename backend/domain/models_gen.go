@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+type AllModel interface {
+	IsAllModel()
+}
+
 type Node interface {
 	IsNode()
 	GetID() string
@@ -72,6 +76,8 @@ type UserPagination struct {
 	Nodes    []*User         `json:"nodes"`
 }
 
+func (UserPagination) IsAllModel() {}
+
 func (UserPagination) IsPagination()                     {}
 func (this UserPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
 func (this UserPagination) GetNodes() []Node {
@@ -89,6 +95,8 @@ type WorkPagination struct {
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*Work         `json:"nodes"`
 }
+
+func (WorkPagination) IsAllModel() {}
 
 func (WorkPagination) IsPagination()                     {}
 func (this WorkPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }

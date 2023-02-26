@@ -31,9 +31,11 @@ func (g *WorkRepository) GetByID(ctx context.Context, id string) (*domain.Work, 
 	return &work, nil
 }
 
-func (g *WorkRepository) GetTotalCount(ctx context.Context) (int64, error) {
+func (g *WorkRepository) GetTotalCount(ctx context.Context, keyword *string) (int64, error) {
 	var totalCount int64
-	if err := g.db.Conn.Table("works").Where("is_delete = ?", "False").Count(&totalCount).Error; err != nil {
+
+	columns := []string{"title", "summary", "duration", "language", "role", "brief_story"}
+	if err := g.db.Conn.Table("works").Where("is_delete = ?", "False").Scopes(util.WhereKeyword(keyword, columns)).Count(&totalCount).Error; err != nil {
 		return 0, fmt.Errorf("GetTotalCount - repository: %w", err)
 	}
 
@@ -61,24 +63,12 @@ func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
 	return works, nil
 }
 
-func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit int, offset int) ([]*domain.Work, int64, error) {
+func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit int, searched string, num int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
 
-	keywords := strings.Fields(keyword)
-	columns := [...]string{"title", "summary", "duration", "language", "role", "brief_story"}
+	columns := []string{"title", "summary", "duration", "language", "role", "brief_story"}
 
-	var WhereQuery string
-
-	for i, column := range columns {
-		for j, keyword := range keywords {
-			WhereQuery += fmt.Sprintf("%s LIKE '%%%s%%'", column, keyword)
-			if i != len(columns)-1 || j != len(keywords)-1 {
-				WhereQuery += " OR "
-			}
-		}
-	}
-
-	result := g.db.Conn.Debug().Limit(limit).Offset(offset).Where(WhereQuery).Find(&works)
+	result := g.db.Conn.Debug().Limit(limit).Where("is_delete = ?", "False").Scopes(util.SortWork("update", searched, num)).Scopes(util.WhereKeyword(&keyword, columns)).Find(&works)
 
 	if err := result.Error; !errors.Is(err, nil) {
 		return nil, 0, fmt.Errorf("GetByKeyword - repository: %w", err)
@@ -111,6 +101,7 @@ func (g *WorkRepository) Create(ctx context.Context, input domain.CreateWorkInpu
 		if err := g.db.Conn.Create(&work).Error; !errors.Is(err, nil) {
 			return fmt.Errorf("Create - repository: %w", err)
 		}
+
 		time.Sleep(time.Second * 1)
 	}
 

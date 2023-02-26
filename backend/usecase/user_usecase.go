@@ -59,7 +59,7 @@ It returns a domain.UserPagination structure if the user specified in the argume
 If an unexpected error occurs, an error wrapped in GetAll-usecase or GetAll - GetTotalCount - usecase: is returned.
 */
 func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain.UserPagination, error) {
-	totalCount, err := u.userRepo.GetTotalCount(ctx)
+	totalCount, err := u.userRepo.GetTotalCount(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - GetTotalCount - usecase: %w", err)
 	}
@@ -84,6 +84,33 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	}
 
 	return &userPagination, nil
+}
+
+func (u UserUseCase) Search(ctx context.Context, keyword string, limit int, searched string, num int) (*domain.UserPagination, error) {
+	totalCount, err := u.userRepo.GetTotalCount(ctx, &keyword)
+	if err != nil {
+		return nil, fmt.Errorf("Search - GetTotalCount - usecase: %w", err)
+	}
+
+	users, numRows, err := u.userRepo.GetByKeyword(ctx, keyword, limit, searched, num)
+	if err != nil {
+		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
+	}
+
+	pageInfo := domain.PaginationInfo{
+		Page:             0,
+		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
+		HasNextPage:      false,
+		HasPreviousPage:  false,
+		Count:            int(numRows),
+		TotalCount:       int(totalCount),
+	}
+	workPagination := domain.UserPagination{
+		PageInfo: &pageInfo,
+		Nodes:    users,
+	}
+
+	return &workPagination, nil
 }
 
 /*

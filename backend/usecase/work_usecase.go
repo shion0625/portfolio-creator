@@ -40,7 +40,7 @@ It returns a domain.UserPagination structure if the user specified in the argume
 If an unexpected error occurs, an error wrapped in GetAll-usecase or GetAll - GetTotalCount - usecase: is returned.
 */
 func (w WorkUseCase) GetAll(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error) {
-	totalCount, err := w.workRepo.GetTotalCount(ctx)
+	totalCount, err := w.workRepo.GetTotalCount(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - GetTotalCount - usecase: %w", err)
 	}
@@ -90,19 +90,24 @@ The offset is the number of data to start retrieving.
 It returns a domain.UserPagination structure if the user specified in the argument exists in the database, or nil otherwise.
 If an unexpected error occurs, an error wrapped in Search-usecase: is returned.
 */
-func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, offset int) (*domain.WorkPagination, error) {
-	works, numRows, err := w.workRepo.GetByKeyword(ctx, keyword, limit, offset)
+func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, searched string, num int) (*domain.WorkPagination, error) {
+	totalCount, err := w.workRepo.GetTotalCount(ctx, &keyword)
 	if err != nil {
-		return nil, fmt.Errorf("Search - usecase: %w", err)
+		return nil, fmt.Errorf("Search - GetTotalCount - usecase: %w", err)
+	}
+
+	works, numRows, err := w.workRepo.GetByKeyword(ctx, keyword, limit, searched, num)
+	if err != nil {
+		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
 
 	pageInfo := domain.PaginationInfo{
-		Page:             int(math.Ceil(float64(offset) / float64(limit))),
-		PaginationLength: int(math.Ceil(float64(numRows) / float64(limit))),
-		HasNextPage:      (int(numRows) < limit+offset),
-		HasPreviousPage:  limit < offset,
+		Page:             0,
+		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
+		HasNextPage:      false,
+		HasPreviousPage:  false,
 		Count:            int(numRows),
-		TotalCount:       int(numRows),
+		TotalCount:       int(totalCount),
 	}
 	workPagination := domain.WorkPagination{
 		PageInfo: &pageInfo,

@@ -1,10 +1,5 @@
 import { useMutation } from '@apollo/client'
-import {
-  GetUserQuery,
-  CreateWorkMutation,
-  CreateWorkDocument,
-  GetUserDocument,
-} from '~/models/client'
+import { GetUserQuery, CreateWorkMutation, CreateWorkDocument, GetUserDocument } from '~/models/client'
 
 // create work mutation
 export const useCreateWork = (id: string) => {

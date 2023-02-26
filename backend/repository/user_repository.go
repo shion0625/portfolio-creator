@@ -7,6 +7,7 @@ import (
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
 	"github.com/shion0625/portfolio-creator/backend/infrastructure"
+	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
 type UserRepository struct {
@@ -47,9 +48,11 @@ func (g *UserRepository) GetByEmail(ctx context.Context, email string) (*domain.
 	return &user, nil
 }
 
-func (g *UserRepository) GetTotalCount(ctx context.Context) (int64, error) {
+func (g *UserRepository) GetTotalCount(ctx context.Context, keyword *string) (int64, error) {
 	var totalCount int64
-	if err := g.db.Conn.Model(&domain.User{}).Count(&totalCount).Error; err != nil {
+
+	columns := []string{"name"}
+	if err := g.db.Conn.Model(&domain.User{}).Scopes(util.WhereKeyword(keyword, columns)).Count(&totalCount).Error; err != nil {
 		return 0, fmt.Errorf("GetTotalCount - repository: %w", err)
 	}
 
@@ -82,4 +85,18 @@ func (g *UserRepository) GetByIDs(ids []string) ([]*domain.User, error) {
 	}
 
 	return users, nil
+}
+
+func (g *UserRepository) GetByKeyword(ctx context.Context, keyword string, limit int, searched string, num int) ([]*domain.User, int64, error) {
+	var users []*domain.User
+
+	columns := []string{"name"}
+
+	result := g.db.Conn.Debug().Limit(limit).Scopes(util.WhereKeyword(&keyword, columns)).Find(&users)
+
+	if err := result.Error; !errors.Is(err, nil) {
+		return nil, 0, fmt.Errorf("GetByKeyword - repository: %w", err)
+	}
+
+	return users, result.RowsAffected, nil
 }

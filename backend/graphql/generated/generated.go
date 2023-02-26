@@ -73,13 +73,13 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		SearchWorks func(childComplexity int, keyword string, limit int, offset *int) int
-		User        func(childComplexity int, id string) int
-		UserAuth    func(childComplexity int, id string) int
-		Users       func(childComplexity int, limit int, offset *int) int
-		Work        func(childComplexity int, id string) int
-		WorkNodes   func(childComplexity int, limit int, order string, searched string, num int) int
-		Works       func(childComplexity int, limit int, order string, searched string, num int) int
+		Search    func(childComplexity int, target string, keyword string, limit int, searched string, num int) int
+		User      func(childComplexity int, id string) int
+		UserAuth  func(childComplexity int, id string) int
+		Users     func(childComplexity int, limit int, offset *int) int
+		Work      func(childComplexity int, id string) int
+		WorkNodes func(childComplexity int, limit int, order string, searched string, num int) int
+		Works     func(childComplexity int, limit int, order string, searched string, num int) int
 	}
 
 	User struct {
@@ -135,7 +135,7 @@ type QueryResolver interface {
 	Work(ctx context.Context, id string) (*domain.Work, error)
 	Works(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error)
 	WorkNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error)
-	SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error)
+	Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.AllModel, error)
 }
 type UserResolver interface {
 	Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error)
@@ -290,17 +290,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Profile.User(childComplexity), true
 
-	case "Query.searchWorks":
-		if e.complexity.Query.SearchWorks == nil {
+	case "Query.search":
+		if e.complexity.Query.Search == nil {
 			break
 		}
 
-		args, err := ec.field_Query_searchWorks_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_search_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.SearchWorks(childComplexity, args["keyword"].(string), args["limit"].(int), args["offset"].(*int)), true
+		return e.complexity.Query.Search(childComplexity, args["target"].(string), args["keyword"].(string), args["limit"].(int), args["searched"].(string), args["num"].(int)), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
@@ -635,11 +635,11 @@ interface Node {
 
 scalar Timestamp
 scalar DateTime
-
 scalar Any
 
-directive @auth on FIELD_DEFINITION
+union AllModel = WorkPagination | UserPagination
 
+directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
@@ -726,7 +726,7 @@ type Query {
   work(id: ID!): Work
   works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
   workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  searchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
+  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): AllModel!
 }
 `, BuiltIn: false},
 	{Name: "../schema/user.graphqls", Input: `## user.graphqls ===============================================
@@ -892,36 +892,54 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_searchWorks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_search_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
-	if tmp, ok := rawArgs["keyword"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("keyword"))
+	if tmp, ok := rawArgs["target"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("target"))
 		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["keyword"] = arg0
-	var arg1 int
+	args["target"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["keyword"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("keyword"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["keyword"] = arg1
+	var arg2 int
 	if tmp, ok := rawArgs["limit"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
-		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["limit"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["offset"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+	args["limit"] = arg2
+	var arg3 string
+	if tmp, ok := rawArgs["searched"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("searched"))
+		arg3, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["offset"] = arg2
+	args["searched"] = arg3
+	var arg4 int
+	if tmp, ok := rawArgs["num"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("num"))
+		arg4, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["num"] = arg4
 	return args, nil
 }
 
@@ -2392,8 +2410,8 @@ func (ec *executionContext) fieldContext_Query_workNodes(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_searchWorks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_searchWorks(ctx, field)
+func (ec *executionContext) _Query_search(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_search(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2406,7 +2424,7 @@ func (ec *executionContext) _Query_searchWorks(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SearchWorks(rctx, fc.Args["keyword"].(string), fc.Args["limit"].(int), fc.Args["offset"].(*int))
+		return ec.resolvers.Query().Search(rctx, fc.Args["target"].(string), fc.Args["keyword"].(string), fc.Args["limit"].(int), fc.Args["searched"].(string), fc.Args["num"].(int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2418,25 +2436,19 @@ func (ec *executionContext) _Query_searchWorks(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*domain.WorkPagination)
+	res := resTmp.(domain.AllModel)
 	fc.Result = res
-	return ec.marshalNWorkPagination2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐWorkPagination(ctx, field.Selections, res)
+	return ec.marshalNAllModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐAllModel(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_searchWorks(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "pageInfo":
-				return ec.fieldContext_WorkPagination_pageInfo(ctx, field)
-			case "nodes":
-				return ec.fieldContext_WorkPagination_nodes(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type WorkPagination", field.Name)
+			return nil, errors.New("field of type AllModel does not have child fields")
 		},
 	}
 	defer func() {
@@ -2446,7 +2458,7 @@ func (ec *executionContext) fieldContext_Query_searchWorks(ctx context.Context, 
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_searchWorks_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_search_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -5810,6 +5822,29 @@ func (ec *executionContext) unmarshalInputUpdateWorkInput(ctx context.Context, o
 
 // region    ************************** interface.gotpl ***************************
 
+func (ec *executionContext) _AllModel(ctx context.Context, sel ast.SelectionSet, obj domain.AllModel) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case domain.WorkPagination:
+		return ec._WorkPagination(ctx, sel, &obj)
+	case *domain.WorkPagination:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._WorkPagination(ctx, sel, obj)
+	case domain.UserPagination:
+		return ec._UserPagination(ctx, sel, &obj)
+	case *domain.UserPagination:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._UserPagination(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj domain.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -6195,7 +6230,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "searchWorks":
+		case "search":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -6204,7 +6239,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_searchWorks(ctx, field)
+				res = ec._Query_search(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -6319,7 +6354,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
-var userPaginationImplementors = []string{"UserPagination", "Pagination"}
+var userPaginationImplementors = []string{"UserPagination", "AllModel", "Pagination"}
 
 func (ec *executionContext) _UserPagination(ctx context.Context, sel ast.SelectionSet, obj *domain.UserPagination) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userPaginationImplementors)
@@ -6466,7 +6501,7 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
-var workPaginationImplementors = []string{"WorkPagination", "Pagination"}
+var workPaginationImplementors = []string{"WorkPagination", "AllModel", "Pagination"}
 
 func (ec *executionContext) _WorkPagination(ctx context.Context, sel ast.SelectionSet, obj *domain.WorkPagination) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, workPaginationImplementors)
@@ -6818,6 +6853,16 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 // endregion **************************** object.gotpl ****************************
 
 // region    ***************************** type.gotpl *****************************
+
+func (ec *executionContext) marshalNAllModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐAllModel(ctx context.Context, sel ast.SelectionSet, v domain.AllModel) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._AllModel(ctx, sel, v)
+}
 
 func (ec *executionContext) unmarshalNAny2interface(ctx context.Context, v interface{}) (interface{}, error) {
 	res, err := graphql.UnmarshalAny(v)

@@ -1,6 +1,6 @@
+import { useGetWorks } from './useGetWorks'
 import { useState, useEffect, useCallback } from 'react'
 import { Work, WorkPagination } from '~/models/types'
-import { useGetWorks } from './useGetWorks'
 
 type Variable = { order: 'update'; searched: string; num: number } | { order: 'create'; searched: string; num: number }
 
@@ -41,8 +41,8 @@ export const useGetMore = () => {
       onCompleted: (data) => {
         setWorks({
           pageInfo: {
-          ...works.pageInfo,
-          hasNextPage: data.works.pageInfo.hasNextPage,
+            ...works.pageInfo,
+            hasNextPage: data.works.pageInfo.hasNextPage,
           },
           nodes: [...works.nodes, ...data.works.nodes],
         })

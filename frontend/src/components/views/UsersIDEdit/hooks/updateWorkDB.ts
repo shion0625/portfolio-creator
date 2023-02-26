@@ -2,7 +2,6 @@ import { Session } from 'next-auth'
 import { WorkFormI } from '~/models/Work'
 import { UpdateWorkInput } from '~/models/types'
 
-
 const updateWorkDB = (session: Session, work: WorkFormI, updateWork: any): Promise<void> =>
   new Promise((resolve, reject) => {
     if (!session.user) {
@@ -31,7 +30,7 @@ const updateWorkDB = (session: Session, work: WorkFormI, updateWork: any): Promi
     resolve()
   })
 
-  export const resultUpdateWork = async (session: Session, work: WorkFormI, updateWork: any): Promise<void> => {
+export const resultUpdateWork = async (session: Session, work: WorkFormI, updateWork: any): Promise<void> => {
   await updateWorkDB(session, work, updateWork)
   return
 }
