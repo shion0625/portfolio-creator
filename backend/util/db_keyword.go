@@ -10,7 +10,7 @@ import (
 func WhereKeyword(keyword *string, columns []string) func(ddb *gorm.DB) *gorm.DB {
 	return func(ddb *gorm.DB) *gorm.DB {
 		if keyword == nil {
-			return ddb.Where("is_delete = ?", "False")
+			return ddb
 		} else {
 			var WhereQuery string
 
@@ -25,7 +25,7 @@ func WhereKeyword(keyword *string, columns []string) func(ddb *gorm.DB) *gorm.DB
 				}
 			}
 
-			return ddb.Where("is_delete = ?", "False").Where(WhereQuery)
+			return ddb.Where(WhereQuery)
 		}
 	}
 }

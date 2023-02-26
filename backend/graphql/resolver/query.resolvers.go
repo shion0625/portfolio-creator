@@ -114,11 +114,21 @@ func (r *queryResolver) WorkNodes(ctx context.Context, limit int, order string, 
 // Search is the resolver for the search field.
 func (r *queryResolver) Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.AllModel, error) {
 	var result domain.AllModel
+
 	var err error
 
 	switch target {
 	case "user":
-		fmt.Println("user")
+		result, err = r.userUseCase.Search(ctx, keyword, limit, searched, num)
+		if !errors.Is(err, nil) {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, &gqlerror.Error{
+					Message: "works not found",
+				}
+			}
+
+			return result, nil
+		}
 	case "work":
 		result, err = r.workUseCase.Search(ctx, keyword, limit, searched, num)
 		if !errors.Is(err, nil) {

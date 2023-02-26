@@ -35,8 +35,7 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context, keyword *string) (in
 	var totalCount int64
 
 	columns := []string{"title", "summary", "duration", "language", "role", "brief_story"}
-
-	if err := g.db.Conn.Table("works").Scopes(util.WhereKeyword(keyword, columns)).Count(&totalCount).Error; err != nil {
+	if err := g.db.Conn.Table("works").Where("is_delete = ?", "False").Scopes(util.WhereKeyword(keyword, columns)).Count(&totalCount).Error; err != nil {
 		return 0, fmt.Errorf("GetTotalCount - repository: %w", err)
 	}
 
@@ -69,7 +68,7 @@ func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit
 
 	columns := []string{"title", "summary", "duration", "language", "role", "brief_story"}
 
-	result := g.db.Conn.Debug().Limit(limit).Scopes(util.SortWork("update", searched, num)).Scopes(util.WhereKeyword(&keyword, columns)).Find(&works)
+	result := g.db.Conn.Debug().Limit(limit).Where("is_delete = ?", "False").Scopes(util.SortWork("update", searched, num)).Scopes(util.WhereKeyword(&keyword, columns)).Find(&works)
 
 	if err := result.Error; !errors.Is(err, nil) {
 		return nil, 0, fmt.Errorf("GetByKeyword - repository: %w", err)
