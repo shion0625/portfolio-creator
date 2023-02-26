@@ -6,11 +6,11 @@ interface Node {
 
 scalar Timestamp
 scalar DateTime
-
 scalar Any
 
-directive @auth on FIELD_DEFINITION
+union AllModel = WorkPagination | UserPagination
 
+directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!

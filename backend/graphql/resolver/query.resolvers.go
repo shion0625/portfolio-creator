@@ -111,20 +111,32 @@ func (r *queryResolver) WorkNodes(ctx context.Context, limit int, order string, 
 	return workNodes, nil
 }
 
-// SearchWorks is the resolver for the SearchWorks field.
-func (r *queryResolver) SearchWorks(ctx context.Context, keyword string, limit int, offset *int) (*domain.WorkPagination, error) {
-	workPagination, err := r.workUseCase.Search(ctx, keyword, limit, *offset)
-	if !errors.Is(err, nil) {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, &gqlerror.Error{
-				Message: "works not found",
-			}
-		}
+// Search is the resolver for the search field.
+func (r *queryResolver) Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.AllModel, error) {
+	var result domain.AllModel
+	var err error
 
-		return nil, fmt.Errorf("SearchWorks - queryResolver: %w", err)
+	switch target {
+	case "user":
+		fmt.Println("user")
+	case "work":
+		result, err = r.workUseCase.Search(ctx, keyword, limit, searched, num)
+		if !errors.Is(err, nil) {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, &gqlerror.Error{
+					Message: "works not found",
+				}
+			}
+
+			return result, nil
+		}
+	default:
+		return nil, &gqlerror.Error{
+			Message: "target1 not found",
+		}
 	}
 
-	return workPagination, nil
+	return result, nil
 }
 
 // Query returns generated.QueryResolver implementation.
