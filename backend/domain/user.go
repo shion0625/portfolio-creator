@@ -31,5 +31,4 @@ type IUserRepository interface {
 	GetAll(ctx context.Context, limit int, offset int) ([]*User, int64, error)
 	GetByIDs(ids []string) ([]*User, error)
 	GetByKeyword(ctx context.Context, keyword string, limit int, searched string, num int) ([]*User, int64, error)
-
 }
