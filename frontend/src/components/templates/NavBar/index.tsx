@@ -18,6 +18,7 @@ import ColorModeContext from '~/context/ColorModeContext'
 
 export default function NavBar() {
   const router = useRouter()
+  const currentPathName = router.pathname
   const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
   const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
 
@@ -34,7 +35,10 @@ export default function NavBar() {
     console.log('search click', searchElement.current.value)
     router.push({
       pathname: '/search',
-      query: { keyword: searchElement.current.value },
+      query: {
+        target: checkPath(currentPathName),
+        keyword: searchElement.current.value
+      },
     })
     }
   }
@@ -42,6 +46,18 @@ export default function NavBar() {
   const handleMenuClose = () => {
     handleProfileMenuClose()
     handleMobileMenuClose()
+  }
+
+  const checkPath = (pathName: string): string => {
+    const firstPath = pathName.split('/')[1]
+    switch (firstPath) {
+      case "users":
+        return "users"
+      case "works":
+        return "works"
+      default:
+        return "users"
+    }
   }
 
   return (

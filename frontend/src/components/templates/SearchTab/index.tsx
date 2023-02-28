@@ -6,7 +6,7 @@ import Tab from '@mui/material/Tab'
 import React, { useState } from 'react'
 
 const SearchTab: React.FC = () => {
-  const [value, setValue] = useState('1')
+  const [value, setValue] = useState('users')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
