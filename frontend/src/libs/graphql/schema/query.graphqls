@@ -8,5 +8,5 @@ type Query {
   work(id: ID!): Work
   works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
   workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): AllModel!
+  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): ModelPagination!
 }

@@ -10,8 +10,9 @@ fragment PaginationFragment on PaginationInfo {
 }
 
 query Search($target: String!, $keyword: String!, $limit: Int!, $searched: String!, $num: Int!) {
-  search(target: $target, keyword:$keyword, limit: $limit, searched: $searched, num: $num) {
-    ...on UserPagination {
+  search(target: $target, keyword: $keyword, limit: $limit, searched: $searched, num: $num) {
+    ... on UserPagination {
+      type
       pageInfo {
         ...PaginationFragment
       }
@@ -19,12 +20,16 @@ query Search($target: String!, $keyword: String!, $limit: Int!, $searched: Strin
         ...UserFragment
       }
     }
-    ...on WorkPagination {
+    ... on WorkPagination {
+      type
       pageInfo {
         ...PaginationFragment
       }
       nodes {
         ...WorkFragment
+        user {
+          ...UserFragment
+        }
       }
     }
   }

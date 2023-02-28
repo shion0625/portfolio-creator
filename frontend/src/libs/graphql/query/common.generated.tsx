@@ -16,7 +16,7 @@ export type SearchQueryVariables = Types.Exact<{
 }>;
 
 
-export type SearchQuery = { search: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null }> } | { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work?: number | null, is_delete: boolean }> } };
+export type SearchQuery = { search: { type: Types.Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null }> } | { type: Types.Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work?: number | null, is_delete: boolean, user: { id: string, name?: string | null, email?: string | null } }> } };
 
 export const PaginationFragmentFragmentDoc = gql`
     fragment PaginationFragment on PaginationInfo {
@@ -38,6 +38,7 @@ export const SearchDocument = gql`
     num: $num
   ) {
     ... on UserPagination {
+      type
       pageInfo {
         ...PaginationFragment
       }
@@ -46,11 +47,15 @@ export const SearchDocument = gql`
       }
     }
     ... on WorkPagination {
+      type
       pageInfo {
         ...PaginationFragment
       }
       nodes {
         ...WorkFragment
+        user {
+          ...UserFragment
+        }
       }
     }
   }

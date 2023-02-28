@@ -8,7 +8,7 @@ scalar Timestamp
 scalar DateTime
 scalar Any
 
-union AllModel = WorkPagination | UserPagination
+union ModelPagination = WorkPagination | UserPagination
 
 directive @auth on FIELD_DEFINITION
 
@@ -24,6 +24,11 @@ type PaginationInfo {
   hasPreviousPage: Boolean!
   count: Int!
   totalCount: Int!
+}
+
+enum Model {
+  user
+  work
 }
 ## mutation.graphqls ===============================================
 
@@ -94,7 +99,7 @@ type Query {
   work(id: ID!): Work
   works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
   workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): AllModel!
+  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): ModelPagination!
 }
 ## user.graphqls ===============================================
 
@@ -109,6 +114,7 @@ type User implements Node{
 }
 
 type UserPagination implements Pagination{
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [User!]!
 }
@@ -133,6 +139,7 @@ type Work implements Node{
   }
 
 type WorkPagination implements Pagination {
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [Work!]!
 }
