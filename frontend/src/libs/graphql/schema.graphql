@@ -6,11 +6,11 @@ interface Node {
 
 scalar Timestamp
 scalar DateTime
-
 scalar Any
 
-directive @auth on FIELD_DEFINITION
+union AllModel = WorkPagination | UserPagination
 
+directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
@@ -94,7 +94,7 @@ type Query {
   work(id: ID!): Work
   works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
   workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  searchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
+  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): AllModel!
 }
 ## user.graphqls ===============================================
 
@@ -128,7 +128,7 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
-  number_of_work: Int!
+  number_of_work: Int
   user: User!
   }
 
