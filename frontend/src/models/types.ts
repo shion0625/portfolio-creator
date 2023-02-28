@@ -15,8 +15,6 @@ export type Scalars = {
   Timestamp: any;
 };
 
-export type AllModel = UserPagination | WorkPagination;
-
 export type CreateWorkInput = {
   brief_story?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<Scalars['String']>;
@@ -29,6 +27,13 @@ export type CreateWorkInput = {
   url?: InputMaybe<Scalars['String']>;
   user_id: Scalars['String'];
 };
+
+export enum Model {
+  User = 'user',
+  Work = 'work'
+}
+
+export type ModelPagination = UserPagination | WorkPagination;
 
 export type Mutation = {
   createWork: Scalars['Boolean'];
@@ -90,7 +95,7 @@ export type Profile = {
 };
 
 export type Query = {
-  search: AllModel;
+  search: ModelPagination;
   user: User;
   userAuth: User;
   users: UserPagination;
@@ -183,6 +188,7 @@ export type User = Node & {
 export type UserPagination = Pagination & {
   nodes: Array<User>;
   pageInfo: PaginationInfo;
+  type: Model;
 };
 
 export type Work = Node & {
@@ -206,4 +212,5 @@ export type Work = Node & {
 export type WorkPagination = Pagination & {
   nodes: Array<Work>;
   pageInfo: PaginationInfo;
+  type: Model;
 };

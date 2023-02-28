@@ -18,8 +18,6 @@ export type Scalars = {
   Timestamp: any;
 };
 
-export type AllModel = UserPagination | WorkPagination;
-
 export type CreateWorkInput = {
   brief_story?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<Scalars['String']>;
@@ -32,6 +30,13 @@ export type CreateWorkInput = {
   url?: InputMaybe<Scalars['String']>;
   user_id: Scalars['String'];
 };
+
+export enum Model {
+  User = 'user',
+  Work = 'work'
+}
+
+export type ModelPagination = UserPagination | WorkPagination;
 
 export type Mutation = {
   createWork: Scalars['Boolean'];
@@ -93,7 +98,7 @@ export type Profile = {
 };
 
 export type Query = {
-  search: AllModel;
+  search: ModelPagination;
   user: User;
   userAuth: User;
   users: UserPagination;
@@ -186,6 +191,7 @@ export type User = Node & {
 export type UserPagination = Pagination & {
   nodes: Array<User>;
   pageInfo: PaginationInfo;
+  type: Model;
 };
 
 export type Work = Node & {
@@ -209,6 +215,7 @@ export type Work = Node & {
 export type WorkPagination = Pagination & {
   nodes: Array<Work>;
   pageInfo: PaginationInfo;
+  type: Model;
 };
 
 export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
@@ -222,7 +229,7 @@ export type SearchQueryVariables = Exact<{
 }>;
 
 
-export type SearchQuery = { search: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null }> } | { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work?: number | null, is_delete: boolean }> } };
+export type SearchQuery = { search: { type: Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null }> } | { type: Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work?: number | null, is_delete: boolean, user: { id: string, name?: string | null, email?: string | null } }> } };
 
 export type UserFragmentFragment = { id: string, name?: string | null, email?: string | null };
 
@@ -367,6 +374,7 @@ export const SearchDocument = gql`
     num: $num
   ) {
     ... on UserPagination {
+      type
       pageInfo {
         ...PaginationFragment
       }
@@ -375,11 +383,15 @@ export const SearchDocument = gql`
       }
     }
     ... on WorkPagination {
+      type
       pageInfo {
         ...PaginationFragment
       }
       nodes {
         ...WorkFragment
+        user {
+          ...UserFragment
+        }
       }
     }
   }
