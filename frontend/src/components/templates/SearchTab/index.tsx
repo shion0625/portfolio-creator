@@ -4,7 +4,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import React, { useState } from 'react'
-
+import { WorkPagination } from '~/components/templates/WorkPagination'
 const SearchTab: React.FC = () => {
   const [value, setValue] = useState('users')
 
@@ -21,8 +21,10 @@ const SearchTab: React.FC = () => {
             <Tab label='works' value='works' />
           </TabList>
         </Box>
-        <TabPanel value='users'>Item One</TabPanel>
-        <TabPanel value='works'>Item Two</TabPanel>
+        <TabPanel value='users'></TabPanel>
+        <TabPanel value='works'>
+          <WorkPagination keyword='10' limit={10} />
+        </TabPanel>
       </TabContext>
     </Box>
   )

@@ -1,19 +1,19 @@
 import Grid from '@mui/material/Grid'
 import React from 'react'
 import { WorkImageCard } from '~/components/parts/WorkImageCard'
-import { WorkPagination, Work } from '~/models/types'
+import { Work } from '~/models/types'
 
 type Props = {
-  works: WorkPagination
+  works: Work[]
 }
 
 export const WorkList: React.FC<Props> = ({ works }): JSX.Element => {
   return (
     <>
       <Grid container spacing={2}>
-        {works.nodes.map((work: Work, i) => {
+        {works.map((work: Work, i) => {
           return (
-            <Grid item key={work.id} xs={6} md={4} lg={3}>
+            <Grid item key={`work.id${i}`} xs={6} md={4} lg={3}>
               <WorkImageCard work={work} />
             </Grid>
           )
