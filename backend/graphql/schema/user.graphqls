@@ -11,6 +11,7 @@ type User implements Node{
 }
 
 type UserPagination implements Pagination{
+  type: Model
   pageInfo: PaginationInfo!
   nodes: [User!]!
 }

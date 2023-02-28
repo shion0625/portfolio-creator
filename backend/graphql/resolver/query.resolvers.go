@@ -112,8 +112,8 @@ func (r *queryResolver) WorkNodes(ctx context.Context, limit int, order string, 
 }
 
 // Search is the resolver for the search field.
-func (r *queryResolver) Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.AllModel, error) {
-	var result domain.AllModel
+func (r *queryResolver) Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.ModelPagination, error) {
+	var result domain.ModelPagination
 
 	var err error
 

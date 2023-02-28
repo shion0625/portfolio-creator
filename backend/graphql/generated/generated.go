@@ -95,6 +95,7 @@ type ComplexityRoot struct {
 	UserPagination struct {
 		Nodes    func(childComplexity int) int
 		PageInfo func(childComplexity int) int
+		Type     func(childComplexity int) int
 	}
 
 	Work struct {
@@ -118,6 +119,7 @@ type ComplexityRoot struct {
 	WorkPagination struct {
 		Nodes    func(childComplexity int) int
 		PageInfo func(childComplexity int) int
+		Type     func(childComplexity int) int
 	}
 }
 
@@ -135,7 +137,7 @@ type QueryResolver interface {
 	Work(ctx context.Context, id string) (*domain.Work, error)
 	Works(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error)
 	WorkNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error)
-	Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.AllModel, error)
+	Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.ModelPagination, error)
 }
 type UserResolver interface {
 	Works(ctx context.Context, obj *domain.User) (*domain.WorkPagination, error)
@@ -437,6 +439,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserPagination.PageInfo(childComplexity), true
 
+	case "UserPagination.type":
+		if e.complexity.UserPagination.Type == nil {
+			break
+		}
+
+		return e.complexity.UserPagination.Type(childComplexity), true
+
 	case "Work.brief_story":
 		if e.complexity.Work.BriefStory == nil {
 			break
@@ -556,6 +565,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.WorkPagination.PageInfo(childComplexity), true
 
+	case "WorkPagination.type":
+		if e.complexity.WorkPagination.Type == nil {
+			break
+		}
+
+		return e.complexity.WorkPagination.Type(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -637,11 +653,12 @@ scalar Timestamp
 scalar DateTime
 scalar Any
 
-union AllModel = WorkPagination | UserPagination
+union ModelPagination = WorkPagination | UserPagination
 
 directive @auth on FIELD_DEFINITION
 
 interface Pagination {
+  type: Model
   pageInfo: PaginationInfo!
   nodes: [Node]! # Node型の配列という意味
 }
@@ -653,6 +670,11 @@ type PaginationInfo {
   hasPreviousPage: Boolean!
   count: Int!
   totalCount: Int!
+}
+
+enum Model {
+  user
+  work
 }
 `, BuiltIn: false},
 	{Name: "../schema/mutation.graphqls", Input: `## mutation.graphqls ===============================================
@@ -726,7 +748,7 @@ type Query {
   work(id: ID!): Work
   works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
   workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): AllModel!
+  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): ModelPagination!
 }
 `, BuiltIn: false},
 	{Name: "../schema/user.graphqls", Input: `## user.graphqls ===============================================
@@ -742,6 +764,7 @@ type User implements Node{
 }
 
 type UserPagination implements Pagination{
+  type: Model
   pageInfo: PaginationInfo!
   nodes: [User!]!
 }
@@ -767,6 +790,7 @@ type Work implements Node{
   }
 
 type WorkPagination implements Pagination {
+  type: Model
   pageInfo: PaginationInfo!
   nodes: [Work!]!
 }
@@ -2156,6 +2180,8 @@ func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field 
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "type":
+				return ec.fieldContext_UserPagination_type(ctx, field)
 			case "pageInfo":
 				return ec.fieldContext_UserPagination_pageInfo(ctx, field)
 			case "nodes":
@@ -2301,6 +2327,8 @@ func (ec *executionContext) fieldContext_Query_works(ctx context.Context, field 
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "type":
+				return ec.fieldContext_WorkPagination_type(ctx, field)
 			case "pageInfo":
 				return ec.fieldContext_WorkPagination_pageInfo(ctx, field)
 			case "nodes":
@@ -2436,9 +2464,9 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.(domain.AllModel)
+	res := resTmp.(domain.ModelPagination)
 	fc.Result = res
-	return ec.marshalNAllModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐAllModel(ctx, field.Selections, res)
+	return ec.marshalNModelPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModelPagination(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2448,7 +2476,7 @@ func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type AllModel does not have child fields")
+			return nil, errors.New("field of type ModelPagination does not have child fields")
 		},
 	}
 	defer func() {
@@ -2838,6 +2866,8 @@ func (ec *executionContext) fieldContext_User_works(ctx context.Context, field g
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "type":
+				return ec.fieldContext_WorkPagination_type(ctx, field)
 			case "pageInfo":
 				return ec.fieldContext_WorkPagination_pageInfo(ctx, field)
 			case "nodes":
@@ -2895,6 +2925,47 @@ func (ec *executionContext) fieldContext_User_profile(ctx context.Context, field
 				return ec.fieldContext_Profile_user(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UserPagination_type(ctx context.Context, field graphql.CollectedField, obj *domain.UserPagination) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserPagination_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Model)
+	fc.Result = res
+	return ec.marshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UserPagination_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UserPagination",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Model does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3662,6 +3733,47 @@ func (ec *executionContext) fieldContext_Work_user(ctx context.Context, field gr
 				return ec.fieldContext_User_profile(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _WorkPagination_type(ctx context.Context, field graphql.CollectedField, obj *domain.WorkPagination) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_WorkPagination_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*domain.Model)
+	fc.Result = res
+	return ec.marshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_WorkPagination_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "WorkPagination",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Model does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5822,7 +5934,7 @@ func (ec *executionContext) unmarshalInputUpdateWorkInput(ctx context.Context, o
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _AllModel(ctx context.Context, sel ast.SelectionSet, obj domain.AllModel) graphql.Marshaler {
+func (ec *executionContext) _ModelPagination(ctx context.Context, sel ast.SelectionSet, obj domain.ModelPagination) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
@@ -6354,7 +6466,7 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
-var userPaginationImplementors = []string{"UserPagination", "AllModel", "Pagination"}
+var userPaginationImplementors = []string{"UserPagination", "ModelPagination", "Pagination"}
 
 func (ec *executionContext) _UserPagination(ctx context.Context, sel ast.SelectionSet, obj *domain.UserPagination) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userPaginationImplementors)
@@ -6364,6 +6476,10 @@ func (ec *executionContext) _UserPagination(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UserPagination")
+		case "type":
+
+			out.Values[i] = ec._UserPagination_type(ctx, field, obj)
+
 		case "pageInfo":
 
 			out.Values[i] = ec._UserPagination_pageInfo(ctx, field, obj)
@@ -6501,7 +6617,7 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
-var workPaginationImplementors = []string{"WorkPagination", "AllModel", "Pagination"}
+var workPaginationImplementors = []string{"WorkPagination", "ModelPagination", "Pagination"}
 
 func (ec *executionContext) _WorkPagination(ctx context.Context, sel ast.SelectionSet, obj *domain.WorkPagination) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, workPaginationImplementors)
@@ -6511,6 +6627,10 @@ func (ec *executionContext) _WorkPagination(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("WorkPagination")
+		case "type":
+
+			out.Values[i] = ec._WorkPagination_type(ctx, field, obj)
+
 		case "pageInfo":
 
 			out.Values[i] = ec._WorkPagination_pageInfo(ctx, field, obj)
@@ -6854,16 +6974,6 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAllModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐAllModel(ctx context.Context, sel ast.SelectionSet, v domain.AllModel) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._AllModel(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNAny2interface(ctx context.Context, v interface{}) (interface{}, error) {
 	res, err := graphql.UnmarshalAny(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6974,6 +7084,16 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNModelPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModelPagination(ctx context.Context, sel ast.SelectionSet, v domain.ModelPagination) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ModelPagination(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNPaginationInfo2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐPaginationInfo(ctx context.Context, sel ast.SelectionSet, v *domain.PaginationInfo) graphql.Marshaler {
@@ -7541,6 +7661,22 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	}
 	res := graphql.MarshalInt(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx context.Context, v interface{}) (*domain.Model, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(domain.Model)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx context.Context, sel ast.SelectionSet, v *domain.Model) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐProfile(ctx context.Context, sel ast.SelectionSet, v *domain.Profile) graphql.Marshaler {

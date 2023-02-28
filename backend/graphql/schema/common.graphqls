@@ -8,11 +8,12 @@ scalar Timestamp
 scalar DateTime
 scalar Any
 
-union AllModel = WorkPagination | UserPagination
+union ModelPagination = WorkPagination | UserPagination
 
 directive @auth on FIELD_DEFINITION
 
 interface Pagination {
+  type: Model
   pageInfo: PaginationInfo!
   nodes: [Node]! # Node型の配列という意味
 }
@@ -24,4 +25,9 @@ type PaginationInfo {
   hasPreviousPage: Boolean!
   count: Int!
   totalCount: Int!
+}
+
+enum Model {
+  user
+  work
 }
