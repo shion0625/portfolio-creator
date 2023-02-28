@@ -8,6 +8,7 @@ import {
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useContext, useRef } from 'react'
 import MobileMenu from '~/components/parts/MobileMenu'
 import MuiLink from '~/components/parts/MuiLink'
@@ -16,21 +17,33 @@ import SearchArea from '~/components/parts/SearchArea'
 import ColorModeContext from '~/context/ColorModeContext'
 
 export default function NavBar() {
+  const router = useRouter()
+  const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
+  const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
+
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 
   const colorMode = useContext(ColorModeContext)
-  const searchElement = useRef(null) //searchAreaの入力DOM要素を取得
 
-  const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => console.log('enter'))
-  const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
+  const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => onSearchClick())
+  const searchElement = useRef<HTMLInputElement>(null) //searchAreaの入力DOM要素を取得
 
-  const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
+  const onSearchClick = () => {
+    if (searchElement.current != null) {
+    console.log('search click', searchElement.current.value)
+    router.push({
+      pathname: '/search',
+      query: { keyword: searchElement.current.value },
+    })
+    }
+  }
 
   const handleMenuClose = () => {
     handleProfileMenuClose()
     handleMobileMenuClose()
   }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
