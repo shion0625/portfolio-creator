@@ -19,7 +19,6 @@ type Node interface {
 
 type Pagination interface {
 	IsPagination()
-	GetType() *Model
 	GetPageInfo() *PaginationInfo
 	GetNodes() []Node
 }
@@ -73,7 +72,7 @@ type UpdateWorkInput struct {
 }
 
 type UserPagination struct {
-	Type     *Model          `json:"type"`
+	Type     Model           `json:"type"`
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*User         `json:"nodes"`
 }
@@ -81,7 +80,6 @@ type UserPagination struct {
 func (UserPagination) IsModelPagination() {}
 
 func (UserPagination) IsPagination()                     {}
-func (this UserPagination) GetType() *Model              { return this.Type }
 func (this UserPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
 func (this UserPagination) GetNodes() []Node {
 	if this.Nodes == nil {
@@ -95,7 +93,7 @@ func (this UserPagination) GetNodes() []Node {
 }
 
 type WorkPagination struct {
-	Type     *Model          `json:"type"`
+	Type     Model           `json:"type"`
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*Work         `json:"nodes"`
 }
@@ -103,7 +101,6 @@ type WorkPagination struct {
 func (WorkPagination) IsModelPagination() {}
 
 func (WorkPagination) IsPagination()                     {}
-func (this WorkPagination) GetType() *Model              { return this.Type }
 func (this WorkPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
 func (this WorkPagination) GetNodes() []Node {
 	if this.Nodes == nil {

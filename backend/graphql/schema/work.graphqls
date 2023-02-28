@@ -19,7 +19,7 @@ type Work implements Node{
   }
 
 type WorkPagination implements Pagination {
-  type: Model
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [Work!]!
 }

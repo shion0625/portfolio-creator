@@ -1,10 +1,11 @@
 import * as Types from '../../../models/types';
 
 import { gql } from '@apollo/client';
+import { PaginationFragmentFragmentDoc } from './common.generated';
 import { WorkFragmentFragmentDoc } from './work.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
+export type UserFragmentFragment = { id: string, name?: string | null, email?: string | null };
 
 export type GetUserQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
@@ -52,14 +53,11 @@ export type LoginMutationVariables = Types.Exact<{
 
 export type LoginMutation = { login: any };
 
-export const PaginationFragmentFragmentDoc = gql`
-    fragment PaginationFragment on PaginationInfo {
-  page
-  hasNextPage
-  count
-  totalCount
-  paginationLength
-  hasPreviousPage
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  id
+  name
+  email
 }
     `;
 export const GetUserDocument = gql`

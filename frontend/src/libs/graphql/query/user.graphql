@@ -1,14 +1,10 @@
 # schema.graphqlsのQueryの内容に従って定義
 
 # フラグメント名        フラグメントを適用するデータ型
-fragment PaginationFragment on PaginationInfo {
-  # 取得するフィールド
-  page
-  hasNextPage
-  count
-  totalCount
-  paginationLength
-  hasPreviousPage
+fragment UserFragment on User {
+  id
+  name
+  email
 }
 
 query GetUser($id: ID!) {

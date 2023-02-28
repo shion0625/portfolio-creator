@@ -658,7 +658,6 @@ union ModelPagination = WorkPagination | UserPagination
 directive @auth on FIELD_DEFINITION
 
 interface Pagination {
-  type: Model
   pageInfo: PaginationInfo!
   nodes: [Node]! # Node型の配列という意味
 }
@@ -764,7 +763,7 @@ type User implements Node{
 }
 
 type UserPagination implements Pagination{
-  type: Model
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [User!]!
 }
@@ -790,7 +789,7 @@ type Work implements Node{
   }
 
 type WorkPagination implements Pagination {
-  type: Model
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [Work!]!
 }
@@ -2951,11 +2950,14 @@ func (ec *executionContext) _UserPagination_type(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*domain.Model)
+	res := resTmp.(domain.Model)
 	fc.Result = res
-	return ec.marshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx, field.Selections, res)
+	return ec.marshalNModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserPagination_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3759,11 +3761,14 @@ func (ec *executionContext) _WorkPagination_type(ctx context.Context, field grap
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*domain.Model)
+	res := resTmp.(domain.Model)
 	fc.Result = res
-	return ec.marshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx, field.Selections, res)
+	return ec.marshalNModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_WorkPagination_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6480,6 +6485,9 @@ func (ec *executionContext) _UserPagination(ctx context.Context, sel ast.Selecti
 
 			out.Values[i] = ec._UserPagination_type(ctx, field, obj)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "pageInfo":
 
 			out.Values[i] = ec._UserPagination_pageInfo(ctx, field, obj)
@@ -6631,6 +6639,9 @@ func (ec *executionContext) _WorkPagination(ctx context.Context, sel ast.Selecti
 
 			out.Values[i] = ec._WorkPagination_type(ctx, field, obj)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "pageInfo":
 
 			out.Values[i] = ec._WorkPagination_pageInfo(ctx, field, obj)
@@ -7084,6 +7095,16 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx context.Context, v interface{}) (domain.Model, error) {
+	var res domain.Model
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNModel2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx context.Context, sel ast.SelectionSet, v domain.Model) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNModelPagination2githubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModelPagination(ctx context.Context, sel ast.SelectionSet, v domain.ModelPagination) graphql.Marshaler {
@@ -7661,22 +7682,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	}
 	res := graphql.MarshalInt(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx context.Context, v interface{}) (*domain.Model, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(domain.Model)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOModel2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐModel(ctx context.Context, sel ast.SelectionSet, v *domain.Model) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
 }
 
 func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋshion0625ᚋportfolioᚑcreatorᚋbackendᚋdomainᚐProfile(ctx context.Context, sel ast.SelectionSet, v *domain.Profile) graphql.Marshaler {

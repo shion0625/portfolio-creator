@@ -59,6 +59,7 @@ func (w WorkUseCase) GetAll(ctx context.Context, limit int, order string, search
 		TotalCount:       int(totalCount),
 	}
 	workPagination := domain.WorkPagination{
+		Type:     domain.ModelWork,
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}
@@ -110,6 +111,7 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, sear
 		TotalCount:       int(totalCount),
 	}
 	workPagination := domain.WorkPagination{
+		Type:     domain.ModelWork,
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}

@@ -1,0 +1,31 @@
+# フラグメント名        フラグメントを適用するデータ型
+fragment PaginationFragment on PaginationInfo {
+  # 取得するフィールド
+  page
+  hasNextPage
+  count
+  totalCount
+  paginationLength
+  hasPreviousPage
+}
+
+query Search($target: String!, $keyword: String!, $limit: Int!, $searched: String!, $num: Int!) {
+  search(target: $target, keyword:$keyword, limit: $limit, searched: $searched, num: $num) {
+    ...on UserPagination {
+      pageInfo {
+        ...PaginationFragment
+      }
+      nodes {
+        ...UserFragment
+      }
+    }
+    ...on WorkPagination {
+      pageInfo {
+        ...PaginationFragment
+      }
+      nodes {
+        ...WorkFragment
+      }
+    }
+  }
+}

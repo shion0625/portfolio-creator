@@ -77,8 +77,8 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 		Count:            int(numRows),
 		TotalCount:       int(totalCount),
 	}
-
 	userPagination := domain.UserPagination{
+		Type:     domain.ModelUser,
 		PageInfo: &pageInfo,
 		Nodes:    users,
 	}
@@ -106,6 +106,7 @@ func (u UserUseCase) Search(ctx context.Context, keyword string, limit int, sear
 		TotalCount:       int(totalCount),
 	}
 	workPagination := domain.UserPagination{
+		Type:     domain.ModelUser,
 		PageInfo: &pageInfo,
 		Nodes:    users,
 	}

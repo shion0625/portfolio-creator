@@ -213,6 +213,19 @@ export type WorkPagination = Pagination & {
 
 export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
 
+export type SearchQueryVariables = Exact<{
+  target: Scalars['String'];
+  keyword: Scalars['String'];
+  limit: Scalars['Int'];
+  searched: Scalars['String'];
+  num: Scalars['Int'];
+}>;
+
+
+export type SearchQuery = { search: { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null }> } | { pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work?: number | null, is_delete: boolean }> } };
+
+export type UserFragmentFragment = { id: string, name?: string | null, email?: string | null };
+
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -319,6 +332,13 @@ export const PaginationFragmentFragmentDoc = gql`
   hasPreviousPage
 }
     `;
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  id
+  name
+  email
+}
+    `;
 export const WorkFragmentFragmentDoc = gql`
     fragment WorkFragment on Work {
   id
@@ -337,6 +357,36 @@ export const WorkFragmentFragmentDoc = gql`
   is_delete
 }
     `;
+export const SearchDocument = gql`
+    query Search($target: String!, $keyword: String!, $limit: Int!, $searched: String!, $num: Int!) {
+  search(
+    target: $target
+    keyword: $keyword
+    limit: $limit
+    searched: $searched
+    num: $num
+  ) {
+    ... on UserPagination {
+      pageInfo {
+        ...PaginationFragment
+      }
+      nodes {
+        ...UserFragment
+      }
+    }
+    ... on WorkPagination {
+      pageInfo {
+        ...PaginationFragment
+      }
+      nodes {
+        ...WorkFragment
+      }
+    }
+  }
+}
+    ${PaginationFragmentFragmentDoc}
+${UserFragmentFragmentDoc}
+${WorkFragmentFragmentDoc}`;
 export const GetUserDocument = gql`
     query GetUser($id: ID!) {
   user(id: $id) {
@@ -489,6 +539,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    Search(variables: SearchQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchQuery>(SearchDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Search', 'query');
+    },
     GetUser(variables: GetUserQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserQuery>(GetUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUser', 'query');
     },
