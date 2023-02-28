@@ -6,7 +6,7 @@ import Tab from '@mui/material/Tab'
 import React, { useState } from 'react'
 import { WorkPagination } from '~/components/templates/WorkPagination'
 const SearchTab: React.FC = () => {
-  const [value, setValue] = useState('users')
+  const [value, setValue] = useState('works')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -23,7 +23,7 @@ const SearchTab: React.FC = () => {
         </Box>
         <TabPanel value='users'></TabPanel>
         <TabPanel value='works'>
-          <WorkPagination keyword='10' limit={10} />
+          <WorkPagination keyword='10 3 4' limit={10} />
         </TabPanel>
       </TabContext>
     </Box>
