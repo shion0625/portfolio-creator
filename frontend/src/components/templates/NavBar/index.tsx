@@ -1,4 +1,4 @@
-import { useOnEnterKey } from './hooks'
+import { useOnEnterKey, useProfileMenu, useMobileMenu } from './hooks'
 import {
   AccountCircle,
   Mail as MailIcon,
@@ -8,7 +8,7 @@ import {
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import Link from 'next/link'
-import React, { useContext, useState, MouseEvent, useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import MobileMenu from '~/components/parts/MobileMenu'
 import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
@@ -20,33 +20,17 @@ export default function NavBar() {
   const mobileMenuId = 'menu-mobile'
 
   const colorMode = useContext(ColorModeContext)
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null) //メニューの表示ボタンを押した場所を取得
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null) //モバイルメニューの表示ボタンを押した場所を取得
   const searchElement = useRef(null) //searchAreaの入力DOM要素を取得
 
-  const isMenuOpen = Boolean(anchorEl) //メニューの状態を管理
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl) //モバイルメニューの状態を管理
+  const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => console.log('enter'))
+  const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
 
-  const handleProfileMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleMobileMenuOpen = (event: MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget)
-  }
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null)
-  }
+  const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
 
   const handleMenuClose = () => {
-    setAnchorEl(null)
+    handleProfileMenuClose()
     handleMobileMenuClose()
   }
-
-  const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => console.log('enter'))
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
