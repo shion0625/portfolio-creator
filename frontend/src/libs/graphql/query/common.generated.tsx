@@ -1,68 +1,111 @@
-import * as Types from '../../../models/types';
+import * as Types from '../../../models/types'
+import { UserFragmentFragmentDoc } from './user.generated'
+import { WorkFragmentFragmentDoc } from './work.generated'
+import { gql } from '@apollo/client'
+import * as Apollo from '@apollo/client'
 
-import { gql } from '@apollo/client';
-import { UserFragmentFragmentDoc } from './user.generated';
-import { WorkFragmentFragmentDoc } from './work.generated';
-import * as Apollo from '@apollo/client';
-const defaultOptions = {} as const;
-export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
+const defaultOptions = {} as const
+export type PaginationFragmentFragment = {
+  page: number
+  hasNextPage: boolean
+  count: number
+  totalCount: number
+  paginationLength: number
+  hasPreviousPage: boolean
+}
 
 export type SearchQueryVariables = Types.Exact<{
-  target: Types.Scalars['String'];
-  keyword: Types.Scalars['String'];
-  limit: Types.Scalars['Int'];
-  searched: Types.Scalars['String'];
-  num: Types.Scalars['Int'];
-}>;
+  target: Types.Scalars['String']
+  keyword: Types.Scalars['String']
+  limit: Types.Scalars['Int']
+  searched: Types.Scalars['String']
+  num: Types.Scalars['Int']
+}>
 
-
-export type SearchQuery = { search: { type: Types.Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null }> } | { type: Types.Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, number_of_work?: number | null, is_delete: boolean, user: { id: string, name?: string | null, email?: string | null } }> } };
+export type SearchQuery = {
+  search:
+    | {
+        type: Types.Model
+        pageInfo: {
+          page: number
+          hasNextPage: boolean
+          count: number
+          totalCount: number
+          paginationLength: number
+          hasPreviousPage: boolean
+        }
+        nodes: Array<{ id: string; name?: string | null; email?: string | null }>
+      }
+    | {
+        type: Types.Model
+        pageInfo: {
+          page: number
+          hasNextPage: boolean
+          count: number
+          totalCount: number
+          paginationLength: number
+          hasPreviousPage: boolean
+        }
+        nodes: Array<{
+          id: string
+          title: string
+          summary?: string | null
+          image_url?: string | null
+          duration?: string | null
+          number_of_people?: number | null
+          language?: string | null
+          role?: string | null
+          url?: string | null
+          brief_story?: string | null
+          created_at: any
+          updated_at: any
+          number_of_work?: number | null
+          is_delete: boolean
+          user: { id: string; name?: string | null; email?: string | null }
+        }>
+      }
+}
 
 export const PaginationFragmentFragmentDoc = gql`
-    fragment PaginationFragment on PaginationInfo {
-  page
-  hasNextPage
-  count
-  totalCount
-  paginationLength
-  hasPreviousPage
-}
-    `;
+  fragment PaginationFragment on PaginationInfo {
+    page
+    hasNextPage
+    count
+    totalCount
+    paginationLength
+    hasPreviousPage
+  }
+`
 export const SearchDocument = gql`
-    query Search($target: String!, $keyword: String!, $limit: Int!, $searched: String!, $num: Int!) {
-  search(
-    target: $target
-    keyword: $keyword
-    limit: $limit
-    searched: $searched
-    num: $num
-  ) {
-    ... on UserPagination {
-      type
-      pageInfo {
-        ...PaginationFragment
-      }
-      nodes {
-        ...UserFragment
-      }
-    }
-    ... on WorkPagination {
-      type
-      pageInfo {
-        ...PaginationFragment
-      }
-      nodes {
-        ...WorkFragment
-        user {
+  query Search($target: String!, $keyword: String!, $limit: Int!, $searched: String!, $num: Int!) {
+    search(target: $target, keyword: $keyword, limit: $limit, searched: $searched, num: $num) {
+      ... on UserPagination {
+        type
+        pageInfo {
+          ...PaginationFragment
+        }
+        nodes {
           ...UserFragment
+        }
+      }
+      ... on WorkPagination {
+        type
+        pageInfo {
+          ...PaginationFragment
+        }
+        nodes {
+          ...WorkFragment
+          user {
+            ...UserFragment
+          }
         }
       }
     }
   }
-}
-    ${PaginationFragmentFragmentDoc}
-${UserFragmentFragmentDoc}
-${WorkFragmentFragmentDoc}`;
+  ${PaginationFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
+  ${WorkFragmentFragmentDoc}
+`
 
 /**
  * __useSearchQuery__
@@ -85,13 +128,13 @@ ${WorkFragmentFragmentDoc}`;
  * });
  */
 export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options)
+}
 export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
-        }
-export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
-export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
-export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options)
+}
+export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>
+export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>
+export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>

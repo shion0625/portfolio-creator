@@ -32,14 +32,14 @@ export default function NavBar() {
 
   const onSearchClick = () => {
     if (searchElement.current != null) {
-    console.log('search click', searchElement.current.value)
-    router.push({
-      pathname: '/search',
-      query: {
-        target: checkPath(currentPathName),
-        keyword: searchElement.current.value
-      },
-    })
+      console.log('search click', searchElement.current.value)
+      router.push({
+        pathname: '/search',
+        query: {
+          target: checkPath(currentPathName),
+          keyword: searchElement.current.value,
+        },
+      })
     }
   }
 
@@ -51,12 +51,12 @@ export default function NavBar() {
   const checkPath = (pathName: string): string => {
     const firstPath = pathName.split('/')[1]
     switch (firstPath) {
-      case "users":
-        return "users"
-      case "works":
-        return "works"
+      case 'users':
+        return 'users'
+      case 'works':
+        return 'works'
       default:
-        return "users"
+        return 'users'
     }
   }
 
