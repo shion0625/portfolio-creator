@@ -1,23 +1,23 @@
-import { useSearch } from './hook'
+import { useSearch } from '../hook'
 import { Pagination } from '@mui/material'
-import React, { useState, memo } from 'react'
-import { WorkList } from '~/components/templates/WorkList'
+import React, { memo } from 'react'
+import { UserList } from '~/components/templates/UserList'
 import { Model } from '~/models/types'
 
 type Props = {
   keyword: string
   limit: number
-  page: number,
+  page: number
   setPage: (page: number) => void
 }
 
-export const WorkPagination: React.FC<Props> = memo(({ keyword, limit, page, setPage }): JSX.Element => {
-  const { search } = useSearch(Model.Work, keyword, limit, '2023-02-23 02:30:46.510146', 9999)
+export const UserPagination: React.FC<Props> = memo(({ keyword, limit, page, setPage }): JSX.Element => {
+  const { search } = useSearch(Model.User, keyword, limit, '2023-02-23 02:30:46.510146', 9999)
 
   if (!search) return <div>loading</div>
   return (
     <>
-      <WorkList works={search.nodes} />
+      <UserList users={search.nodes} />
       <Pagination
         size='large'
         count={10} //総ページ数

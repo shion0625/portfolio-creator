@@ -4,7 +4,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import React, { useState } from 'react'
-import { WorkPagination } from '~/components/templates/WorkPagination'
+import { WorkPagination } from '~/components/templates/Pagination/WorkPagination'
 
 const SearchTab: React.FC = () => {
   const [value, setValue] = useState('works')
