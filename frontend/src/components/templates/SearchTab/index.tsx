@@ -3,13 +3,17 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { UserPagination } from '~/components/templates/Pagination/UserPagination'
 import { WorkPagination } from '~/components/templates/Pagination/WorkPagination'
 
 const SearchTab: React.FC = () => {
-  const [value, setValue] = useState('works')
-  const [workPage, setPage] = useState<number>(1)
-
+  const router = useRouter()
+  const { target, keyword } = router.query
+  const [value, setValue] = useState(String(target))
+  const [workPage, setWorkPage] = useState<number>(1)
+  const [userPage, setUserPage] = useState<number>(1)
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
@@ -23,9 +27,11 @@ const SearchTab: React.FC = () => {
             <Tab label='works' value='works' />
           </TabList>
         </Box>
-        <TabPanel value='users'></TabPanel>
+        <TabPanel value='users'>
+          <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} />
+        </TabPanel>
         <TabPanel value='works'>
-          <WorkPagination keyword='10 3 4' limit={10} page={workPage} setPage={setPage} />
+          <WorkPagination keyword={String(keyword)} limit={10} page={workPage} setPage={setWorkPage} />
         </TabPanel>
       </TabContext>
     </Box>
