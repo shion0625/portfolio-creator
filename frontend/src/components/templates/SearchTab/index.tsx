@@ -8,6 +8,7 @@ import { WorkPagination } from '~/components/templates/WorkPagination'
 
 const SearchTab: React.FC = () => {
   const [value, setValue] = useState('works')
+  const [workPage, setPage] = useState<number>(1)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -24,7 +25,7 @@ const SearchTab: React.FC = () => {
         </Box>
         <TabPanel value='users'></TabPanel>
         <TabPanel value='works'>
-          <WorkPagination keyword='10 3 4' limit={10} />
+          <WorkPagination keyword='10 3 4' limit={10} page={workPage} setPage={setPage} />
         </TabPanel>
       </TabContext>
     </Box>

@@ -1,16 +1,17 @@
 import { useSearch } from './hook'
 import { Pagination } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { WorkList } from '~/components/templates/WorkList'
 import { Model } from '~/models/types'
 
 type Props = {
   keyword: string
   limit: number
+  page: number,
+  setPage: (page: number) => void
 }
 
-export const WorkPagination: React.FC<Props> = ({ keyword, limit }): JSX.Element => {
-  const [page, setPage] = useState<number>(1)
+export const WorkPagination: React.FC<Props> = memo(({ keyword, limit, page, setPage }): JSX.Element => {
   const { search } = useSearch(Model.Work, keyword, limit, '2023-02-23 02:30:46.510146', 9999)
 
   if (!search) return <div>loading</div>
@@ -27,4 +28,4 @@ export const WorkPagination: React.FC<Props> = ({ keyword, limit }): JSX.Element
       />
     </>
   )
-}
+})
