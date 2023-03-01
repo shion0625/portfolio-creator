@@ -1,6 +1,6 @@
 import { useGetWorks } from './useGetWorks'
 import { useState, useEffect, useCallback } from 'react'
-import { Work, WorkPagination } from '~/models/types'
+import { Work, WorkPagination, Model } from '~/models/types'
 
 type Variable = { order: 'update'; searched: string; num: number } | { order: 'create'; searched: string; num: number }
 
@@ -21,6 +21,7 @@ let lastData: Work = {
 export const useGetMore = () => {
   const DEFAULT_VOLUMES = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
   const [works, setWorks] = useState<WorkPagination>({
+    type: Model.Work,
     pageInfo: {
       count: 0,
       hasNextPage: true,
@@ -40,6 +41,7 @@ export const useGetMore = () => {
       variables: { limit: DEFAULT_VOLUMES, order: variable.order, searched: variable.searched, num: variable.num },
       onCompleted: (data) => {
         setWorks({
+          type: works.type,
           pageInfo: {
             ...works.pageInfo,
             hasNextPage: data.works.pageInfo.hasNextPage,

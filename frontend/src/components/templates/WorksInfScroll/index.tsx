@@ -4,16 +4,19 @@ import Grid from '@mui/material/Grid'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React, { useEffect, useState } from 'react'
 import { WorkImageCard } from '~/components/parts/WorkImageCard'
-import { useGetMore } from '~/components/templates/WorksInfScroll/hooks/useGetMore'
 
+type Props = {
+  pageInfo: any
+  works: any
+  onScroll: any
+}
 type State = {
   message: string
 }
 
-const WorksInfScroll: React.FC = (): JSX.Element => {
+const WorksInfScroll: React.FC<Props> = ({pageInfo, works, onScroll}): JSX.Element => {
   const parentRef = React.useRef<Element>(null)
   const [state, setState] = useState<State>({ message: '' })
-  const { pageInfo, works, onScroll } = useGetMore()
 
   const rowVirtualizer = useVirtualizer({
     count: pageInfo.hasNextPage ? works.length + 1 : works.length,
