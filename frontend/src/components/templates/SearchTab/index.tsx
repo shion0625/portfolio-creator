@@ -6,7 +6,9 @@ import Tab from '@mui/material/Tab'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { UserPagination } from '~/components/templates/Pagination/UserPagination'
-import { WorkPagination } from '~/components/templates/Pagination/WorkPagination'
+import { useSearch } from '~/components/templates/Pagination/hook'
+import WorksInfScroll from '~/components/templates/WorksInfScroll'
+import { Model } from '~/models/types'
 
 const SearchTab: React.FC = () => {
   const router = useRouter()
@@ -14,10 +16,12 @@ const SearchTab: React.FC = () => {
   const [value, setValue] = useState(String(target))
   const [workPage, setWorkPage] = useState<number>(1)
   const [userPage, setUserPage] = useState<number>(1)
+  const { search } = useSearch(Model.Work, String(keyword), 10, '2023-02-23 02:30:46.510146', 9999)
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
-
+  if (!search) return <>error</>
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
@@ -31,7 +35,7 @@ const SearchTab: React.FC = () => {
           <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} />
         </TabPanel>
         <TabPanel value='works'>
-          <WorkPagination keyword={String(keyword)} limit={10} page={workPage} setPage={setWorkPage} />
+          <WorksInfScroll pageInfo={search.pageInfo} works={search.nodes} onScroll={onScroll} />
         </TabPanel>
       </TabContext>
     </Box>

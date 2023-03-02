@@ -14,7 +14,7 @@ type State = {
   message: string
 }
 
-const WorksInfScroll: React.FC<Props> = ({pageInfo, works, onScroll}): JSX.Element => {
+const WorksInfScroll: React.FC<Props> = ({ pageInfo, works, onScroll }): JSX.Element => {
   const parentRef = React.useRef<Element>(null)
   const [state, setState] = useState<State>({ message: '' })
 
