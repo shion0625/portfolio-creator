@@ -86,13 +86,13 @@ func (u UserUseCase) GetAll(ctx context.Context, limit int, offset int) (*domain
 	return &userPagination, nil
 }
 
-func (u UserUseCase) Search(ctx context.Context, keyword string, limit int, searched string, num int) (*domain.UserPagination, error) {
+func (u UserUseCase) Search(ctx context.Context, keyword string, sortBy domain.SortBy, searchedAt string, num int, limit int) (*domain.UserPagination, error) {
 	totalCount, err := u.userRepo.GetTotalCount(ctx, &keyword)
 	if err != nil {
 		return nil, fmt.Errorf("Search - GetTotalCount - usecase: %w", err)
 	}
 
-	users, numRows, err := u.userRepo.GetByKeyword(ctx, keyword, limit, searched, num)
+	users, numRows, err := u.userRepo.GetByKeyword(ctx, keyword, sortBy, searchedAt, num, limit)
 	if err != nil {
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}

@@ -30,3 +30,8 @@ enum Model {
   user
   work
 }
+
+enum SortBy {
+  create
+  update
+}

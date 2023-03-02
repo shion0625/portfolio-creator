@@ -87,7 +87,7 @@ func (g *UserRepository) GetByIDs(ids []string) ([]*domain.User, error) {
 	return users, nil
 }
 
-func (g *UserRepository) GetByKeyword(ctx context.Context, keyword string, limit int, searched string, num int) ([]*domain.User, int64, error) {
+func (g *UserRepository) GetByKeyword(ctx context.Context, keyword string, sortBy domain.SortBy, searchedAt string, num int, limit int) ([]*domain.User, int64, error) {
 	var users []*domain.User
 
 	columns := []string{"name"}

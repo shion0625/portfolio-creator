@@ -196,3 +196,44 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 func (e Role) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+type SortBy string
+
+const (
+	SortByCreate SortBy = "create"
+	SortByUpdate SortBy = "update"
+)
+
+var AllSortBy = []SortBy{
+	SortByCreate,
+	SortByUpdate,
+}
+
+func (e SortBy) IsValid() bool {
+	switch e {
+	case SortByCreate, SortByUpdate:
+		return true
+	}
+	return false
+}
+
+func (e SortBy) String() string {
+	return string(e)
+}
+
+func (e *SortBy) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SortBy(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SortBy", str)
+	}
+	return nil
+}
+
+func (e SortBy) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}

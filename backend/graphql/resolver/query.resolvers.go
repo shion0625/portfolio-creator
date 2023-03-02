@@ -80,8 +80,8 @@ func (r *queryResolver) Work(ctx context.Context, id string) (*domain.Work, erro
 }
 
 // Works is the resolver for the works field.
-func (r *queryResolver) Works(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error) {
-	workPagination, err := r.workUseCase.GetAll(ctx, limit, order, searched, num)
+func (r *queryResolver) Works(ctx context.Context, sortBy domain.SortBy, searchedAt string, num int, limit int) (*domain.WorkPagination, error) {
+	workPagination, err := r.workUseCase.GetAll(ctx, sortBy, searchedAt, num, limit)
 	if !errors.Is(err, nil) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, &gqlerror.Error{
@@ -95,31 +95,15 @@ func (r *queryResolver) Works(ctx context.Context, limit int, order string, sear
 	return workPagination, nil
 }
 
-// WorkNodes is the resolver for the workNodes field.
-func (r *queryResolver) WorkNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error) {
-	workNodes, err := r.workUseCase.GetAllNodes(ctx, limit, order, searched, num)
-	if !errors.Is(err, nil) {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, &gqlerror.Error{
-				Message: "works not found",
-			}
-		}
-
-		return nil, fmt.Errorf("Works - queryResolver: %w", err)
-	}
-
-	return workNodes, nil
-}
-
 // Search is the resolver for the search field.
-func (r *queryResolver) Search(ctx context.Context, target string, keyword string, limit int, searched string, num int) (domain.ModelPagination, error) {
+func (r *queryResolver) Search(ctx context.Context, target string, keyword string, sortBy domain.SortBy, searchedAt string, num int, limit int) (domain.ModelPagination, error) {
 	var result domain.ModelPagination
 
 	var err error
 
 	switch target {
 	case "user":
-		result, err = r.userUseCase.Search(ctx, keyword, limit, searched, num)
+		result, err = r.userUseCase.Search(ctx, keyword, sortBy, searchedAt, num, limit)
 		if !errors.Is(err, nil) {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return nil, &gqlerror.Error{
@@ -130,7 +114,7 @@ func (r *queryResolver) Search(ctx context.Context, target string, keyword strin
 			return result, nil
 		}
 	case "work":
-		result, err = r.workUseCase.Search(ctx, keyword, limit, searched, num)
+		result, err = r.workUseCase.Search(ctx, keyword, sortBy, searchedAt, num, limit)
 		if !errors.Is(err, nil) {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return nil, &gqlerror.Error{
