@@ -29,32 +29,22 @@ query GetWork($id: ID!) {
   }
 }
 
-query GetWorks($limit: Int!, $order: String! ,$searched:  String!, $num: Int!) {
-  works(limit: $limit, order: $order, searched: $searched, num: $num){
-    pageInfo{
-      page,
-      paginationLength,
-      hasPreviousPage,
-      hasNextPage,
-      count,
+query GetWorks($sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
+  works(sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
+    pageInfo {
+      page
+      paginationLength
+      hasPreviousPage
+      hasNextPage
+      count
       totalCount
-    },
-    nodes{
-    ...WorkFragment
-      user{
+    }
+    nodes {
+      ...WorkFragment
+      user {
         id
         name
       }
-    }
-  }
-}
-
-query GetWorkNodes($limit: Int!, $order:String! ,$searched: String!, $num: Int!) {
-  workNodes(limit: $limit, order: $order, searched: $searched, num: $num) {
-    ...WorkFragment
-    user {
-      id
-      name
     }
   }
 }

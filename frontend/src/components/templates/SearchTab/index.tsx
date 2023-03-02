@@ -4,24 +4,42 @@ import TabPanel from '@mui/lab/TabPanel'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { UserPagination } from '~/components/templates/Pagination/UserPagination'
-import { useSearch } from '~/components/templates/Pagination/hook'
+import React, { useState, useEffect } from 'react'
 import WorksInfScroll from '~/components/templates/WorksInfScroll'
-import { Model } from '~/models/types'
+import { SortBy } from '~/models/types'
+import {useFetchSearchWorks} from './hook/useFetchSearchWorks'
 
 const SearchTab: React.FC = () => {
   const router = useRouter()
   const { target, keyword } = router.query
+  const [isReady, setIsReady] = useState(false);
   const [value, setValue] = useState(String(target))
-  const [workPage, setWorkPage] = useState<number>(1)
-  const [userPage, setUserPage] = useState<number>(1)
-  const { search } = useSearch(Model.Work, String(keyword), 10, '2023-02-23 02:30:46.510146', 9999)
+  const { pageInfo, works, onScroll } = useFetchSearchWorks(SortBy.Update, String(keyword))
+
+  useEffect(() => {
+    if (router.isReady) {
+      setValue(String(target));
+    }
+  }, [router, target]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      setIsReady(true);
+    }
+  }, [router]);
+
+  if (!isReady) {
+    return <>loading...</>;
+  }
+
+  if (!works) {
+    return <>error</>;
+  }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
-  if (!search) return <>error</>
+
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
@@ -32,10 +50,11 @@ const SearchTab: React.FC = () => {
           </TabList>
         </Box>
         <TabPanel value='users'>
-          <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} />
+          <div>f</div>
+          {/* <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} /> */}
         </TabPanel>
         <TabPanel value='works'>
-          <WorksInfScroll pageInfo={search.pageInfo} works={search.nodes} onScroll={onScroll} />
+          <WorksInfScroll pageInfo={pageInfo} works={works} onScroll={onScroll} />
         </TabPanel>
       </TabContext>
     </Box>

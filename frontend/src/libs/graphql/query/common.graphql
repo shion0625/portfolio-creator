@@ -9,8 +9,8 @@ fragment PaginationFragment on PaginationInfo {
   hasPreviousPage
 }
 
-query Search($target: String!, $keyword: String!, $limit: Int!, $searched: String!, $num: Int!) {
-  search(target: $target, keyword: $keyword, limit: $limit, searched: $searched, num: $num) {
+query Search($target: String!, $keyword: String! , $sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
+  search(target: $target, keyword: $keyword, sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
     ... on UserPagination {
       type
       pageInfo {
