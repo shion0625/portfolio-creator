@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import ImageCard from '~/components/templates/ImageCard'
-import { WorkFormContext } from '~/context/workForm'
+import { WorkFormContext } from '~/stores/workForm'
 import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/Work'
 import { GetUserAuthQuery } from '~/models/client'
 

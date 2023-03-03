@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import SearchWorks from '~/components/templates/SearchWorks';
 import { useRecoilState } from 'recoil';
-import { currentTabState } from '~/context/CurrentTabContext'
+import { currentTabState } from '~/stores/CurrentTab'
 
 const SearchTab: React.FC = () => {
   const router = useRouter();

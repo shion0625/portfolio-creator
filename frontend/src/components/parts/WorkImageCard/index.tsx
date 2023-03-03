@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import React from 'react'
 import TransitionsModal from '~/components/parts/TransitionsModal'
 import WorkItem from '~/components/templates/WorkItem'
-import { WorkContext } from '~/context/WorkView'
+import { WorkContext } from '~/stores/WorkView'
 import { Work } from '~/models/types'
 
 type Props = {

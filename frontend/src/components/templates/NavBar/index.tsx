@@ -14,9 +14,9 @@ import MobileMenu from '~/components/parts/MobileMenu'
 import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
-import ColorModeContext from '~/context/ColorModeContext'
+import ColorModeContext from '~/stores/ColorModeContext'
 import { useRecoilState } from 'recoil';
-import { currentTabState } from '~/context/CurrentTabContext'
+import { currentTabState } from '~/stores/CurrentTab'
 
 export default function NavBar() {
   const router = useRouter()

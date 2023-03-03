@@ -24,7 +24,7 @@
       "~/apollo/*": ["src/libs/apollo/*"],
       "~/libs/*": ["src/libs/*"],
       "~/utils/*": ["src/utils/*"],
-      "~/context/*": ["src/context/*"],
+      "~/stores/*": ["src/stores/*"],
       "~/constant/*": ["src/constant/*"],
       "~/hooks/*": ["src/hooks/*"]
     }

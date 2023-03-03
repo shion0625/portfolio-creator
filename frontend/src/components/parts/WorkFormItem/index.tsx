@@ -4,7 +4,7 @@ import { ErrorMessage } from '@hookform/error-message'
 import { Box, TextField } from '@mui/material'
 import React, { useContext } from 'react'
 import NestedFieldArray from '~/components/templates/NestedFieldList'
-import { WorkFormContext } from '~/context/workForm'
+import { WorkFormContext } from '~/stores/workForm'
 
 const WorkFormItem: React.FC = () => {
   const { register, control, workIndex, errors } = useContext(WorkFormContext)

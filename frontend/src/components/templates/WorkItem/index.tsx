@@ -4,7 +4,7 @@ import { Box, Chip, Link as MuiLink } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React, { useContext } from 'react'
 import { Color } from '~/constant/constant'
-import { WorkContext } from '~/context/WorkView'
+import { WorkContext } from '~/stores/WorkView'
 
 const WorkItem: React.FC = () => {
   const { work } = useContext(WorkContext)
