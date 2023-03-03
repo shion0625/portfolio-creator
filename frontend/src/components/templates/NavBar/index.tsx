@@ -10,12 +10,12 @@ import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/materi
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useContext, useRef } from 'react'
+import { useRecoilState } from 'recoil'
 import MobileMenu from '~/components/parts/MobileMenu'
 import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
 import ColorModeContext from '~/stores/ColorModeContext'
-import { useRecoilState } from 'recoil';
 import { currentTabState } from '~/stores/CurrentTab'
 
 export default function NavBar() {
@@ -28,7 +28,7 @@ export default function NavBar() {
   const mobileMenuId = 'menu-mobile'
 
   const colorMode = useContext(ColorModeContext)
-  const [currentTab] = useRecoilState(currentTabState); // Recoil状態を使用する
+  const [currentTab] = useRecoilState(currentTabState) // Recoil状態を使用する
 
   const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => onSearchClick())
   const searchElement = useRef<HTMLInputElement>(null) //searchAreaの入力DOM要素を取得

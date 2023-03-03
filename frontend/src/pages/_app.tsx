@@ -5,11 +5,11 @@ import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import { useState } from 'react'
-import ColorModeContext from '~/stores/ColorModeContext'
+import { RecoilRoot } from 'recoil'
 import { initializeApollo } from '~/libs/apollo/apolloClient'
+import ColorModeContext from '~/stores/ColorModeContext'
 import '~/styles/globals.css'
 import { primary, secondary, error, warning, info, success } from '~/styles/theme'
-import { RecoilRoot } from 'recoil';
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -90,7 +90,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
             </SessionProvider>
           </ApolloProvider>
         </ThemeProvider>
-        </ColorModeContext.Provider>
+      </ColorModeContext.Provider>
     </RecoilRoot>
   )
 }

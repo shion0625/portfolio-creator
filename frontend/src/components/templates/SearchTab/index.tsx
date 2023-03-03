@@ -1,36 +1,36 @@
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
-import SearchWorks from '~/components/templates/SearchWorks';
-import { useRecoilState } from 'recoil';
+import TabContext from '@mui/lab/TabContext'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
+import Box from '@mui/material/Box'
+import Tab from '@mui/material/Tab'
+import { useRouter } from 'next/router'
+import React, { useState, useEffect } from 'react'
+import { useRecoilState } from 'recoil'
+import SearchWorks from '~/components/templates/SearchWorks'
 import { currentTabState } from '~/stores/CurrentTab'
 
 const SearchTab: React.FC = () => {
-  const router = useRouter();
-  const [isReady, setIsReady] = useState(false);
-  const [currentTab, setCurrentTab] = useRecoilState(currentTabState); // Recoil状態を使用する
+  const router = useRouter()
+  const [isReady, setIsReady] = useState(false)
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState) // Recoil状態を使用する
 
-  const { keyword } = router.query;
+  const { keyword } = router.query
 
   useEffect(() => {
     if (router.isReady) {
-      setCurrentTab(String(router.query.target));
-      setIsReady(true);
+      setCurrentTab(String(router.query.target))
+      setIsReady(true)
     }
-  }, [router]);
+  }, [router])
 
   if (!isReady) {
-    return <>loading...</>;
+    return <>loading...</>
   }
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setCurrentTab(newValue);
+    setCurrentTab(newValue)
     console.log(currentTab)
-  };
+  }
 
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -50,7 +50,7 @@ const SearchTab: React.FC = () => {
         </TabPanel>
       </TabContext>
     </Box>
-  );
-};
+  )
+}
 
-export default SearchTab;
+export default SearchTab
