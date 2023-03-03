@@ -47,8 +47,8 @@ export const useFetchSearchWorks = (sortBy: SortBy, keyword: string): UseGetMore
   const { search, searchData } = useSearch(
     Model.Work,
     keyword,
-    SortBy.Create,
-    '2023-02-23 02:30:46.510146',
+    sortBy,
+    CURRENT_TIME,
     9999,
     DEFAULT_VOLUMES,
   )
