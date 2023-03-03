@@ -9,12 +9,11 @@ declare module 'next-auth' {
   }
 }
 
+// interface Session {
+//   user: User | JWT
+//   accessToken: JWT
+// }
 
-  // interface Session {
-  //   user: User | JWT
-  //   accessToken: JWT
-  // }
-
-  // interface User extends DefaultUser {
-  //   id?: string | null
-  // }
+// interface User extends DefaultUser {
+//   id?: string | null
+// }

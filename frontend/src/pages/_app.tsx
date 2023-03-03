@@ -9,6 +9,7 @@ import ColorModeContext from '~/context/ColorModeContext'
 import { initializeApollo } from '~/libs/apollo/apolloClient'
 import '~/styles/globals.css'
 import { primary, secondary, error, warning, info, success } from '~/styles/theme'
+import { RecoilRoot } from 'recoil';
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -80,15 +81,17 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   })
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <ApolloProvider client={client}>
-          <SessionProvider session={pageProps.session}>
-            <Component {...pageProps} />
-          </SessionProvider>
-        </ApolloProvider>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <RecoilRoot>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <ApolloProvider client={client}>
+            <SessionProvider session={pageProps.session}>
+              <Component {...pageProps} />
+            </SessionProvider>
+          </ApolloProvider>
+        </ThemeProvider>
+        </ColorModeContext.Provider>
+    </RecoilRoot>
   )
 }
 

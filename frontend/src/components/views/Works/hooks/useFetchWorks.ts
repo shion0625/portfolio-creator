@@ -1,6 +1,6 @@
 import { useGetWorks } from './useGetWorks'
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Work, WorkPagination, Model, SortBy} from '~/models/types'
+import { Work, WorkPagination, Model, SortBy } from '~/models/types'
 
 type GetWorksParams = {
   variables: {

@@ -10,7 +10,7 @@ type GetWorksParams = {
     searchedAt: string
     num: number
   }
-  onCompleted: (data: { search: WorkPagination } ) => void
+  onCompleted: (data: { search: WorkPagination }) => void
 }
 
 type UseGetMoreResult = {
@@ -44,7 +44,14 @@ export const useFetchSearchWorks = (sortBy: SortBy, keyword: string): UseGetMore
   })
   const lastDataRef = useRef<Work | undefined>(undefined)
 
-  const { search, searchData } = useSearch(Model.Work, keyword, SortBy.Create, '2023-02-23 02:30:46.510146', 9999, DEFAULT_VOLUMES)
+  const { search, searchData } = useSearch(
+    Model.Work,
+    keyword,
+    SortBy.Create,
+    '2023-02-23 02:30:46.510146',
+    9999,
+    DEFAULT_VOLUMES,
+  )
 
   useEffect(() => {
     search({
@@ -59,9 +66,9 @@ export const useFetchSearchWorks = (sortBy: SortBy, keyword: string): UseGetMore
             },
             nodes: [...prev.nodes, ...searchData.nodes],
           }))
-      if (searchData.nodes.length !== 0) {
-        lastDataRef.current = searchData.nodes[searchData.nodes.length -1];
-        }
+          if (searchData.nodes.length !== 0) {
+            lastDataRef.current = searchData.nodes[searchData.nodes.length - 1]
+          }
         }
       },
     })
@@ -83,6 +90,6 @@ export const useFetchSearchWorks = (sortBy: SortBy, keyword: string): UseGetMore
   return {
     pageInfo: works.pageInfo,
     works: works.nodes,
-    onScroll
+    onScroll,
   }
 }

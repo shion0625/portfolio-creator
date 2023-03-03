@@ -15,6 +15,8 @@ import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
 import ColorModeContext from '~/context/ColorModeContext'
+import { useRecoilState } from 'recoil';
+import { currentTabState } from '~/context/CurrentTabContext'
 
 export default function NavBar() {
   const router = useRouter()
@@ -26,13 +28,14 @@ export default function NavBar() {
   const mobileMenuId = 'menu-mobile'
 
   const colorMode = useContext(ColorModeContext)
+  const [currentTab] = useRecoilState(currentTabState); // Recoil状態を使用する
 
   const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => onSearchClick())
   const searchElement = useRef<HTMLInputElement>(null) //searchAreaの入力DOM要素を取得
 
   const onSearchClick = () => {
     if (searchElement.current != null) {
-      console.log('search click', searchElement.current.value)
+      console.log('search click', checkPath(currentPathName))
       router.push({
         pathname: '/search',
         query: {
@@ -55,8 +58,10 @@ export default function NavBar() {
         return 'users'
       case 'works':
         return 'works'
+      case 'search':
+        return currentTab
       default:
-        return 'users'
+        return 'works'
     }
   }
 

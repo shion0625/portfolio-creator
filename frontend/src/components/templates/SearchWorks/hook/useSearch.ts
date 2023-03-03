@@ -4,7 +4,7 @@ import { WorkPagination, UserPagination, Model, SortBy } from '~/models/types'
 
 export interface SearchResult<T extends Model> {
   search: LazyQueryExecFunction<SearchQuery, OperationVariables>
-  searchData: (T extends Model.Work ? WorkPagination : UserPagination)|undefined
+  searchData: (T extends Model.Work ? WorkPagination : UserPagination) | undefined
 }
 
 export const useSearch = <T extends Model>(

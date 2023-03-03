@@ -6,33 +6,35 @@ import Tab from '@mui/material/Tab';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import SearchWorks from '~/components/templates/SearchWorks';
-
-type Query = {
-  target?: string;
-  keyword?: string;
-};
+import { useRecoilState } from 'recoil';
+import { currentTabState } from '~/context/CurrentTabContext'
 
 const SearchTab: React.FC = () => {
   const router = useRouter();
-  const [query, setQuery] = useState<Query>(router.query);
   const [isReady, setIsReady] = useState(false);
+  const [currentTab, setCurrentTab] = useRecoilState(currentTabState); // Recoil状態を使用する
+
+  const { keyword } = router.query;
 
   useEffect(() => {
-    setIsReady(router.isReady);
-    setQuery(router.query);
+    if (router.isReady) {
+      setCurrentTab(String(router.query.target));
+      setIsReady(true);
+    }
   }, [router]);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setQuery({ ...query, target: newValue });
-  };
 
   if (!isReady) {
     return <>loading...</>;
   }
 
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setCurrentTab(newValue);
+    console.log(currentTab)
+  };
+
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
-      <TabContext value={query.target ?? 'works'}>
+      <TabContext value={currentTab}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label='tab'>
             <Tab label='users' value='users' />
@@ -41,10 +43,10 @@ const SearchTab: React.FC = () => {
         </Box>
         <TabPanel value='users'>
           <div>f</div>
-          {/* <UserPagination keyword={query.keyword} limit={10} page={userPage} setPage={setUserPage} /> */}
+          {/* <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} /> */}
         </TabPanel>
         <TabPanel value='works'>
-          <SearchWorks keyword={query.keyword ?? ''} />
+          <SearchWorks keyword={String(keyword)} />
         </TabPanel>
       </TabContext>
     </Box>
