@@ -1,9 +1,6 @@
 import { useFetchSearchWorks } from './hook/useFetchSearchWorks'
-import { useSearch } from './hook/useSearch'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import WorksInfScroll from '~/components/templates/WorksInfScroll'
-import { SearchQuery, SearchDocument } from '~/models/client'
 import { Model, SortBy } from '~/models/types'
 
 type Props = {
