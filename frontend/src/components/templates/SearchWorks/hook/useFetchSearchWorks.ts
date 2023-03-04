@@ -12,6 +12,17 @@ type UseFetchSearchWorks<T extends Model> = {
 
 const DEFAULT_VOLUMES: number = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
 const CURRENT_TIME: string = new Date().toISOString()
+const INIT_SEARCH_DATA = {
+  pageInfo: {
+  count: 0,
+  hasNextPage: true,
+  hasPreviousPage: false,
+  page: 0,
+  paginationLength: 0,
+  totalCount: 0,
+},
+nodes: [],
+}
 
 export const useFetchSearchWorks = <T extends Model>(
   target: T,
@@ -21,16 +32,9 @@ export const useFetchSearchWorks = <T extends Model>(
   //初期データ
   const [searchData, setSearchData] = useState<SearchDataState<T>>(() => ({
     type: target,
-    pageInfo: {
-      count: 0,
-      hasNextPage: true,
-      hasPreviousPage: false,
-      page: 0,
-      paginationLength: 0,
-      totalCount: 0,
-    },
-    nodes: [],
+    ...INIT_SEARCH_DATA
   }))
+
   //初期のuseSearchの引数
   const [variables, setVariable] = useState<Variables<T>>({
     target,
@@ -47,31 +51,24 @@ export const useFetchSearchWorks = <T extends Model>(
 
   //keywordが変更になった際にデータを
   useDidUpdateEffect(() => {
+    //searchDataを初期値に変更
     setSearchData((prev) => ({
       ...prev,
-      pageInfo: {
-        count: 0,
-        hasNextPage: true,
-        hasPreviousPage: false,
-        page: 0,
-        paginationLength: 0,
-        totalCount: 0,
-      },
-      nodes: [],
+      ...INIT_SEARCH_DATA
     }))
+    //variableを初期値に変更
     setVariable((prev) => ({
       ...prev,
       keyword,
       searchedAt: CURRENT_TIME,
       num: 9999,
-      limit: DEFAULT_VOLUMES,
     }))
   }, [keyword])
 
   //variablesが変更になった時だけrefetchが発火する
   useDidUpdateEffect(() => {
     //variablesを変更した後に発火し、更新された変数でデータの取得
-    refetch({ variables })
+    refetch(variables)
   }, [variables])
 
   //lastDataRef.currentをvariablesに渡す。
@@ -82,7 +79,6 @@ export const useFetchSearchWorks = <T extends Model>(
         ...prev,
         searchedAt: lastData.created_at,
         num: lastData.serial_number,
-        limit: DEFAULT_VOLUMES,
       }))
     }
   }, [])
