@@ -6,7 +6,7 @@ import Tab from '@mui/material/Tab'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { useRecoilState } from 'recoil'
-import SearchWorks from '~/components/templates/SearchWorks'
+import SearchInfScrollWorks from '~/components/templates/SearchInfScroll/Works'
 import { currentTabState } from '~/stores/CurrentTab'
 
 const SearchTab: React.FC = () => {
@@ -46,7 +46,7 @@ const SearchTab: React.FC = () => {
           {/* <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} /> */}
         </TabPanel>
         <TabPanel value='works'>
-          <SearchWorks keyword={String(keyword)} />
+          <SearchInfScrollWorks keyword={String(keyword)} />
         </TabPanel>
       </TabContext>
     </Box>

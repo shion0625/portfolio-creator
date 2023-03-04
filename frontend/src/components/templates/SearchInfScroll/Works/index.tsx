@@ -1,4 +1,4 @@
-import { useFetchSearchWorks } from './hook/useFetchSearchWorks'
+import { useFetchSearchWorks } from '../hook/useFetchSearchWorks'
 import React from 'react'
 import WorksInfScroll from '~/components/templates/WorksInfScroll'
 import { Model, SortBy } from '~/models/types'
@@ -7,10 +7,10 @@ type Props = {
   keyword: string
 }
 
-const SearchWorks: React.FC<Props> = ({ keyword }) => {
+const SearchInfScrollWorks: React.FC<Props> = ({ keyword }) => {
   const { searchData, onScroll } = useFetchSearchWorks(Model.Work, SortBy.Update, String(keyword))
 
   return <WorksInfScroll pageInfo={searchData.pageInfo} works={searchData.nodes} onScroll={onScroll} />
 }
 
-export default SearchWorks
+export default SearchInfScrollWorks
