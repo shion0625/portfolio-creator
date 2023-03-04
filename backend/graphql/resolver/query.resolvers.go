@@ -112,26 +112,6 @@ func (r *queryResolver) Search(ctx context.Context, target string, keyword strin
 		return result, nil
 	case "work":
 		result, err := r.workUseCase.Search(ctx, keyword, sortBy, searchedAt, num, limit)
-		fmt.Printf("Type: %s\n", result.Type)
-		fmt.Printf("PageInfo: %#v\n", result.PageInfo)
-		for i, node := range result.Nodes {
-			fmt.Printf("Node %d:\n", i)
-			fmt.Printf("  ID: %s\n", node.ID)
-			fmt.Printf("  Title: %s\n", node.Title)
-			fmt.Printf("  Summary: %v\n", node.Summary)
-			fmt.Printf("  ImageURL: %v\n", node.ImageURL)
-			fmt.Printf("  Duration: %v\n", node.Duration)
-			fmt.Printf("  NumberOfPeople: %v\n", node.NumberOfPeople)
-			fmt.Printf("  Language: %v\n", node.Language)
-			fmt.Printf("  Role: %v\n", node.Role)
-			fmt.Printf("  URL: %v\n", node.URL)
-			fmt.Printf("  BriefStory: %v\n", node.BriefStory)
-			fmt.Printf("  CreatedAt: %s\n", node.CreatedAt)
-			fmt.Printf("  UpdatedAt: %s\n", node.UpdatedAt)
-			fmt.Printf("  IsDelete: %v\n", node.IsDelete)
-			fmt.Printf("  UserID: %s\n", node.UserID)
-			fmt.Printf("  SerialNumber: %d\n", node.SerialNumber)
-		}
 		if !errors.Is(err, nil) {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return nil, &gqlerror.Error{
