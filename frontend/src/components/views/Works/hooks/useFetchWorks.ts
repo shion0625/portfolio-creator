@@ -47,21 +47,21 @@ export const useFetchWorks = (sortBy: SortBy): UseGetMoreResult => {
   useEffect(() => {
     getWorks({
       variables: { ...variable },
-      onCompleted: (data) => {
-        setWorks((prev) => ({
-          ...prev,
-          pageInfo: {
-            ...prev.pageInfo,
-            hasNextPage: data.works.pageInfo.hasNextPage,
-          },
-          nodes: [...prev.nodes, ...data.works.nodes],
-        }))
-        if (data.works.nodes.length !== 0) {
-          lastDataRef.current = data.works.nodes.slice(-1)[0]
-        }
-      },
+      // onCompleted: (data) => {
+      //   setWorks((prev) => ({
+      //     ...prev,
+      //     pageInfo: {
+      //       ...prev.pageInfo,
+      //       hasNextPage: data.works.pageInfo.hasNextPage,
+      //     },
+      //     nodes: [...prev.nodes, ...data.works.nodes],
+      //   }))
+      //   if (data.works.nodes.length !== 0) {
+      //     lastDataRef.current = data.works.nodes.slice(-1)[0]
+      //   }
+      // },
     })
-  }, [getWorks, variable])
+  }, [variable])
 
   const onScroll = useCallback((): void => {
     const lastData = lastDataRef.current
@@ -69,7 +69,7 @@ export const useFetchWorks = (sortBy: SortBy): UseGetMoreResult => {
       setVariable({
         sortBy,
         searchedAt: lastData.created_at,
-        num: lastData.number_of_work,
+        num: lastData.serial_number,
         limit: DEFAULT_VOLUMES,
       })
     }

@@ -5,19 +5,20 @@ fragment UserFragment on User {
   id
   name
   email
+  created_at
+  updated_at
+  serial_number
 }
 
 query GetUser($id: ID!) {
   user(id: $id) {
-    id
-    name
-    email
-    works{
-      pageInfo{
+    ...UserFragment
+    works {
+      pageInfo {
         ...PaginationFragment
       }
-      nodes{
-      ...WorkFragment
+      nodes {
+        ...WorkFragment
       }
     }
   }
@@ -25,15 +26,13 @@ query GetUser($id: ID!) {
 
 query GetUserAuth($id: ID!) {
   userAuth(id: $id) {
-    id
-    name
-    email
-    works{
-      pageInfo{
+    ...UserFragment
+    works {
+      pageInfo {
         ...PaginationFragment
       }
-      nodes{
-      ...WorkFragment
+      nodes {
+        ...WorkFragment
       }
     }
   }
@@ -41,18 +40,16 @@ query GetUserAuth($id: ID!) {
 
 query GetUsers($limit: Int!, $offset: Int) {
   users(limit: $limit, offset: $offset) {
-    pageInfo{
+    pageInfo {
       ...PaginationFragment
     }
-    nodes{
-      id
-      name
-      works{
-        nodes{
+    nodes {
+      ...UserFragment
+      works {
+        nodes {
           ...WorkFragment
-          user{
-            id
-            name
+          user {
+            ...UserFragment
           }
         }
       }
@@ -62,13 +59,12 @@ query GetUsers($limit: Int!, $offset: Int) {
 
 query GetUsersName($limit: Int!, $offset: Int) {
   users(limit: $limit, offset: $offset) {
-    pageInfo{
+    pageInfo {
       ...PaginationFragment
     }
-    nodes{
-      id
-      name
-        }
+    nodes {
+      ...UserFragment
+    }
   }
 }
 

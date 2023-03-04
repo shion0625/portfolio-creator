@@ -4,30 +4,27 @@ import { WorkPagination, UserPagination, Model, SortBy } from '~/models/types'
 
 export interface SearchResult<T extends Model> {
   search: LazyQueryExecFunction<SearchQuery, OperationVariables>
-  searchData: (T extends Model.Work ? WorkPagination : UserPagination) | undefined
+  searchResult: (T extends Model.Work ? WorkPagination : UserPagination) | undefined
+}
+
+export type Variables<T extends Model>  = {
+  target: T,
+  limit: number
+  sortBy: SortBy
+  keyword: string
+  searchedAt: string
+  num: number
 }
 
 export const useSearch = <T extends Model>(
-  target: T,
-  keyword: string,
-  sortBy: SortBy,
-  searchedAt: string,
-  num: number,
-  limit: number,
+  variables: Variables<T>
 ): SearchResult<T> => {
   const [search, { data, loading, error }] = useLazyQuery<SearchQuery>(SearchDocument, {
-    variables: {
-      target,
-      keyword,
-      sortBy,
-      searchedAt,
-      num,
-      limit,
-    },
+    variables: variables
   })
 
   return {
     search,
-    searchData: data?.search as SearchResult<T>['searchData'],
+    searchResult: data?.search as SearchResult<T>['searchResult'],
   }
 }

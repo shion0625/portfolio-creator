@@ -15,16 +15,14 @@ fragment WorkFragment on Work {
   brief_story
   created_at
   updated_at
-  number_of_work
-  is_delete
+  serial_number
 }
 
 query GetWork($id: ID!) {
   work(id: $id){
     ...WorkFragment
     user{
-      id
-      name
+      ...UserFragment
     }
   }
 }
@@ -32,18 +30,12 @@ query GetWork($id: ID!) {
 query GetWorks($sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
   works(sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
     pageInfo {
-      page
-      paginationLength
-      hasPreviousPage
-      hasNextPage
-      count
-      totalCount
+      ...PaginationFragment
     }
     nodes {
       ...WorkFragment
       user {
-        id
-        name
+        ...UserFragment
       }
     }
   }

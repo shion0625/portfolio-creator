@@ -6,6 +6,9 @@ type User implements Node{
   email: String
   emailVerified: [Timestamp]
   image: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  serial_number: Int!
   works: WorkPagination
   profile: Profile
 }

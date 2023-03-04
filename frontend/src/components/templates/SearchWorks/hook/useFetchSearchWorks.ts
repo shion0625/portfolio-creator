@@ -1,95 +1,84 @@
-import { useSearch, SearchResult } from './useSearch'
+import { useSearch, Variables } from './useSearch'
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Work, WorkPagination, Model, SortBy } from '~/models/types'
+import { Work, User, WorkPagination,UserPagination, Model, SortBy, Node } from '~/models/types'
 
-type GetWorksParams = {
-  variables: {
-    limit: number
-    sortBy: SortBy
-    keyword: string
-    searchedAt: string
-    num: number
-  }
-  onCompleted: (data: { search: WorkPagination }) => void
-}
+type SearchDataState<T extends Model> = (T extends Model.Work ? WorkPagination : UserPagination)
 
-type UseGetMoreResult = {
-  pageInfo: WorkPagination['pageInfo']
-  works: WorkPagination['nodes']
+type SearchNodeDataState<T extends Model> = (T extends Model.Work ? Work : User)
+
+type UseFetchSearchWorks<T extends Model> = {
+  searchData: SearchDataState<T>
   onScroll: () => void
 }
 
 const DEFAULT_VOLUMES: number = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
 const CURRENT_TIME: string = new Date().toISOString()
 
-export const useFetchSearchWorks = (sortBy: SortBy, keyword: string): UseGetMoreResult => {
-  const [works, setWorks] = useState<WorkPagination>({
-    type: Model.Work,
-    pageInfo: {
-      count: 0,
-      hasNextPage: true,
-      hasPreviousPage: false,
-      page: 0,
-      paginationLength: 0,
-      totalCount: 0,
-    },
-    nodes: [],
-  })
-  const [variable, setVariable] = useState<GetWorksParams['variables']>({
+export const useFetchSearchWorks = <T extends Model>(target: T, sortBy: SortBy, keyword: string): UseFetchSearchWorks<T> => {
+  const [searchData, setSearchData] = useState<SearchDataState<T>>(() => ({
+  type: target,
+  pageInfo: {
+    count: 0,
+    hasNextPage: true,
+    hasPreviousPage: false,
+    page: 0,
+    paginationLength: 0,
+    totalCount: 0,
+  },
+  nodes: [],
+}))
+
+  const [variables, setVariable] = useState<Variables<T>>({
+    target,
     keyword,
     sortBy,
     searchedAt: CURRENT_TIME,
     num: 9999,
     limit: DEFAULT_VOLUMES,
   })
-  const lastDataRef = useRef<Work | undefined>(undefined)
+const lastDataRef = useRef<Node | undefined>(undefined)
 
-  const { search, searchData } = useSearch(
-    Model.Work,
-    keyword,
-    sortBy,
-    CURRENT_TIME,
-    9999,
-    DEFAULT_VOLUMES,
+  const { search, searchResult } = useSearch(
+    variables
   )
 
   useEffect(() => {
     search({
-      variables: { ...variable },
+      variables,
       onCompleted: () => {
-        if (searchData) {
-          setWorks((prev) => ({
+        if (searchResult) {
+          setSearchData((prev) => ({
             ...prev,
             pageInfo: {
               ...prev.pageInfo,
-              hasNextPage: searchData.pageInfo.hasNextPage ?? prev.pageInfo.hasNextPage,
+              hasNextPage: searchResult.pageInfo.hasNextPage ?? prev.pageInfo.hasNextPage,
             },
-            nodes: [...prev.nodes, ...searchData.nodes],
+            nodes: [...prev.nodes, ...searchResult.nodes],
           }))
-          if (searchData.nodes.length !== 0) {
-            lastDataRef.current = searchData.nodes[searchData.nodes.length - 1]
+          if (searchResult.nodes.length !== 0) {
+            lastDataRef.current = searchResult.nodes[searchResult.nodes.length - 1]
           }
         }
       },
     })
-  }, [search, variable, searchData])
+  }, [variables])
 
-  const onScroll = useCallback((): void => {
-    const lastData = lastDataRef.current
+
+const onScroll = useCallback((): void => {
+  const lastData = lastDataRef.current as SearchNodeDataState<T>;
     if (lastData) {
-      setVariable({
-        sortBy,
+      setVariable((prev) => ({
+        ...prev,
         searchedAt: lastData.created_at,
-        keyword,
-        num: lastData.number_of_work,
+        num: lastData.serial_number,
         limit: DEFAULT_VOLUMES,
       })
+      )
     }
   }, [])
 
   return {
-    pageInfo: works.pageInfo,
-    works: works.nodes,
+    searchData: searchData,
     onScroll,
   }
 }

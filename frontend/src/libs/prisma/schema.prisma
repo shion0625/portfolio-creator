@@ -58,6 +58,7 @@ model User {
     image         String?
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
+    serialNumber  Int       @default(autoincrement())
     accounts      Account[]
     sessions      Session[]
     @@map("users")

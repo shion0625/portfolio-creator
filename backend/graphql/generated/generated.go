@@ -82,12 +82,15 @@ type ComplexityRoot struct {
 	}
 
 	User struct {
+		CreatedAt     func(childComplexity int) int
 		Email         func(childComplexity int) int
 		EmailVerified func(childComplexity int) int
 		ID            func(childComplexity int) int
 		Image         func(childComplexity int) int
 		Name          func(childComplexity int) int
 		Profile       func(childComplexity int) int
+		SerialNumber  func(childComplexity int) int
+		UpdatedAt     func(childComplexity int) int
 		Works         func(childComplexity int) int
 	}
 
@@ -106,8 +109,8 @@ type ComplexityRoot struct {
 		IsDelete       func(childComplexity int) int
 		Language       func(childComplexity int) int
 		NumberOfPeople func(childComplexity int) int
-		NumberOfWork   func(childComplexity int) int
 		Role           func(childComplexity int) int
+		SerialNumber   func(childComplexity int) int
 		Summary        func(childComplexity int) int
 		Title          func(childComplexity int) int
 		URL            func(childComplexity int) int
@@ -362,6 +365,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Works(childComplexity, args["sortBy"].(domain.SortBy), args["searchedAt"].(string), args["num"].(int), args["limit"].(int)), true
 
+	case "User.created_at":
+		if e.complexity.User.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.User.CreatedAt(childComplexity), true
+
 	case "User.email":
 		if e.complexity.User.Email == nil {
 			break
@@ -403,6 +413,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Profile(childComplexity), true
+
+	case "User.serial_number":
+		if e.complexity.User.SerialNumber == nil {
+			break
+		}
+
+		return e.complexity.User.SerialNumber(childComplexity), true
+
+	case "User.updated_at":
+		if e.complexity.User.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.User.UpdatedAt(childComplexity), true
 
 	case "User.works":
 		if e.complexity.User.Works == nil {
@@ -488,19 +512,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Work.NumberOfPeople(childComplexity), true
 
-	case "Work.number_of_work":
-		if e.complexity.Work.NumberOfWork == nil {
-			break
-		}
-
-		return e.complexity.Work.NumberOfWork(childComplexity), true
-
 	case "Work.role":
 		if e.complexity.Work.Role == nil {
 			break
 		}
 
 		return e.complexity.Work.Role(childComplexity), true
+
+	case "Work.serial_number":
+		if e.complexity.Work.SerialNumber == nil {
+			break
+		}
+
+		return e.complexity.Work.SerialNumber(childComplexity), true
 
 	case "Work.summary":
 		if e.complexity.Work.Summary == nil {
@@ -748,6 +772,9 @@ type User implements Node{
   email: String
   emailVerified: [Timestamp]
   image: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  serial_number: Int!
   works: WorkPagination
   profile: Profile
 }
@@ -774,7 +801,7 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
-  number_of_work: Int!
+  serial_number: Int!
   user: User!
   }
 
@@ -1183,6 +1210,12 @@ func (ec *executionContext) fieldContext_Mutation_updateProfile(ctx context.Cont
 				return ec.fieldContext_User_emailVerified(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_User_serial_number(ctx, field)
 			case "works":
 				return ec.fieldContext_User_works(ctx, field)
 			case "profile":
@@ -1924,6 +1957,12 @@ func (ec *executionContext) fieldContext_Profile_user(ctx context.Context, field
 				return ec.fieldContext_User_emailVerified(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_User_serial_number(ctx, field)
 			case "works":
 				return ec.fieldContext_User_works(ctx, field)
 			case "profile":
@@ -2004,6 +2043,12 @@ func (ec *executionContext) fieldContext_Query_userAuth(ctx context.Context, fie
 				return ec.fieldContext_User_emailVerified(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_User_serial_number(ctx, field)
 			case "works":
 				return ec.fieldContext_User_works(ctx, field)
 			case "profile":
@@ -2075,6 +2120,12 @@ func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field g
 				return ec.fieldContext_User_emailVerified(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_User_serial_number(ctx, field)
 			case "works":
 				return ec.fieldContext_User_works(ctx, field)
 			case "profile":
@@ -2222,8 +2273,8 @@ func (ec *executionContext) fieldContext_Query_work(ctx context.Context, field g
 				return ec.fieldContext_Work_updated_at(ctx, field)
 			case "is_delete":
 				return ec.fieldContext_Work_is_delete(ctx, field)
-			case "number_of_work":
-				return ec.fieldContext_Work_number_of_work(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_Work_serial_number(ctx, field)
 			case "user":
 				return ec.fieldContext_Work_user(ctx, field)
 			}
@@ -2699,6 +2750,138 @@ func (ec *executionContext) fieldContext_User_image(ctx context.Context, field g
 	return fc, nil
 }
 
+func (ec *executionContext) _User_created_at(ctx context.Context, field graphql.CollectedField, obj *domain.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_created_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDateTime2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_created_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _User_updated_at(ctx context.Context, field graphql.CollectedField, obj *domain.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_updated_at(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDateTime2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_updated_at(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _User_serial_number(ctx context.Context, field graphql.CollectedField, obj *domain.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_serial_number(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SerialNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_serial_number(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _User_works(ctx context.Context, field graphql.CollectedField, obj *domain.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_User_works(ctx, field)
 	if err != nil {
@@ -2950,6 +3133,12 @@ func (ec *executionContext) fieldContext_UserPagination_nodes(ctx context.Contex
 				return ec.fieldContext_User_emailVerified(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_User_serial_number(ctx, field)
 			case "works":
 				return ec.fieldContext_User_works(ctx, field)
 			case "profile":
@@ -3509,8 +3698,8 @@ func (ec *executionContext) fieldContext_Work_is_delete(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Work_number_of_work(ctx context.Context, field graphql.CollectedField, obj *domain.Work) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Work_number_of_work(ctx, field)
+func (ec *executionContext) _Work_serial_number(ctx context.Context, field graphql.CollectedField, obj *domain.Work) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Work_serial_number(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3523,7 +3712,7 @@ func (ec *executionContext) _Work_number_of_work(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.NumberOfWork, nil
+		return obj.SerialNumber, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3540,7 +3729,7 @@ func (ec *executionContext) _Work_number_of_work(ctx context.Context, field grap
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Work_number_of_work(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Work_serial_number(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Work",
 		Field:      field,
@@ -3602,6 +3791,12 @@ func (ec *executionContext) fieldContext_Work_user(ctx context.Context, field gr
 				return ec.fieldContext_User_emailVerified(ctx, field)
 			case "image":
 				return ec.fieldContext_User_image(ctx, field)
+			case "created_at":
+				return ec.fieldContext_User_created_at(ctx, field)
+			case "updated_at":
+				return ec.fieldContext_User_updated_at(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_User_serial_number(ctx, field)
 			case "works":
 				return ec.fieldContext_User_works(ctx, field)
 			case "profile":
@@ -3780,8 +3975,8 @@ func (ec *executionContext) fieldContext_WorkPagination_nodes(ctx context.Contex
 				return ec.fieldContext_Work_updated_at(ctx, field)
 			case "is_delete":
 				return ec.fieldContext_Work_is_delete(ctx, field)
-			case "number_of_work":
-				return ec.fieldContext_Work_number_of_work(ctx, field)
+			case "serial_number":
+				return ec.fieldContext_Work_serial_number(ctx, field)
 			case "user":
 				return ec.fieldContext_Work_user(ctx, field)
 			}
@@ -6276,6 +6471,27 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._User_image(ctx, field, obj)
 
+		case "created_at":
+
+			out.Values[i] = ec._User_created_at(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "updated_at":
+
+			out.Values[i] = ec._User_updated_at(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "serial_number":
+
+			out.Values[i] = ec._User_serial_number(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "works":
 			field := field
 
@@ -6440,9 +6656,9 @@ func (ec *executionContext) _Work(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "number_of_work":
+		case "serial_number":
 
-			out.Values[i] = ec._Work_number_of_work(ctx, field, obj)
+			out.Values[i] = ec._Work_serial_number(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
