@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import MuiLink from '~/components/parts/MuiLink'
-import NavBar from '~/components/templates/NavBar'
+import NavBar from '~/components/screens/NavBar'
 import SignIn from '~/components/templates/Signin'
 
 const IndexView: React.FC = () => {

@@ -1,7 +1,7 @@
 import { Search, SearchIconWrapper, StyledInputBase } from './style'
 import SearchIcon from '@mui/icons-material/Search'
 import React from 'react'
-import type { KeyBoardHandler } from '~/components/templates/NavBar/hooks'
+import type { KeyBoardHandler } from '~/components/screens/NavBar/hooks'
 
 type SearchAreaProps = {
   inputElement: React.Ref<HTMLInputElement>

@@ -3,7 +3,7 @@ import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import MuiLink from '~/components/parts/MuiLink'
-import PrimarySearchAppBar from '~/components/templates/NavBar'
+import PrimarySearchAppBar from '~/components/screens/NavBar'
 import { GetUserQuery } from '~/models/client'
 
 type UserDetailProps = GetUserQuery & {
