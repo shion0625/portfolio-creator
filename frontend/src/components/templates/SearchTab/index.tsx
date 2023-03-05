@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import SearchInfScrollWorks from '~/components/templates/SearchInfScroll/Works'
+import SearchInfScrollUsers from '~/components/templates/SearchInfScroll/Users'
 import { currentTabState } from '~/stores/CurrentTab'
 
 const SearchTab: React.FC = () => {
@@ -42,8 +43,7 @@ const SearchTab: React.FC = () => {
           </TabList>
         </Box>
         <TabPanel value='users'>
-          <div>f</div>
-          {/* <UserPagination keyword={String(keyword)} limit={10} page={userPage} setPage={setUserPage} /> */}
+          <SearchInfScrollUsers keyword={String(keyword)} />
         </TabPanel>
         <TabPanel value='works'>
           <SearchInfScrollWorks keyword={String(keyword)} />

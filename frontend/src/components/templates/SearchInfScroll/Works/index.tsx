@@ -1,4 +1,4 @@
-import { useFetchSearchWorks } from '../hook/useFetchSearchWorks'
+import { useFetchSearchWorks } from '../hook'
 import React from 'react'
 import WorksInfScroll from '~/components/templates/WorksInfScroll'
 import { Model, SortBy } from '~/models/types'

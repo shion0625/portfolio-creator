@@ -3,21 +3,21 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React from 'react'
-import { WorkImageCard } from '~/components/parts/WorkImageCard'
+import { UserCard } from '~/components/parts/UserImageCard'
 import { useInfiniteScroll } from '~/utils/hook/useInfiniteScroll';
-import { WorkPagination } from '~/models/types'
+import { UserPagination } from '~/models/types'
 
 type Props = {
-  pageInfo: WorkPagination["pageInfo"]
-  works: WorkPagination["nodes"]
+  pageInfo: UserPagination["pageInfo"]
+  users: UserPagination["nodes"]
   onScroll: () => void
 }
 
-const WorksInfScroll: React.FC<Props> = ({ pageInfo, works, onScroll }): JSX.Element => {
+const UsersInfScroll: React.FC<Props> = ({ pageInfo, users, onScroll }): JSX.Element => {
   const parentRef = React.useRef<Element>(null)
 
   const rowVirtualizer = useVirtualizer({
-    count: pageInfo.hasNextPage ? works.length + 1 : works.length,
+    count: pageInfo.hasNextPage ? users.length + 1 : users.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 100,
     overscan: 12,
@@ -35,11 +35,11 @@ const WorksInfScroll: React.FC<Props> = ({ pageInfo, works, onScroll }): JSX.Ele
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const isLoaderRow = virtualRow.index > works.length - 1
-          const post = works[virtualRow.index]
+          const isLoaderRow = virtualRow.index > users.length - 1
+          const post = users[virtualRow.index]
           return (
-            <Grid item key={'works:' + virtualRow.index} xs={6} md={4} lg={3}>
-              {isLoaderRow ? <CircularProgress key={virtualRow.index} /> : <WorkImageCard work={post} />}
+            <Grid item key={'users:' + virtualRow.index} xs={6} md={4} lg={3}>
+              {isLoaderRow ? <CircularProgress key={virtualRow.index} /> : <UserCard user={post} />}
             </Grid>
           )
         })}
@@ -48,4 +48,4 @@ const WorksInfScroll: React.FC<Props> = ({ pageInfo, works, onScroll }): JSX.Ele
   )
 }
 
-export default WorksInfScroll
+export default UsersInfScroll
