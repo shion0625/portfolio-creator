@@ -3,7 +3,7 @@ import { Item } from './style'
 import { ErrorMessage } from '@hookform/error-message'
 import { Box, TextField } from '@mui/material'
 import React, { useContext } from 'react'
-import NestedFieldArray from '~/components/templates/NestedFieldList'
+import NestedFormArray from '~/components/parts/NestedFormArray'
 import { WorkFormContext } from '~/stores/workForm'
 
 const WorkFormItem: React.FC = () => {
@@ -62,7 +62,7 @@ const WorkFormItem: React.FC = () => {
         />
       </Box>
 
-      <NestedFieldArray
+      <NestedFormArray
         register={register}
         control={control}
         label='開発言語・技術'
@@ -71,7 +71,7 @@ const WorkFormItem: React.FC = () => {
 
       <TextField sx={{ mb: 2 }} fullWidth size='small' label='役割' {...register(`works.${workIndex}.role` as const)} />
 
-      <NestedFieldArray
+      <NestedFormArray
         register={register}
         control={control}
         label='URL'
