@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
 import BasicModal from '~/components/parts/Modal'
-import WorkFormItem from '~/components/parts/WorkFormItem'
+import WorkFormItem from '~/components/screens/WorkFormItem'
 import { WorkFormInterface } from '~/models/Work'
 
 type Props = {
