@@ -65,9 +65,8 @@ const WorkFormItem: React.FC = () => {
       <NestedFieldArray
         register={register}
         control={control}
-        nestIndex={workIndex}
         label='開発言語・技術'
-        choiceItem='languages'
+        targetName={`works[${workIndex}].languages`}
       />
 
       <TextField sx={{ mb: 2 }} fullWidth size='small' label='役割' {...register(`works.${workIndex}.role` as const)} />
@@ -75,11 +74,10 @@ const WorkFormItem: React.FC = () => {
       <NestedFieldArray
         register={register}
         control={control}
-        nestIndex={workIndex}
         label='URL'
         type='url'
         placeholder='https://example.com'
-        choiceItem='urls'
+        targetName={`works[${workIndex}].urls`}
       />
 
       <TextField

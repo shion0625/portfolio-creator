@@ -4,19 +4,18 @@ import React from 'react'
 import { useFieldArray, UseFormRegister, Control } from 'react-hook-form'
 
 type Props = {
+  targetName: string
   register: UseFormRegister<any>
   control: Control<any>
-  nestIndex: number
-  choiceItem: string
   label: string
   type?: React.HTMLInputTypeAttribute | 'text'
   placeholder?: string
 }
 
-const NestedFieldArray: React.FC<Props> = ({ nestIndex, control, register, choiceItem, label, type, placeholder }) => {
+const NestedFieldArray: React.FC<Props> = ({ control, register, targetName, label, type, placeholder }) => {
   const { fields, remove, append } = useFieldArray({
     control,
-    name: `works[${nestIndex}].${choiceItem}`,
+    name: targetName,
   })
 
   const addChoiceItem = () => {
@@ -37,7 +36,7 @@ const NestedFieldArray: React.FC<Props> = ({ nestIndex, control, register, choic
               size='small'
               label={label}
               placeholder={placeholder}
-              {...register(`works[${nestIndex}].${choiceItem}[${index}]`)}
+              {...register(`${targetName}[${index}]`)}
             />
             <IconButton aria-label='delete' onClick={() => removeChoiceItem(index)}>
               <DeleteOutlineIcon />
