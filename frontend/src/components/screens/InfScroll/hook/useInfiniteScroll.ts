@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 
 export const useInfiniteScroll = (onScroll: () => void) => {
   const [isLoading, setIsLoading] = useState(false);
-  console.log("hiii")
-
   useEffect(() => {
     let queue: NodeJS.Timeout
     window.addEventListener('scroll', () => {

@@ -2,7 +2,7 @@ import { useFetchWorks } from './hooks/useFetchWorks'
 import React from 'react'
 import { memo } from 'react'
 import NavBar from '~/components/templates/NavBar'
-import WorksInfScroll from '~/components/templates/WorksInfScroll'
+import WorksInfScroll from '~/components/screens/WorksInfScroll'
 import { SortBy } from '~/models/types'
 
 const WorksView: React.FC = memo(() => {

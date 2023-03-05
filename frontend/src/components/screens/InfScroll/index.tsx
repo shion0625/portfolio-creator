@@ -3,21 +3,21 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React from 'react'
-import { UserCard } from '~/components/parts/UserImageCard'
-import { useInfiniteScroll } from '~/utils/hook/useInfiniteScroll';
-import { UserPagination } from '~/models/types'
+import { useInfiniteScroll } from './hook'
+import { PaginationInfo } from '~/models/types'
 
-type Props = {
-  pageInfo: UserPagination["pageInfo"]
-  users: UserPagination["nodes"]
+type Props<T> = {
+  pageInfo: PaginationInfo
+  items: T[]
+  renderItem: (item: T) => React.ReactNode
   onScroll: () => void
 }
 
-const UsersInfScroll: React.FC<Props> = ({ pageInfo, users, onScroll }): JSX.Element => {
+const InfScroll = <T extends unknown>({ pageInfo, items, renderItem, onScroll }: Props<T>): JSX.Element => {
   const parentRef = React.useRef<Element>(null)
 
   const rowVirtualizer = useVirtualizer({
-    count: pageInfo.hasNextPage ? users.length + 1 : users.length,
+    count: pageInfo.hasNextPage ? items.length + 1 : items.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 100,
     overscan: 12,
@@ -35,11 +35,14 @@ const UsersInfScroll: React.FC<Props> = ({ pageInfo, users, onScroll }): JSX.Ele
         }}
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const isLoaderRow = virtualRow.index > users.length - 1
-          const post = users[virtualRow.index]
+          const isLoaderRow = virtualRow.index > items.length - 1
+          const item = items[virtualRow.index]
           return (
-            <Grid item key={'users:' + virtualRow.index} xs={6} md={4} lg={3}>
-              {isLoaderRow ? <CircularProgress key={virtualRow.index} /> : <UserCard user={post} />}
+            <Grid item key={virtualRow.index} xs={6} md={4} lg={3}>
+              {isLoaderRow ?
+                <CircularProgress /> :
+                renderItem(item)
+              }
             </Grid>
           )
         })}
@@ -48,4 +51,4 @@ const UsersInfScroll: React.FC<Props> = ({ pageInfo, users, onScroll }): JSX.Ele
   )
 }
 
-export default UsersInfScroll
+export default InfScroll

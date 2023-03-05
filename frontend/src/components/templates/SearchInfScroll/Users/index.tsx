@@ -1,6 +1,6 @@
 import { useFetchSearchWorks } from '../hook/useFetchSearchWorks'
 import React from 'react'
-import UsersInfScroll from '~/components/templates/UsersInfScroll'
+import UsersInfScroll from '~/components/screens/UsersInfScroll'
 import { Model, SortBy } from '~/models/types'
 
 type Props = {
