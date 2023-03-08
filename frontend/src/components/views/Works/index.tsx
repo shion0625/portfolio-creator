@@ -1,4 +1,4 @@
-import { useFetchWorks } from './hooks/useFetchWorks'
+import { useFetchWorks } from './hook/useFetchWorks'
 import React from 'react'
 import { memo } from 'react'
 import NavBar from '~/components/screens/NavBar'
@@ -6,11 +6,11 @@ import WorksInfScroll from '~/components/screens/WorksInfScroll'
 import { SortBy } from '~/models/types'
 
 const WorksView: React.FC = memo(() => {
-  const { pageInfo, works, onScroll } = useFetchWorks(SortBy.Update)
+  const { fetchData, onScroll } = useFetchWorks(SortBy.Update)
   return (
     <>
       <NavBar />
-      <WorksInfScroll pageInfo={pageInfo} works={works} onScroll={onScroll} />
+      <WorksInfScroll pageInfo={fetchData.pageInfo} works={fetchData.nodes} onScroll={onScroll} />
     </>
   )
 })

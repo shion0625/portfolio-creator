@@ -39,7 +39,6 @@ export const useSearch = <T extends Model>(
         }))
         if (searchResult.nodes.length !== 0) {
           lastDataRef.current = searchResult.nodes[searchResult.nodes.length - 1]
-          console.log(lastDataRef)
         }
       }
     },
