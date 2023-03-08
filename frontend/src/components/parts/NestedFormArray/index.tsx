@@ -1,6 +1,6 @@
 import { Add as AddIcon, DeleteOutline as DeleteOutlineIcon } from '@mui/icons-material'
 import { Box, TextField, IconButton } from '@mui/material'
-import React, {useCallback} from 'react'
+import React, { useCallback } from 'react'
 import { useFieldArray, UseFormRegister, Control } from 'react-hook-form'
 
 type Props = {
@@ -22,9 +22,12 @@ const NestedFormArray: React.FC<Props> = ({ control, register, targetName, label
     append('')
   }, [append])
 
-  const removeChoiceItem = useCallback((index: number) => {
-    remove(index)
-  }, [remove])
+  const removeChoiceItem = useCallback(
+    (index: number) => {
+      remove(index)
+    },
+    [remove],
+  )
 
   return (
     <Box>

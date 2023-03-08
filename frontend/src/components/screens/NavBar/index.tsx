@@ -9,25 +9,25 @@ import {
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useContext, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useRecoilState } from 'recoil'
 import MobileMenu from '~/components/parts/MobileMenu'
 import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
-import ColorModeContext from '~/stores/ColorModeContext'
 import { currentTabState } from '~/stores/CurrentTab'
+import { usePaletteMode } from '~/stores/PaletteMode'
 
 export default function NavBar() {
   const router = useRouter()
   const currentPathName = router.pathname
   const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
   const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
+  const [, , toggleChangePaletteMode] = usePaletteMode()
 
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 
-  const colorMode = useContext(ColorModeContext)
   const [currentTab] = useRecoilState(currentTabState) // Recoil状態を使用する
 
   const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => onSearchClick())
@@ -80,7 +80,7 @@ export default function NavBar() {
             startComposition={startComposition}
             endComposition={endComposition}
           />
-          <IconButton color='inherit' onClick={colorMode.toggleColorMode}>
+          <IconButton color='inherit' onClick={toggleChangePaletteMode}>
             <InvertColorsIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />

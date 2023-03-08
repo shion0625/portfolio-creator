@@ -10,12 +10,12 @@ type Props = {
 
 export const UserCard: React.FC<Props> = ({ user }): JSX.Element => {
   return (
-        <Box key={user.id}>
-          <Link href={`/users/${user.id}`} passHref>
-            <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
-              <MuiLink>{user.name ?? `名無しさん`}</MuiLink>
-            </Paper>
-          </Link>
-        </Box>
+    <Box key={user.id}>
+      <Link href={`/users/${user.id}`} passHref>
+        <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
+          <MuiLink>{user.name ?? `名無しさん`}</MuiLink>
+        </Paper>
+      </Link>
+    </Box>
   )
 }
