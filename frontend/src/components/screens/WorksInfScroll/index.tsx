@@ -1,11 +1,11 @@
 import React from 'react'
-import { WorkPagination, Work } from '~/models/types'
-import InfScroll from '~/components/screens/InfScroll'
 import { WorkImageCard } from '~/components/parts/WorkImageCard'
+import InfScroll from '~/components/screens/InfScroll'
+import { WorkPagination, Work } from '~/models/types'
 
 type Props = {
-  pageInfo: WorkPagination["pageInfo"]
-  works: WorkPagination["nodes"]
+  pageInfo: WorkPagination['pageInfo']
+  works: WorkPagination['nodes']
   onScroll: () => void
 }
 
@@ -14,9 +14,7 @@ const WorksInfScroll: React.FC<Props> = ({ pageInfo, works, onScroll }): JSX.Ele
     return <WorkImageCard work={work} />
   }, [])
 
-  return (
-    <InfScroll pageInfo={pageInfo} items={works} renderItem={renderItem} onScroll={onScroll} />
-  )
+  return <InfScroll pageInfo={pageInfo} items={works} renderItem={renderItem} onScroll={onScroll} />
 }
 
 export default WorksInfScroll

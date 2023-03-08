@@ -1,9 +1,9 @@
+import { useInfiniteScroll } from './hook'
 import { Box } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import React from 'react'
-import { useInfiniteScroll } from './hook'
 import { PaginationInfo } from '~/models/types'
 
 type Props<T> = {
@@ -39,10 +39,7 @@ const InfScroll = <T extends unknown>({ pageInfo, items, renderItem, onScroll }:
           const item = items[virtualRow.index]
           return (
             <Grid item key={virtualRow.index} xs={6} md={4} lg={3}>
-              {isLoaderRow ?
-                <CircularProgress /> :
-                renderItem(item)
-              }
+              {isLoaderRow ? <CircularProgress /> : renderItem(item)}
             </Grid>
           )
         })}

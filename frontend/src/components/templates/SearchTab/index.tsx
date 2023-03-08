@@ -6,8 +6,8 @@ import Tab from '@mui/material/Tab'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { useRecoilState } from 'recoil'
-import SearchInfScrollWorks from '~/components/templates/SearchInfScroll/Works'
 import SearchInfScrollUsers from '~/components/templates/SearchInfScroll/Users'
+import SearchInfScrollWorks from '~/components/templates/SearchInfScroll/Works'
 import { currentTabState } from '~/stores/CurrentTab'
 
 const SearchTab: React.FC = () => {
