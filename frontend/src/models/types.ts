@@ -28,6 +28,13 @@ export type CreateWorkInput = {
   user_id: Scalars['String']
 }
 
+export enum Model {
+  User = 'user',
+  Work = 'work',
+}
+
+export type ModelPagination = UserPagination | WorkPagination
+
 export type Mutation = {
   createWork: Scalars['Boolean']
   deleteWorks: Scalars['Boolean']
@@ -83,19 +90,21 @@ export type Profile = {
 }
 
 export type Query = {
-  searchWorks: WorkPagination
+  search: ModelPagination
   user: User
   userAuth: User
   users: UserPagination
   work?: Maybe<Work>
-  workNodes: Array<Work>
   works: WorkPagination
 }
 
-export type QuerySearchWorksArgs = {
+export type QuerySearchArgs = {
   keyword: Scalars['String']
   limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
+  num: Scalars['Int']
+  searchedAt: Scalars['String']
+  sortBy: SortBy
+  target: Scalars['String']
 }
 
 export type QueryUserArgs = {
@@ -115,24 +124,22 @@ export type QueryWorkArgs = {
   id: Scalars['ID']
 }
 
-export type QueryWorkNodesArgs = {
-  limit: Scalars['Int']
-  num: Scalars['Int']
-  order: Scalars['String']
-  searched: Scalars['String']
-}
-
 export type QueryWorksArgs = {
   limit: Scalars['Int']
   num: Scalars['Int']
-  order: Scalars['String']
-  searched: Scalars['String']
+  searchedAt: Scalars['String']
+  sortBy: SortBy
 }
 
 export enum Role {
   Admin = 'ADMIN',
   User = 'USER',
   Viewer = 'VIEWER',
+}
+
+export enum SortBy {
+  Create = 'create',
+  Update = 'update',
 }
 
 export type UpdateProfileInput = {
@@ -155,18 +162,22 @@ export type UpdateWorkInput = {
 }
 
 export type User = Node & {
+  created_at: Scalars['DateTime']
   email?: Maybe<Scalars['String']>
   emailVerified?: Maybe<Array<Maybe<Scalars['Timestamp']>>>
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   profile?: Maybe<Profile>
+  serial_number: Scalars['Int']
+  updated_at: Scalars['DateTime']
   works?: Maybe<WorkPagination>
 }
 
 export type UserPagination = Pagination & {
   nodes: Array<User>
   pageInfo: PaginationInfo
+  type: Model
 }
 
 export type Work = Node & {
@@ -178,8 +189,8 @@ export type Work = Node & {
   is_delete: Scalars['Boolean']
   language?: Maybe<Scalars['String']>
   number_of_people?: Maybe<Scalars['Int']>
-  number_of_work: Scalars['Int']
   role?: Maybe<Scalars['String']>
+  serial_number: Scalars['Int']
   summary?: Maybe<Scalars['String']>
   title: Scalars['String']
   updated_at: Scalars['DateTime']
@@ -190,4 +201,5 @@ export type Work = Node & {
 export type WorkPagination = Pagination & {
   nodes: Array<Work>
   pageInfo: PaginationInfo
+  type: Model
 }

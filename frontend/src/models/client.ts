@@ -32,6 +32,13 @@ export type CreateWorkInput = {
   user_id: Scalars['String']
 }
 
+export enum Model {
+  User = 'user',
+  Work = 'work',
+}
+
+export type ModelPagination = UserPagination | WorkPagination
+
 export type Mutation = {
   createWork: Scalars['Boolean']
   deleteWorks: Scalars['Boolean']
@@ -87,19 +94,21 @@ export type Profile = {
 }
 
 export type Query = {
-  searchWorks: WorkPagination
+  search: ModelPagination
   user: User
   userAuth: User
   users: UserPagination
   work?: Maybe<Work>
-  workNodes: Array<Work>
   works: WorkPagination
 }
 
-export type QuerySearchWorksArgs = {
+export type QuerySearchArgs = {
   keyword: Scalars['String']
   limit: Scalars['Int']
-  offset?: InputMaybe<Scalars['Int']>
+  num: Scalars['Int']
+  searchedAt: Scalars['String']
+  sortBy: SortBy
+  target: Scalars['String']
 }
 
 export type QueryUserArgs = {
@@ -119,24 +128,22 @@ export type QueryWorkArgs = {
   id: Scalars['ID']
 }
 
-export type QueryWorkNodesArgs = {
-  limit: Scalars['Int']
-  num: Scalars['Int']
-  order: Scalars['String']
-  searched: Scalars['String']
-}
-
 export type QueryWorksArgs = {
   limit: Scalars['Int']
   num: Scalars['Int']
-  order: Scalars['String']
-  searched: Scalars['String']
+  searchedAt: Scalars['String']
+  sortBy: SortBy
 }
 
 export enum Role {
   Admin = 'ADMIN',
   User = 'USER',
   Viewer = 'VIEWER',
+}
+
+export enum SortBy {
+  Create = 'create',
+  Update = 'update',
 }
 
 export type UpdateProfileInput = {
@@ -159,18 +166,22 @@ export type UpdateWorkInput = {
 }
 
 export type User = Node & {
+  created_at: Scalars['DateTime']
   email?: Maybe<Scalars['String']>
   emailVerified?: Maybe<Array<Maybe<Scalars['Timestamp']>>>
   id: Scalars['ID']
   image?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   profile?: Maybe<Profile>
+  serial_number: Scalars['Int']
+  updated_at: Scalars['DateTime']
   works?: Maybe<WorkPagination>
 }
 
 export type UserPagination = Pagination & {
   nodes: Array<User>
   pageInfo: PaginationInfo
+  type: Model
 }
 
 export type Work = Node & {
@@ -182,8 +193,8 @@ export type Work = Node & {
   is_delete: Scalars['Boolean']
   language?: Maybe<Scalars['String']>
   number_of_people?: Maybe<Scalars['Int']>
-  number_of_work: Scalars['Int']
   role?: Maybe<Scalars['String']>
+  serial_number: Scalars['Int']
   summary?: Maybe<Scalars['String']>
   title: Scalars['String']
   updated_at: Scalars['DateTime']
@@ -194,6 +205,7 @@ export type Work = Node & {
 export type WorkPagination = Pagination & {
   nodes: Array<Work>
   pageInfo: PaginationInfo
+  type: Model
 }
 
 export type PaginationFragmentFragment = {
@@ -205,6 +217,81 @@ export type PaginationFragmentFragment = {
   hasPreviousPage: boolean
 }
 
+export type SearchQueryVariables = Exact<{
+  target: Scalars['String']
+  keyword: Scalars['String']
+  sortBy: SortBy
+  searchedAt: Scalars['String']
+  num: Scalars['Int']
+  limit: Scalars['Int']
+}>
+
+export type SearchQuery = {
+  search:
+    | {
+        type: Model
+        pageInfo: {
+          page: number
+          hasNextPage: boolean
+          count: number
+          totalCount: number
+          paginationLength: number
+          hasPreviousPage: boolean
+        }
+        nodes: Array<{
+          id: string
+          name?: string | null
+          email?: string | null
+          created_at: any
+          updated_at: any
+          serial_number: number
+        }>
+      }
+    | {
+        type: Model
+        pageInfo: {
+          page: number
+          hasNextPage: boolean
+          count: number
+          totalCount: number
+          paginationLength: number
+          hasPreviousPage: boolean
+        }
+        nodes: Array<{
+          id: string
+          title: string
+          summary?: string | null
+          image_url?: string | null
+          duration?: string | null
+          number_of_people?: number | null
+          language?: string | null
+          role?: string | null
+          url?: string | null
+          brief_story?: string | null
+          created_at: any
+          updated_at: any
+          serial_number: number
+          user: {
+            id: string
+            name?: string | null
+            email?: string | null
+            created_at: any
+            updated_at: any
+            serial_number: number
+          }
+        }>
+      }
+}
+
+export type UserFragmentFragment = {
+  id: string
+  name?: string | null
+  email?: string | null
+  created_at: any
+  updated_at: any
+  serial_number: number
+}
+
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -214,6 +301,9 @@ export type GetUserQuery = {
     id: string
     name?: string | null
     email?: string | null
+    created_at: any
+    updated_at: any
+    serial_number: number
     works?: {
       pageInfo: {
         page: number
@@ -236,8 +326,7 @@ export type GetUserQuery = {
         brief_story?: string | null
         created_at: any
         updated_at: any
-        number_of_work: number
-        is_delete: boolean
+        serial_number: number
       }>
     } | null
   }
@@ -252,6 +341,9 @@ export type GetUserAuthQuery = {
     id: string
     name?: string | null
     email?: string | null
+    created_at: any
+    updated_at: any
+    serial_number: number
     works?: {
       pageInfo: {
         page: number
@@ -274,8 +366,7 @@ export type GetUserAuthQuery = {
         brief_story?: string | null
         created_at: any
         updated_at: any
-        number_of_work: number
-        is_delete: boolean
+        serial_number: number
       }>
     } | null
   }
@@ -299,6 +390,10 @@ export type GetUsersQuery = {
     nodes: Array<{
       id: string
       name?: string | null
+      email?: string | null
+      created_at: any
+      updated_at: any
+      serial_number: number
       works?: {
         nodes: Array<{
           id: string
@@ -313,9 +408,15 @@ export type GetUsersQuery = {
           brief_story?: string | null
           created_at: any
           updated_at: any
-          number_of_work: number
-          is_delete: boolean
-          user: { id: string; name?: string | null }
+          serial_number: number
+          user: {
+            id: string
+            name?: string | null
+            email?: string | null
+            created_at: any
+            updated_at: any
+            serial_number: number
+          }
         }>
       } | null
     }>
@@ -337,7 +438,14 @@ export type GetUsersNameQuery = {
       paginationLength: number
       hasPreviousPage: boolean
     }
-    nodes: Array<{ id: string; name?: string | null }>
+    nodes: Array<{
+      id: string
+      name?: string | null
+      email?: string | null
+      created_at: any
+      updated_at: any
+      serial_number: number
+    }>
   }
 }
 
@@ -368,8 +476,7 @@ export type WorkFragmentFragment = {
   brief_story?: string | null
   created_at: any
   updated_at: any
-  number_of_work: number
-  is_delete: boolean
+  serial_number: number
 }
 
 export type GetWorkQueryVariables = Exact<{
@@ -390,28 +497,34 @@ export type GetWorkQuery = {
     brief_story?: string | null
     created_at: any
     updated_at: any
-    number_of_work: number
-    is_delete: boolean
-    user: { id: string; name?: string | null }
+    serial_number: number
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      created_at: any
+      updated_at: any
+      serial_number: number
+    }
   } | null
 }
 
 export type GetWorksQueryVariables = Exact<{
-  limit: Scalars['Int']
-  order: Scalars['String']
-  searched: Scalars['String']
+  sortBy: SortBy
+  searchedAt: Scalars['String']
   num: Scalars['Int']
+  limit: Scalars['Int']
 }>
 
 export type GetWorksQuery = {
   works: {
     pageInfo: {
       page: number
-      paginationLength: number
-      hasPreviousPage: boolean
       hasNextPage: boolean
       count: number
       totalCount: number
+      paginationLength: number
+      hasPreviousPage: boolean
     }
     nodes: Array<{
       id: string
@@ -426,38 +539,17 @@ export type GetWorksQuery = {
       brief_story?: string | null
       created_at: any
       updated_at: any
-      number_of_work: number
-      is_delete: boolean
-      user: { id: string; name?: string | null }
+      serial_number: number
+      user: {
+        id: string
+        name?: string | null
+        email?: string | null
+        created_at: any
+        updated_at: any
+        serial_number: number
+      }
     }>
   }
-}
-
-export type GetWorkNodesQueryVariables = Exact<{
-  limit: Scalars['Int']
-  order: Scalars['String']
-  searched: Scalars['String']
-  num: Scalars['Int']
-}>
-
-export type GetWorkNodesQuery = {
-  workNodes: Array<{
-    id: string
-    title: string
-    summary?: string | null
-    image_url?: string | null
-    duration?: string | null
-    number_of_people?: number | null
-    language?: string | null
-    role?: string | null
-    url?: string | null
-    brief_story?: string | null
-    created_at: any
-    updated_at: any
-    number_of_work: number
-    is_delete: boolean
-    user: { id: string; name?: string | null }
-  }>
 }
 
 export type CreateWorkMutationVariables = Exact<{
@@ -488,6 +580,16 @@ export const PaginationFragmentFragmentDoc = gql`
     hasPreviousPage
   }
 `
+export const UserFragmentFragmentDoc = gql`
+  fragment UserFragment on User {
+    id
+    name
+    email
+    created_at
+    updated_at
+    serial_number
+  }
+`
 export const WorkFragmentFragmentDoc = gql`
   fragment WorkFragment on Work {
     id
@@ -502,16 +604,43 @@ export const WorkFragmentFragmentDoc = gql`
     brief_story
     created_at
     updated_at
-    number_of_work
-    is_delete
+    serial_number
   }
+`
+export const SearchDocument = gql`
+  query Search($target: String!, $keyword: String!, $sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
+    search(target: $target, keyword: $keyword, sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
+      ... on UserPagination {
+        type
+        pageInfo {
+          ...PaginationFragment
+        }
+        nodes {
+          ...UserFragment
+        }
+      }
+      ... on WorkPagination {
+        type
+        pageInfo {
+          ...PaginationFragment
+        }
+        nodes {
+          ...WorkFragment
+          user {
+            ...UserFragment
+          }
+        }
+      }
+    }
+  }
+  ${PaginationFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
+  ${WorkFragmentFragmentDoc}
 `
 export const GetUserDocument = gql`
   query GetUser($id: ID!) {
     user(id: $id) {
-      id
-      name
-      email
+      ...UserFragment
       works {
         pageInfo {
           ...PaginationFragment
@@ -522,15 +651,14 @@ export const GetUserDocument = gql`
       }
     }
   }
+  ${UserFragmentFragmentDoc}
   ${PaginationFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
 `
 export const GetUserAuthDocument = gql`
   query GetUserAuth($id: ID!) {
     userAuth(id: $id) {
-      id
-      name
-      email
+      ...UserFragment
       works {
         pageInfo {
           ...PaginationFragment
@@ -541,6 +669,7 @@ export const GetUserAuthDocument = gql`
       }
     }
   }
+  ${UserFragmentFragmentDoc}
   ${PaginationFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
 `
@@ -551,14 +680,12 @@ export const GetUsersDocument = gql`
         ...PaginationFragment
       }
       nodes {
-        id
-        name
+        ...UserFragment
         works {
           nodes {
             ...WorkFragment
             user {
-              id
-              name
+              ...UserFragment
             }
           }
         }
@@ -566,6 +693,7 @@ export const GetUsersDocument = gql`
     }
   }
   ${PaginationFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
 `
 export const GetUsersNameDocument = gql`
@@ -575,12 +703,12 @@ export const GetUsersNameDocument = gql`
         ...PaginationFragment
       }
       nodes {
-        id
-        name
+        ...UserFragment
       }
     }
   }
   ${PaginationFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
 `
 export const GetUserIdsDocument = gql`
   query GetUserIds($limit: Int!, $offset: Int) {
@@ -601,46 +729,30 @@ export const GetWorkDocument = gql`
     work(id: $id) {
       ...WorkFragment
       user {
-        id
-        name
+        ...UserFragment
       }
     }
   }
   ${WorkFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
 `
 export const GetWorksDocument = gql`
-  query GetWorks($limit: Int!, $order: String!, $searched: String!, $num: Int!) {
-    works(limit: $limit, order: $order, searched: $searched, num: $num) {
+  query GetWorks($sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
+    works(sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
       pageInfo {
-        page
-        paginationLength
-        hasPreviousPage
-        hasNextPage
-        count
-        totalCount
+        ...PaginationFragment
       }
       nodes {
         ...WorkFragment
         user {
-          id
-          name
+          ...UserFragment
         }
       }
     }
   }
+  ${PaginationFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
-`
-export const GetWorkNodesDocument = gql`
-  query GetWorkNodes($limit: Int!, $order: String!, $searched: String!, $num: Int!) {
-    workNodes(limit: $limit, order: $order, searched: $searched, num: $num) {
-      ...WorkFragment
-      user {
-        id
-        name
-      }
-    }
-  }
-  ${WorkFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
 `
 export const CreateWorkDocument = gql`
   mutation CreateWork($input: CreateWorkInput!) {
@@ -668,6 +780,14 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    Search(variables: SearchQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<SearchQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<SearchQuery>(SearchDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        'Search',
+        'query',
+      )
+    },
     GetUser(variables: GetUserQueryVariables, requestHeaders?: Dom.RequestInit['headers']): Promise<GetUserQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -747,20 +867,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         (wrappedRequestHeaders) =>
           client.request<GetWorksQuery>(GetWorksDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
         'GetWorks',
-        'query',
-      )
-    },
-    GetWorkNodes(
-      variables: GetWorkNodesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetWorkNodesQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetWorkNodesQuery>(GetWorkNodesDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'GetWorkNodes',
         'query',
       )
     },

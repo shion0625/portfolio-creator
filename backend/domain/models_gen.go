@@ -8,8 +8,8 @@ import (
 	"strconv"
 )
 
-type AllModel interface {
-	IsAllModel()
+type ModelPagination interface {
+	IsModelPagination()
 }
 
 type Node interface {
@@ -72,11 +72,12 @@ type UpdateWorkInput struct {
 }
 
 type UserPagination struct {
+	Type     Model           `json:"type"`
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*User         `json:"nodes"`
 }
 
-func (UserPagination) IsAllModel() {}
+func (UserPagination) IsModelPagination() {}
 
 func (UserPagination) IsPagination()                     {}
 func (this UserPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
@@ -92,11 +93,12 @@ func (this UserPagination) GetNodes() []Node {
 }
 
 type WorkPagination struct {
+	Type     Model           `json:"type"`
 	PageInfo *PaginationInfo `json:"pageInfo"`
 	Nodes    []*Work         `json:"nodes"`
 }
 
-func (WorkPagination) IsAllModel() {}
+func (WorkPagination) IsModelPagination() {}
 
 func (WorkPagination) IsPagination()                     {}
 func (this WorkPagination) GetPageInfo() *PaginationInfo { return this.PageInfo }
@@ -109,6 +111,47 @@ func (this WorkPagination) GetNodes() []Node {
 		interfaceSlice = append(interfaceSlice, concrete)
 	}
 	return interfaceSlice
+}
+
+type Model string
+
+const (
+	ModelUser Model = "user"
+	ModelWork Model = "work"
+)
+
+var AllModel = []Model{
+	ModelUser,
+	ModelWork,
+}
+
+func (e Model) IsValid() bool {
+	switch e {
+	case ModelUser, ModelWork:
+		return true
+	}
+	return false
+}
+
+func (e Model) String() string {
+	return string(e)
+}
+
+func (e *Model) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Model(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Model", str)
+	}
+	return nil
+}
+
+func (e Model) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type Role string
@@ -151,5 +194,46 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SortBy string
+
+const (
+	SortByCreate SortBy = "create"
+	SortByUpdate SortBy = "update"
+)
+
+var AllSortBy = []SortBy{
+	SortByCreate,
+	SortByUpdate,
+}
+
+func (e SortBy) IsValid() bool {
+	switch e {
+	case SortByCreate, SortByUpdate:
+		return true
+	}
+	return false
+}
+
+func (e SortBy) String() string {
+	return string(e)
+}
+
+func (e *SortBy) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SortBy(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SortBy", str)
+	}
+	return nil
+}
+
+func (e SortBy) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

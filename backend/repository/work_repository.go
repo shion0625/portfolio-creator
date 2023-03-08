@@ -42,10 +42,10 @@ func (g *WorkRepository) GetTotalCount(ctx context.Context, keyword *string) (in
 	return totalCount, nil
 }
 
-func (g *WorkRepository) GetAll(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, int64, error) {
+func (g *WorkRepository) GetAll(ctx context.Context, sortBy domain.SortBy, searchedAt string, num int, limit int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
 	result := g.db.Conn.Debug().Limit(limit).
-		Joins("INNER JOIN users on users.id = works.user_id").Scopes(util.SortWork(order, searched, num)).Find(&works)
+		Joins("INNER JOIN users on users.id = works.user_id").Scopes(util.SortWork(sortBy, searchedAt, num)).Find(&works)
 
 	if !errors.Is(result.Error, nil) {
 		return nil, 0, result.Error
@@ -63,12 +63,12 @@ func (g *WorkRepository) GetByUserIDs(ids []string) ([]*domain.Work, error) {
 	return works, nil
 }
 
-func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, limit int, searched string, num int) ([]*domain.Work, int64, error) {
+func (g *WorkRepository) GetByKeyword(ctx context.Context, keyword string, sortBy domain.SortBy, searchedAt string, num int, limit int) ([]*domain.Work, int64, error) {
 	var works []*domain.Work
 
 	columns := []string{"title", "summary", "duration", "language", "role", "brief_story"}
 
-	result := g.db.Conn.Debug().Limit(limit).Where("is_delete = ?", "False").Scopes(util.SortWork("update", searched, num)).Scopes(util.WhereKeyword(&keyword, columns)).Find(&works)
+	result := g.db.Conn.Debug().Limit(limit).Where("is_delete = ?", "False").Scopes(util.SortWork(sortBy, searchedAt, num)).Scopes(util.WhereKeyword(&keyword, columns)).Find(&works)
 
 	if err := result.Error; !errors.Is(err, nil) {
 		return nil, 0, fmt.Errorf("GetByKeyword - repository: %w", err)

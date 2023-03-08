@@ -6,11 +6,11 @@ interface Node {
 
 scalar Timestamp
 scalar DateTime
-
 scalar Any
 
-directive @auth on FIELD_DEFINITION
+union ModelPagination = WorkPagination | UserPagination
 
+directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
@@ -24,4 +24,14 @@ type PaginationInfo {
   hasPreviousPage: Boolean!
   count: Int!
   totalCount: Int!
+}
+
+enum Model {
+  user
+  work
+}
+
+enum SortBy {
+  create
+  update
 }

@@ -8,3 +8,12 @@ declare module 'next-auth' {
     accessToken: JWT
   }
 }
+
+// interface Session {
+//   user: User | JWT
+//   accessToken: JWT
+// }
+
+// interface User extends DefaultUser {
+//   id?: string | null
+// }

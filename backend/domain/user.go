@@ -9,6 +9,10 @@ type User struct {
 	Email         *string   `json:"email" gorm:"type:text"`
 	EmailVerified []*string `json:"emailVerified" gorm:"type:text[]"`
 	Image         *string   `json:"image" gorm:"type:text"`
+	CreatedAt      string   `json:"createdAt"`
+	UpdatedAt      string   `json:"updatedAt"`
+	SerialNumber   int      `json:"serialNumber" gorm:"autoIncrement"`
+
 }
 
 func (User) IsNode()            {}
@@ -19,7 +23,7 @@ type IUserUseCase interface {
 	GetByID(ctx context.Context, id string) (*User, error)
 	GetByEmail(ctx context.Context, email string) (*User, error)
 	GetAll(ctx context.Context, limit int, offset int) (*UserPagination, error)
-	Search(ctx context.Context, keyword string, limit int, searched string, num int) (*UserPagination, error)
+	Search(ctx context.Context, keyword string, sortBy SortBy, searchedAt string, num int, limit int) (*UserPagination, error)
 	Login(ctx context.Context, id string, email string) (interface{}, error)
 }
 
@@ -30,5 +34,5 @@ type IUserRepository interface {
 	GetTotalCount(ctx context.Context, keyword *string) (int64, error)
 	GetAll(ctx context.Context, limit int, offset int) ([]*User, int64, error)
 	GetByIDs(ids []string) ([]*User, error)
-	GetByKeyword(ctx context.Context, keyword string, limit int, searched string, num int) ([]*User, int64, error)
+	GetByKeyword(ctx context.Context, keyword string, sortBy SortBy, searchedAt string, num int, limit int) ([]*User, int64, error)
 }

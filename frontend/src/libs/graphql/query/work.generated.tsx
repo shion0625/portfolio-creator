@@ -1,4 +1,6 @@
 import * as Types from '../../../models/types'
+import { PaginationFragmentFragmentDoc } from './common.generated'
+import { UserFragmentFragmentDoc } from './user.generated'
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
@@ -16,8 +18,7 @@ export type WorkFragmentFragment = {
   brief_story?: string | null
   created_at: any
   updated_at: any
-  number_of_work: number
-  is_delete: boolean
+  serial_number: number
 }
 
 export type GetWorkQueryVariables = Types.Exact<{
@@ -38,28 +39,34 @@ export type GetWorkQuery = {
     brief_story?: string | null
     created_at: any
     updated_at: any
-    number_of_work: number
-    is_delete: boolean
-    user: { id: string; name?: string | null }
+    serial_number: number
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      created_at: any
+      updated_at: any
+      serial_number: number
+    }
   } | null
 }
 
 export type GetWorksQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
-  order: Types.Scalars['String']
-  searched: Types.Scalars['String']
+  sortBy: Types.SortBy
+  searchedAt: Types.Scalars['String']
   num: Types.Scalars['Int']
+  limit: Types.Scalars['Int']
 }>
 
 export type GetWorksQuery = {
   works: {
     pageInfo: {
       page: number
-      paginationLength: number
-      hasPreviousPage: boolean
       hasNextPage: boolean
       count: number
       totalCount: number
+      paginationLength: number
+      hasPreviousPage: boolean
     }
     nodes: Array<{
       id: string
@@ -74,38 +81,17 @@ export type GetWorksQuery = {
       brief_story?: string | null
       created_at: any
       updated_at: any
-      number_of_work: number
-      is_delete: boolean
-      user: { id: string; name?: string | null }
+      serial_number: number
+      user: {
+        id: string
+        name?: string | null
+        email?: string | null
+        created_at: any
+        updated_at: any
+        serial_number: number
+      }
     }>
   }
-}
-
-export type GetWorkNodesQueryVariables = Types.Exact<{
-  limit: Types.Scalars['Int']
-  order: Types.Scalars['String']
-  searched: Types.Scalars['String']
-  num: Types.Scalars['Int']
-}>
-
-export type GetWorkNodesQuery = {
-  workNodes: Array<{
-    id: string
-    title: string
-    summary?: string | null
-    image_url?: string | null
-    duration?: string | null
-    number_of_people?: number | null
-    language?: string | null
-    role?: string | null
-    url?: string | null
-    brief_story?: string | null
-    created_at: any
-    updated_at: any
-    number_of_work: number
-    is_delete: boolean
-    user: { id: string; name?: string | null }
-  }>
 }
 
 export type CreateWorkMutationVariables = Types.Exact<{
@@ -140,8 +126,7 @@ export const WorkFragmentFragmentDoc = gql`
     brief_story
     created_at
     updated_at
-    number_of_work
-    is_delete
+    serial_number
   }
 `
 export const GetWorkDocument = gql`
@@ -149,12 +134,12 @@ export const GetWorkDocument = gql`
     work(id: $id) {
       ...WorkFragment
       user {
-        id
-        name
+        ...UserFragment
       }
     }
   }
   ${WorkFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
 `
 
 /**
@@ -185,26 +170,22 @@ export type GetWorkQueryHookResult = ReturnType<typeof useGetWorkQuery>
 export type GetWorkLazyQueryHookResult = ReturnType<typeof useGetWorkLazyQuery>
 export type GetWorkQueryResult = Apollo.QueryResult<GetWorkQuery, GetWorkQueryVariables>
 export const GetWorksDocument = gql`
-  query GetWorks($limit: Int!, $order: String!, $searched: String!, $num: Int!) {
-    works(limit: $limit, order: $order, searched: $searched, num: $num) {
+  query GetWorks($sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
+    works(sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
       pageInfo {
-        page
-        paginationLength
-        hasPreviousPage
-        hasNextPage
-        count
-        totalCount
+        ...PaginationFragment
       }
       nodes {
         ...WorkFragment
         user {
-          id
-          name
+          ...UserFragment
         }
       }
     }
   }
+  ${PaginationFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
 `
 
 /**
@@ -219,10 +200,10 @@ export const GetWorksDocument = gql`
  * @example
  * const { data, loading, error } = useGetWorksQuery({
  *   variables: {
- *      limit: // value for 'limit'
- *      order: // value for 'order'
- *      searched: // value for 'searched'
+ *      sortBy: // value for 'sortBy'
+ *      searchedAt: // value for 'searchedAt'
  *      num: // value for 'num'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
@@ -237,53 +218,6 @@ export function useGetWorksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetWorksQueryHookResult = ReturnType<typeof useGetWorksQuery>
 export type GetWorksLazyQueryHookResult = ReturnType<typeof useGetWorksLazyQuery>
 export type GetWorksQueryResult = Apollo.QueryResult<GetWorksQuery, GetWorksQueryVariables>
-export const GetWorkNodesDocument = gql`
-  query GetWorkNodes($limit: Int!, $order: String!, $searched: String!, $num: Int!) {
-    workNodes(limit: $limit, order: $order, searched: $searched, num: $num) {
-      ...WorkFragment
-      user {
-        id
-        name
-      }
-    }
-  }
-  ${WorkFragmentFragmentDoc}
-`
-
-/**
- * __useGetWorkNodesQuery__
- *
- * To run a query within a React component, call `useGetWorkNodesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetWorkNodesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetWorkNodesQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *      order: // value for 'order'
- *      searched: // value for 'searched'
- *      num: // value for 'num'
- *   },
- * });
- */
-export function useGetWorkNodesQuery(
-  baseOptions: Apollo.QueryHookOptions<GetWorkNodesQuery, GetWorkNodesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetWorkNodesQuery, GetWorkNodesQueryVariables>(GetWorkNodesDocument, options)
-}
-export function useGetWorkNodesLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetWorkNodesQuery, GetWorkNodesQueryVariables>,
-) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetWorkNodesQuery, GetWorkNodesQueryVariables>(GetWorkNodesDocument, options)
-}
-export type GetWorkNodesQueryHookResult = ReturnType<typeof useGetWorkNodesQuery>
-export type GetWorkNodesLazyQueryHookResult = ReturnType<typeof useGetWorkNodesLazyQuery>
-export type GetWorkNodesQueryResult = Apollo.QueryResult<GetWorkNodesQuery, GetWorkNodesQueryVariables>
 export const CreateWorkDocument = gql`
   mutation CreateWork($input: CreateWorkInput!) {
     createWork(input: $input)

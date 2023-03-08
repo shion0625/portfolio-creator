@@ -39,13 +39,13 @@ The offset is the number of data to start retrieving.
 It returns a domain.UserPagination structure if the user specified in the argument exists in the database, or nil otherwise.
 If an unexpected error occurs, an error wrapped in GetAll-usecase or GetAll - GetTotalCount - usecase: is returned.
 */
-func (w WorkUseCase) GetAll(ctx context.Context, limit int, order string, searched string, num int) (*domain.WorkPagination, error) {
+func (w WorkUseCase) GetAll(ctx context.Context, sortBy domain.SortBy, searchedAt string, num int, limit int) (*domain.WorkPagination, error) {
 	totalCount, err := w.workRepo.GetTotalCount(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - GetTotalCount - usecase: %w", err)
 	}
 
-	works, numRows, err := w.workRepo.GetAll(ctx, limit, order, searched, num)
+	works, numRows, err := w.workRepo.GetAll(ctx, sortBy, searchedAt, num, limit)
 	if err != nil {
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
@@ -59,27 +59,12 @@ func (w WorkUseCase) GetAll(ctx context.Context, limit int, order string, search
 		TotalCount:       int(totalCount),
 	}
 	workPagination := domain.WorkPagination{
+		Type:     domain.ModelWork,
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}
 
 	return &workPagination, nil
-}
-
-/*
-GetAllNodes retrieves information for multiple users based on the limit and offset entered.
-The limit is the number of data to retrieve.
-The offset is the number of data to start retrieving.
-It returns a []*domain.Work if the user specified in the argument exists in the database, or nil otherwise.
-If an unexpected error occurs, an error wrapped in GetAllNodes-usecase: is returned.
-*/
-func (w WorkUseCase) GetAllNodes(ctx context.Context, limit int, order string, searched string, num int) ([]*domain.Work, error) {
-	works, _, err := w.workRepo.GetAll(ctx, limit, order, searched, num)
-	if err != nil {
-		return nil, fmt.Errorf("GetAllNodes - usecase: %w", err)
-	}
-
-	return works, nil
 }
 
 /*
@@ -90,13 +75,13 @@ The offset is the number of data to start retrieving.
 It returns a domain.UserPagination structure if the user specified in the argument exists in the database, or nil otherwise.
 If an unexpected error occurs, an error wrapped in Search-usecase: is returned.
 */
-func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, searched string, num int) (*domain.WorkPagination, error) {
+func (w WorkUseCase) Search(ctx context.Context, keyword string, sortBy domain.SortBy, searchedAt string, num int, limit int) (*domain.WorkPagination, error) {
 	totalCount, err := w.workRepo.GetTotalCount(ctx, &keyword)
 	if err != nil {
 		return nil, fmt.Errorf("Search - GetTotalCount - usecase: %w", err)
 	}
 
-	works, numRows, err := w.workRepo.GetByKeyword(ctx, keyword, limit, searched, num)
+	works, numRows, err := w.workRepo.GetByKeyword(ctx, keyword, sortBy, searchedAt, num, limit)
 	if err != nil {
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
@@ -110,6 +95,7 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, limit int, sear
 		TotalCount:       int(totalCount),
 	}
 	workPagination := domain.WorkPagination{
+		Type:     domain.ModelWork,
 		PageInfo: &pageInfo,
 		Nodes:    works,
 	}

@@ -1,16 +1,17 @@
 import * as Types from '../../../models/types'
+import { PaginationFragmentFragmentDoc } from './common.generated'
 import { WorkFragmentFragmentDoc } from './work.generated'
 import { gql } from '@apollo/client'
 import * as Apollo from '@apollo/client'
 
 const defaultOptions = {} as const
-export type PaginationFragmentFragment = {
-  page: number
-  hasNextPage: boolean
-  count: number
-  totalCount: number
-  paginationLength: number
-  hasPreviousPage: boolean
+export type UserFragmentFragment = {
+  id: string
+  name?: string | null
+  email?: string | null
+  created_at: any
+  updated_at: any
+  serial_number: number
 }
 
 export type GetUserQueryVariables = Types.Exact<{
@@ -22,6 +23,9 @@ export type GetUserQuery = {
     id: string
     name?: string | null
     email?: string | null
+    created_at: any
+    updated_at: any
+    serial_number: number
     works?: {
       pageInfo: {
         page: number
@@ -44,8 +48,7 @@ export type GetUserQuery = {
         brief_story?: string | null
         created_at: any
         updated_at: any
-        number_of_work: number
-        is_delete: boolean
+        serial_number: number
       }>
     } | null
   }
@@ -60,6 +63,9 @@ export type GetUserAuthQuery = {
     id: string
     name?: string | null
     email?: string | null
+    created_at: any
+    updated_at: any
+    serial_number: number
     works?: {
       pageInfo: {
         page: number
@@ -82,8 +88,7 @@ export type GetUserAuthQuery = {
         brief_story?: string | null
         created_at: any
         updated_at: any
-        number_of_work: number
-        is_delete: boolean
+        serial_number: number
       }>
     } | null
   }
@@ -107,6 +112,10 @@ export type GetUsersQuery = {
     nodes: Array<{
       id: string
       name?: string | null
+      email?: string | null
+      created_at: any
+      updated_at: any
+      serial_number: number
       works?: {
         nodes: Array<{
           id: string
@@ -121,9 +130,15 @@ export type GetUsersQuery = {
           brief_story?: string | null
           created_at: any
           updated_at: any
-          number_of_work: number
-          is_delete: boolean
-          user: { id: string; name?: string | null }
+          serial_number: number
+          user: {
+            id: string
+            name?: string | null
+            email?: string | null
+            created_at: any
+            updated_at: any
+            serial_number: number
+          }
         }>
       } | null
     }>
@@ -145,7 +160,14 @@ export type GetUsersNameQuery = {
       paginationLength: number
       hasPreviousPage: boolean
     }
-    nodes: Array<{ id: string; name?: string | null }>
+    nodes: Array<{
+      id: string
+      name?: string | null
+      email?: string | null
+      created_at: any
+      updated_at: any
+      serial_number: number
+    }>
   }
 }
 
@@ -163,22 +185,20 @@ export type LoginMutationVariables = Types.Exact<{
 
 export type LoginMutation = { login: any }
 
-export const PaginationFragmentFragmentDoc = gql`
-  fragment PaginationFragment on PaginationInfo {
-    page
-    hasNextPage
-    count
-    totalCount
-    paginationLength
-    hasPreviousPage
+export const UserFragmentFragmentDoc = gql`
+  fragment UserFragment on User {
+    id
+    name
+    email
+    created_at
+    updated_at
+    serial_number
   }
 `
 export const GetUserDocument = gql`
   query GetUser($id: ID!) {
     user(id: $id) {
-      id
-      name
-      email
+      ...UserFragment
       works {
         pageInfo {
           ...PaginationFragment
@@ -189,6 +209,7 @@ export const GetUserDocument = gql`
       }
     }
   }
+  ${UserFragmentFragmentDoc}
   ${PaginationFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
 `
@@ -223,9 +244,7 @@ export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVa
 export const GetUserAuthDocument = gql`
   query GetUserAuth($id: ID!) {
     userAuth(id: $id) {
-      id
-      name
-      email
+      ...UserFragment
       works {
         pageInfo {
           ...PaginationFragment
@@ -236,6 +255,7 @@ export const GetUserAuthDocument = gql`
       }
     }
   }
+  ${UserFragmentFragmentDoc}
   ${PaginationFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
 `
@@ -276,14 +296,12 @@ export const GetUsersDocument = gql`
         ...PaginationFragment
       }
       nodes {
-        id
-        name
+        ...UserFragment
         works {
           nodes {
             ...WorkFragment
             user {
-              id
-              name
+              ...UserFragment
             }
           }
         }
@@ -291,6 +309,7 @@ export const GetUsersDocument = gql`
     }
   }
   ${PaginationFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
   ${WorkFragmentFragmentDoc}
 `
 
@@ -329,12 +348,12 @@ export const GetUsersNameDocument = gql`
         ...PaginationFragment
       }
       nodes {
-        id
-        name
+        ...UserFragment
       }
     }
   }
   ${PaginationFragmentFragmentDoc}
+  ${UserFragmentFragmentDoc}
 `
 
 /**

@@ -6,7 +6,6 @@ type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
-  works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
-  workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  search(target: String!, keyword: String! limit: Int!, searched: String!, num: Int!): AllModel!
+  works(sortBy: SortBy! ,searchedAt: String!, num: Int!, limit: Int!): WorkPagination!
+  search(target: String!, keyword: String! , sortBy: SortBy!, searchedAt: String!, num: Int!, limit: Int!): ModelPagination!
 }

@@ -6,11 +6,11 @@ interface Node {
 
 scalar Timestamp
 scalar DateTime
-
 scalar Any
 
-directive @auth on FIELD_DEFINITION
+union ModelPagination = WorkPagination | UserPagination
 
+directive @auth on FIELD_DEFINITION
 
 interface Pagination {
   pageInfo: PaginationInfo!
@@ -24,6 +24,16 @@ type PaginationInfo {
   hasPreviousPage: Boolean!
   count: Int!
   totalCount: Int!
+}
+
+enum Model {
+  user
+  work
+}
+
+enum SortBy {
+  create
+  update
 }
 ## mutation.graphqls ===============================================
 
@@ -92,9 +102,8 @@ type Query {
   user(id: ID!): User!
   users(limit: Int!, offset: Int): UserPagination!
   work(id: ID!): Work
-  works(limit: Int!, order: String! ,searched: String!, num: Int!): WorkPagination!
-  workNodes(limit: Int!, order: String! ,searched: String!, num: Int!): [Work!]!
-  searchWorks(keyword: String! limit: Int!, offset: Int): WorkPagination!
+  works(sortBy: SortBy! ,searchedAt: String!, num: Int!, limit: Int!): WorkPagination!
+  search(target: String!, keyword: String! , sortBy: SortBy!, searchedAt: String!, num: Int!, limit: Int!): ModelPagination!
 }
 ## user.graphqls ===============================================
 
@@ -104,11 +113,15 @@ type User implements Node{
   email: String
   emailVerified: [Timestamp]
   image: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  serial_number: Int!
   works: WorkPagination
   profile: Profile
 }
 
 type UserPagination implements Pagination{
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [User!]!
 }
@@ -128,11 +141,12 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
-  number_of_work: Int!
+  serial_number: Int!
   user: User!
   }
 
 type WorkPagination implements Pagination {
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [Work!]!
 }

@@ -1,18 +1,16 @@
+import { useFetchWorks } from './hooks/useFetchWorks'
 import React from 'react'
 import { memo } from 'react'
-import NavBar from '~/components/templates/NavBar'
-import WorksInfScroll from '~/components/templates/WorksInfScroll'
-import { WorkPagination } from '~/models/types'
+import NavBar from '~/components/screens/NavBar'
+import WorksInfScroll from '~/components/screens/WorksInfScroll'
+import { SortBy } from '~/models/types'
 
-type Props = {
-  works: WorkPagination
-}
-
-const WorksView: React.FC<Props> = memo(({ works }) => {
+const WorksView: React.FC = memo(() => {
+  const { pageInfo, works, onScroll } = useFetchWorks(SortBy.Update)
   return (
     <>
       <NavBar />
-      <WorksInfScroll />
+      <WorksInfScroll pageInfo={pageInfo} works={works} onScroll={onScroll} />
     </>
   )
 })

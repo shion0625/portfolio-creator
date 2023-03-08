@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import lo from 'lodash'
 import { Session } from 'next-auth'
 import React, { useRef } from 'react'
-import PrimarySearchAppBar from '~/components/templates/NavBar'
+import PrimarySearchAppBar from '~/components/screens/NavBar'
 import { WorkForms } from '~/components/templates/WorkForms'
 import {
   useGetUserWork,

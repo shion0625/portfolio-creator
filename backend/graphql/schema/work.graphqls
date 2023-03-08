@@ -14,11 +14,12 @@ type Work implements Node{
   created_at: DateTime!
   updated_at: DateTime!
   is_delete: Boolean!
-  number_of_work: Int
+  serial_number: Int!
   user: User!
   }
 
 type WorkPagination implements Pagination {
+  type: Model!
   pageInfo: PaginationInfo!
   nodes: [Work!]!
 }

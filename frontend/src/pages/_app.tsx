@@ -5,8 +5,9 @@ import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import { useState } from 'react'
-import ColorModeContext from '~/context/ColorModeContext'
+import { RecoilRoot } from 'recoil'
 import { initializeApollo } from '~/libs/apollo/apolloClient'
+import ColorModeContext from '~/stores/ColorModeContext'
 import '~/styles/globals.css'
 import { primary, secondary, error, warning, info, success } from '~/styles/theme'
 
@@ -80,15 +81,17 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   })
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <ApolloProvider client={client}>
-          <SessionProvider session={pageProps.session}>
-            <Component {...pageProps} />
-          </SessionProvider>
-        </ApolloProvider>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <RecoilRoot>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <ApolloProvider client={client}>
+            <SessionProvider session={pageProps.session}>
+              <Component {...pageProps} />
+            </SessionProvider>
+          </ApolloProvider>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    </RecoilRoot>
   )
 }
 
