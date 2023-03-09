@@ -5,7 +5,7 @@ import SignIn from '~/components/templates/Signin'
 const IndexView: React.FC = () => {
   return (
     <>
-      {/* <NavBar /> */}
+      <NavBar />
       <SignIn />
       <div style={{ margin: '0 auto', width: '1000px' }}>
         {/* {data?.user.id} */}

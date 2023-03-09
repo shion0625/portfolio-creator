@@ -11,13 +11,12 @@ type Props = {
 
 const Link: React.FC<Props> = memo(function Link({ linkProps, children, target, rel }) {
   return (
-    <NextLink href={linkProps.href} passHref>
+    <NextLink href={linkProps.href} passHref legacyBehavior>
       <MuiLink
-        component='span'
+        underline='none'
+        color='primary'
         sx={{
-          underline: 'none',
           textDecoration: 'none',
-          color: 'text.primary',
           cursor: 'pointer',
         }}
         target={target}
