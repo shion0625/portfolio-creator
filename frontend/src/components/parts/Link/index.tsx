@@ -1,4 +1,4 @@
-import { Link as MuiLink } from '@mui/material'
+import { MuiLink } from './style'
 import NextLink, { LinkProps } from 'next/link'
 import React, { ReactNode, memo } from 'react'
 
@@ -14,11 +14,6 @@ const Link: React.FC<Props> = memo(function Link({ linkProps, children, target, 
     <NextLink href={linkProps.href} passHref legacyBehavior>
       <MuiLink
         underline='none'
-        color='primary'
-        sx={{
-          textDecoration: 'none',
-          cursor: 'pointer',
-        }}
         target={target}
         rel={rel}
       >
