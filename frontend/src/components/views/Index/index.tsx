@@ -1,23 +1,18 @@
-import Link from 'next/link'
-import MuiLink from '~/components/parts/MuiLink'
+import Link from '~/components/parts/Link'
 import NavBar from '~/components/screens/NavBar'
 import SignIn from '~/components/templates/Signin'
 
 const IndexView: React.FC = () => {
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <SignIn />
       <div style={{ margin: '0 auto', width: '1000px' }}>
         {/* {data?.user.id} */}
         <br />
-        <Link href='/users' passHref>
-          <MuiLink>ユーザ一覧</MuiLink>
-        </Link>
+        <Link linkProps={{ href: '/users' }}>ユーザ一覧</Link>
         <br />
-        <Link href='/works' passHref>
-          <MuiLink>ポートフォリオ一覧</MuiLink>
-        </Link>
+        <Link linkProps={{ href: '/works' }}>ポートフォリオ一覧</Link>
       </div>
     </>
   )

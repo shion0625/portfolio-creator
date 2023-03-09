@@ -16,7 +16,7 @@ export const useInfiniteScroll = (onScroll: () => void) => {
         }
       }, 1000)
     })
-  }, [])
+  })
 
   return isLoading
 }

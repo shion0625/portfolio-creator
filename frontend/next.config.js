@@ -22,5 +22,4 @@ function loadEnv(appEnv = 'local') {
       process.env[key] = value
     })
   }
-
 }

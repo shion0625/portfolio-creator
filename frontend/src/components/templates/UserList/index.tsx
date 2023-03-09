@@ -1,7 +1,6 @@
 import { Box, Paper } from '@mui/material'
-import Link from 'next/link'
 import React from 'react'
-import MuiLink from '~/components/parts/MuiLink'
+import Link from '~/components/parts/Link'
 import { User } from '~/models/types'
 
 type Props = {
@@ -14,9 +13,9 @@ export const UserList: React.FC<Props> = ({ users }): JSX.Element => {
       {users.map((user: User) => {
         return (
           <Box key={user.id}>
-            <Link href={`/users/${user.id}`} passHref>
+            <Link linkProps={{ href: `/users/${user.id}` }}>
               <Paper elevation={3} sx={{ m: 2, py: 2, fontSize: 18 }}>
-                <MuiLink>{user.name ?? `名無しさん`}</MuiLink>
+                {user.name ?? `名無しさん`}
               </Paper>
             </Link>
           </Box>

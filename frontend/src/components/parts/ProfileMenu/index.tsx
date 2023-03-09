@@ -10,7 +10,7 @@ type Props = {
   handleMenuClose: () => void //プロフィールメニューを閉じる
 }
 
-const ProfileMenu: React.FC<Props> = memo(function profileMenu({ anchorEl, menuId, isMenuOpen, handleMenuClose }) {
+const ProfileMenu: React.FC<Props> = memo(function ProfileMenu({ anchorEl, menuId, isMenuOpen, handleMenuClose }) {
   const { data: session, status } = useSession()
 
   return (
