@@ -22,7 +22,7 @@ const SearchTab: React.FC = () => {
       setCurrentTab(String(router.query.target))
       setIsReady(true)
     }
-  }, [router,setCurrentTab])
+  }, [router, setCurrentTab])
 
   if (!isReady) {
     return <>loading...</>
