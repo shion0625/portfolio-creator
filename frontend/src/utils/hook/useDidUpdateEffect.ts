@@ -10,5 +10,5 @@ export function useDidUpdateEffect(fn: EffectCallback, deps: DependencyList) {
     } else {
       fn()
     }
-  }, deps)
+  }, [fn, deps])
 }

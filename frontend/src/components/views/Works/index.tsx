@@ -5,7 +5,7 @@ import NavBar from '~/components/screens/NavBar'
 import WorksInfScroll from '~/components/screens/WorksInfScroll'
 import { SortBy } from '~/models/types'
 
-const WorksView: React.FC = memo(() => {
+const WorksView: React.FC = memo(function WorksView() {
   const { fetchData, onScroll } = useFetchWorks(SortBy.Update)
   return (
     <>
