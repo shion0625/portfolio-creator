@@ -11,7 +11,7 @@ const LinkMenuItem = forwardRef<HTMLAnchorElement, LinkMenuItemProps>(function L
   const { href, menuName, onClick, ...other } = props
   return (
     <Link href={href} passHref>
-      <MenuItem component='a' ref={forwardedRef} {...other} onClick={onClick}>
+      <MenuItem component='span' ref={forwardedRef} {...other} onClick={onClick}>
         {menuName}
       </MenuItem>
     </Link>
