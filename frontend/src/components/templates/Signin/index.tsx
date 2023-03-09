@@ -11,15 +11,18 @@ const SignIn: NextPage = () => {
 
   const [Login, { data, loading, error }] = useMutation<LoginMutation>(LoginDocument)
 
-  const getJetToken = useCallback(async (user_id: string, user_email: string) => {
-    let jwtToken = await Login({
-      variables: { id: user_id, email: user_email },
-    })
-    setCookieToken(jwtToken?.data?.login.token)
-  },[Login])
+  const getJetToken = useCallback(
+    async (user_id: string, user_email: string) => {
+      let jwtToken = await Login({
+        variables: { id: user_id, email: user_email },
+      })
+      setCookieToken(jwtToken?.data?.login.token)
+    },
+    [Login],
+  )
 
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       if (status == 'authenticated' && session && session.user && session.user.email) {
         getJetToken(session.user.id, session.user.email)
       }
