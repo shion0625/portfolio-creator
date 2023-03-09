@@ -10,7 +10,7 @@ type LinkMenuItemProps = Omit<MenuItemProps<'a', { href: string }>, 'component' 
 const LinkMenuItem = forwardRef<HTMLAnchorElement, LinkMenuItemProps>(function LinkMenuItem(props, forwardedRef) {
   const { href, menuName, onClick, ...other } = props
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref legacyBehavior>
       <MenuItem component='a' ref={forwardedRef} {...other} onClick={onClick}>
         {menuName}
       </MenuItem>

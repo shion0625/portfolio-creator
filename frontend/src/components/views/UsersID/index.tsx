@@ -1,8 +1,7 @@
 import { Box } from '@mui/material'
 import { Session } from 'next-auth'
 import { useSession } from 'next-auth/react'
-import Link from 'next/link'
-import MuiLink from '~/components/parts/MuiLink'
+import Link from '~/components/parts/Link'
 import PrimarySearchAppBar from '~/components/screens/NavBar'
 import { GetUserQuery } from '~/models/client'
 
@@ -18,10 +17,8 @@ const UsersIDView: React.FC<UserDetailProps> = ({ user, session }) => {
         <p>User Detail</p>
         <p>{`ID: ${user.id}`}</p>
         <p>{user.name}</p>
-        {session?.user?.id == user.id && <Link href={`/users/${user.id}/Edit`}>編集</Link>}
-        <Link href='/users' passHref>
-          <MuiLink>ユーザ一覧に戻る</MuiLink>
-        </Link>
+        {session?.user?.id == user.id && <Link linkProps={{ href: `/users/${user.id}/Edit` }}>編集</Link>}
+        <Link linkProps={{ href: `/users` }}>ユーザ一覧に戻る</Link>
       </Box>
     </>
   )

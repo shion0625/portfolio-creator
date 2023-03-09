@@ -1,8 +1,9 @@
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
 import { Item } from './style'
-import { Box, Chip, Link as MuiLink } from '@mui/material'
+import { Box, Chip } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React, { useContext } from 'react'
+import Link from '~/components/parts/Link'
 import { Color } from '~/constant/constant'
 import { WorkContext } from '~/stores/WorkView'
 
@@ -33,7 +34,7 @@ const WorkItem: React.FC = () => {
         <Typography paragraph>
           {languages.length != 0 &&
             languages.map((language, i) => {
-              var num = Math.floor(Math.random() * color.length)
+              let num = Math.floor(Math.random() * color.length)
               return <Chip key={language + ':' + i} label={language} variant='outlined' color={color[num]} />
             })}
         </Typography>
@@ -42,9 +43,9 @@ const WorkItem: React.FC = () => {
           {urls.length != 0 &&
             urls.map((url, i) => (
               <Box key={url + i}>
-                <MuiLink href={url} target='_blank' rel='noopener noreferrer'>
+                <Link linkProps={{ href: url }} target='_blank' rel='noopener noreferrer'>
                   {url}
-                </MuiLink>
+                </Link>
               </Box>
             ))}
         </Typography>

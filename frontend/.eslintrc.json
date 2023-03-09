@@ -1,11 +1,9 @@
 {
+  "extends": ["next", "next/core-web-vitals", "plugin:jsx-a11y/recommended", "prettier"],
   "plugins": ["jsx-a11y"],
-  "extends": ["plugin:jsx-a11y/strict", "next", "next/core-web-vitals", "prettier", "next/babel"],
   "rules": {
-    // 必須
     "curly": "error",
     "no-var": "error",
-    // 推奨
     "dot-notation": "warn",
     "no-trailing-spaces": "warn",
     "space-infix-ops": "warn",

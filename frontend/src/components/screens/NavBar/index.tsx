@@ -7,12 +7,11 @@ import {
   InvertColors as InvertColorsIcon,
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
 import { useRecoilState } from 'recoil'
+import Link from '~/components/parts/Link'
 import MobileMenu from '~/components/parts/MobileMenu'
-import MuiLink from '~/components/parts/MuiLink'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import SearchArea from '~/components/parts/SearchArea'
 import { currentTabState } from '~/stores/CurrentTab'
@@ -70,9 +69,7 @@ export default function NavBar() {
       <AppBar position='static'>
         <Toolbar>
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
-            <Link href='/' passHref>
-              <MuiLink>portfolio</MuiLink>
-            </Link>
+            <Link linkProps={{ href: '/' }}>portfolio</Link>
           </Typography>
           <SearchArea
             inputElement={searchElement}
