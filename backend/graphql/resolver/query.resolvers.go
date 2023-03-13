@@ -102,7 +102,6 @@ func (r *queryResolver) Search(ctx context.Context, target string, keyword strin
 		result, err := r.userUseCase.Search(ctx, keyword, sortBy, searchedAt, num, limit)
 		if !errors.Is(err, nil) {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-
 				return nil, &gqlerror.Error{
 					Message: "works not found",
 				}

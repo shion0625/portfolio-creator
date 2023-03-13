@@ -23,20 +23,20 @@ var timeout = 3 * time.Second
 func main() {
 	util.LoadEnv()
 
-	cEcho := echo.New()
-	cEcho.Use(middleware.Logger())
-	cEcho.Use(middleware.Recover())
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 	// cors設定
-	cEcho.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	cDig, _ := dig.BuildDigDependencies()
-	err := cDig.Invoke(func(r *resolver.Resolver) error {
-		cEcho.GET("/", Playground())
-		g := cEcho.Group("/api")
+	d, _ := dig.BuildDigDependencies()
+	err := d.Invoke(func(r *resolver.Resolver) error {
+		e.GET("/api", Playground())
+		g := e.Group("/api")
 		g.Use(echo.WrapMiddleware(auth.AuthMiddleware))
 		g.POST("/query", QueryPlayground(r))
 
@@ -48,7 +48,7 @@ func main() {
 	}
 
 	port := util.GetPort()
-	errPort := cEcho.Start(port)
+	errPort := e.Start(port)
 
 	if errors.Is(errPort, nil) {
 		log.Fatalln(errPort)

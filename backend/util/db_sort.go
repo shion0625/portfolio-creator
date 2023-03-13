@@ -1,8 +1,8 @@
 package util
 
 import (
-	"gorm.io/gorm"
 	"github.com/shion0625/portfolio-creator/backend/domain"
+	"gorm.io/gorm"
 )
 
 func SortWork(sortBy domain.SortBy, searched string, num int) func(ddb *gorm.DB) *gorm.DB {
