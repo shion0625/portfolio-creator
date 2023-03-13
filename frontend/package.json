@@ -5,6 +5,7 @@
   "scripts": {
     "local": "APP_ENV=local next dev",
     "dev": "APP_ENV=development next dev",
+    "pro": "APP_ENV=production next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src",
