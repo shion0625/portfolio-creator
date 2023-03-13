@@ -1,8 +1,8 @@
 import { GetUsersNameQuery } from '~/models/client'
-import { fetcherSSG } from '~/repositories/server'
+import { executeQuery } from '~/utils/hook/useServerSideQuery'
 
 export async function getUsersName(): Promise<GetUsersNameQuery> {
-  const sdk = await fetcherSSG()
-  const users = await sdk.GetUsersName({ limit: 10, offset: 0 })
+  const users = executeQuery(
+    'GetUsersName', { limit: 10, offset: 0 })
   return users
 }

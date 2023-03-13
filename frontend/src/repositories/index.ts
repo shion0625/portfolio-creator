@@ -7,5 +7,3 @@ export const userRepository = {
   getUserIds,
   getUsersName,
 }
-
-export * from './server'
