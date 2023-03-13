@@ -29,13 +29,13 @@ func main() {
 	// cors設定
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080", "portfolio-creator-kappa.vercel.app", "https://backend-qqw7poodoa-an.a.run.app"},
 		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
 	d, _ := dig.BuildDigDependencies()
 	err := d.Invoke(func(r *resolver.Resolver) error {
-		e.GET("/api", Playground())
+		e.GET("/", Playground())
 		g := e.Group("/api")
 		g.Use(echo.WrapMiddleware(auth.AuthMiddleware))
 		g.POST("/query", QueryPlayground(r))
