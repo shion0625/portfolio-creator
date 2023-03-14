@@ -18,18 +18,17 @@ import (
 	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
-var timeout = 3 * time.Second
+var timeout = 30 * time.Second
 
 func main() {
 	util.LoadEnv()
-
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	// cors設定
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080", "portfolio-creator-kappa.vercel.app", "https://backend-qqw7poodoa-an.a.run.app"},
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080", "https://portfolio-creator-kappa.vercel.app", "https://backend-qqw7poodoa-an.a.run.app"},
 		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
@@ -48,9 +47,9 @@ func main() {
 	}
 
 	port := util.GetPort()
-	errPort := e.Start(port)
+	errPort := e.Start(":" + port)
 
-	if errors.Is(errPort, nil) {
+	if !errors.Is(errPort, nil) {
 		log.Fatalln(errPort)
 	}
 
@@ -99,7 +98,6 @@ func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 			),
 		)
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
-
 		return nil
 	}
 }
