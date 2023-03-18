@@ -25,7 +25,7 @@ jobs:
         working-directory: ./frontend
 
       - name: Pull remote changes
-        run: git pull origin develop
+        run: git pull --no-rebase origin develop
         working-directory: ./frontend
 
       - name: Run Prettier
