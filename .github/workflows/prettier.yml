@@ -34,6 +34,8 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add -A .
           git diff-index --quiet HEAD || git commit -m "Auto-format code with Prettier [skip ci]"
+          git push origin main
         env:
           CI: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./frontend

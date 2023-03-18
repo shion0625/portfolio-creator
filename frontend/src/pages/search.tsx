@@ -4,7 +4,7 @@ import React from 'react'
 import SearchView from '~/components/views/Search'
 
 const Search: NextPage = () => {
-  const { data: session, status } = useSession()
+              const { data: session, status } = useSession()
   return <SearchView />
 }
 
