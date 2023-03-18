@@ -9,10 +9,9 @@ type User struct {
 	Email         *string   `json:"email" gorm:"type:text"`
 	EmailVerified []*string `json:"emailVerified" gorm:"type:text[]"`
 	Image         *string   `json:"image" gorm:"type:text"`
-	CreatedAt      string   `json:"createdAt"`
-	UpdatedAt      string   `json:"updatedAt"`
-	SerialNumber   int      `json:"serialNumber" gorm:"autoIncrement"`
-
+	CreatedAt     string    `json:"createdAt"`
+	UpdatedAt     string    `json:"updatedAt"`
+	SerialNumber  int       `json:"serialNumber" gorm:"autoIncrement"`
 }
 
 func (User) IsNode()            {}
