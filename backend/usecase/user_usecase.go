@@ -8,6 +8,7 @@ import (
 
 	"github.com/shion0625/portfolio-creator/backend/config/auth"
 	"github.com/shion0625/portfolio-creator/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
 type UserUseCase struct {
@@ -97,21 +98,15 @@ func (u UserUseCase) Search(ctx context.Context, keyword string, sortBy domain.S
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
 
-	pageInfo := domain.PaginationInfo{
-		Page:             0,
-		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      false,
-		HasPreviousPage:  false,
-		Count:            int(numRows),
-		TotalCount:       int(totalCount),
-	}
-	workPagination := domain.UserPagination{
+	pageInfo := util.SettingPagination(limit, totalCount, numRows)
+
+	userPagination := domain.UserPagination{
 		Type:     domain.ModelUser,
 		PageInfo: &pageInfo,
 		Nodes:    users,
 	}
 
-	return &workPagination, nil
+	return &userPagination, nil
 }
 
 /*

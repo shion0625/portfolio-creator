@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math"
 
 	"github.com/shion0625/portfolio-creator/backend/domain"
+	"github.com/shion0625/portfolio-creator/backend/util"
 )
 
 type WorkUseCase struct {
@@ -50,14 +50,8 @@ func (w WorkUseCase) GetAll(ctx context.Context, sortBy domain.SortBy, searchedA
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
 
-	pageInfo := domain.PaginationInfo{
-		Page:             0,
-		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      false,
-		HasPreviousPage:  false,
-		Count:            int(numRows),
-		TotalCount:       int(totalCount),
-	}
+	pageInfo := util.SettingPagination(limit, totalCount, numRows)
+
 	workPagination := domain.WorkPagination{
 		Type:     domain.ModelWork,
 		PageInfo: &pageInfo,
@@ -86,14 +80,8 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, sortBy domain.S
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
 
-	pageInfo := domain.PaginationInfo{
-		Page:             0,
-		PaginationLength: int(math.Ceil(float64(totalCount) / float64(limit))),
-		HasNextPage:      false,
-		HasPreviousPage:  false,
-		Count:            int(numRows),
-		TotalCount:       int(totalCount),
-	}
+	pageInfo := util.SettingPagination(limit, totalCount, numRows)
+
 	workPagination := domain.WorkPagination{
 		Type:     domain.ModelWork,
 		PageInfo: &pageInfo,
