@@ -22,7 +22,9 @@ var timeout = 30 * time.Second
 
 func main() {
 	util.LoadEnv()
+
 	e := echo.New()
+
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	// cors設定
@@ -98,6 +100,7 @@ func QueryPlayground(r *resolver.Resolver) echo.HandlerFunc {
 			),
 		)
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
+
 		return nil
 	}
 }
