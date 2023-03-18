@@ -10,7 +10,6 @@ import {
   useCreateWork,
   useUpdateWork,
   useDeleteWorks,
-  useForceUpdate,
   database,
 } from '~/components/views/UsersIDEdit/hooks'
 import { WorkFormI, WorkFormInterface, DirtyWork } from '~/models/Work'
