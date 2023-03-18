@@ -11,11 +11,11 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   return (
     <RecoilRoot>
       <Theme>
-  <ApolloProvider client={client}>
-    <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
-    </SessionProvider>
-  </ApolloProvider>
+        <ApolloProvider client={client}>
+          <SessionProvider session={pageProps.session}>
+            <Component {...pageProps} />
+          </SessionProvider>
+        </ApolloProvider>
       </Theme>
     </RecoilRoot>
   )
