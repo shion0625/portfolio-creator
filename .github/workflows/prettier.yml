@@ -1,9 +1,6 @@
 name: Prettier
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -34,7 +31,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add -A .
           git diff-index --quiet HEAD || git commit -m "Auto-format code with Prettier [skip ci]"
-          git push origin ${GITHUB_REF}:${{ github.head_ref }}
+          git push origin ${GITHUB_REF#refs/}:${{ github.head_ref }}
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
