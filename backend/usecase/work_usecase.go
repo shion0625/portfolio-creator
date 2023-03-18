@@ -50,15 +50,14 @@ func (w WorkUseCase) GetAll(ctx context.Context, sortBy domain.SortBy, searchedA
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
 
-	pageInfo := util.SetPaginationInfo(limit, totalCount, numRows)
+	pagination := util.SetPagination(works, limit, totalCount, numRows)
 
-	workPagination := domain.WorkPagination{
-		Type:     domain.ModelWork,
-		PageInfo: &pageInfo,
-		Nodes:    works,
+	result, ok := pagination.(*domain.WorkPagination)
+	if !ok {
+		return nil, errors.New("unexpected pagination type")
 	}
 
-	return &workPagination, nil
+	return result, nil
 }
 
 /*
@@ -80,15 +79,14 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, sortBy domain.S
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
 
-	pageInfo := util.SetPaginationInfo(limit, totalCount, numRows)
+	pagination := util.SetPagination(works, limit, totalCount, numRows)
 
-	workPagination := domain.WorkPagination{
-		Type:     domain.ModelWork,
-		PageInfo: &pageInfo,
-		Nodes:    works,
+	result, ok := pagination.(*domain.WorkPagination)
+	if !ok {
+		return nil, errors.New("unexpected pagination type")
 	}
 
-	return &workPagination, nil
+	return result, nil
 }
 
 /*

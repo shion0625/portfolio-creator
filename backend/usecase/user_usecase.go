@@ -98,15 +98,14 @@ func (u UserUseCase) Search(ctx context.Context, keyword string, sortBy domain.S
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
 
-	pageInfo := util.SetPaginationInfo(limit, totalCount, numRows)
+	pagination := util.SetPagination(users, limit, totalCount, numRows)
 
-	userPagination := domain.UserPagination{
-		Type:     domain.ModelUser,
-		PageInfo: &pageInfo,
-		Nodes:    users,
+	result, ok := pagination.(*domain.UserPagination)
+	if !ok {
+		return nil, errors.New("unexpected pagination type")
 	}
 
-	return &userPagination, nil
+	return result, nil
 }
 
 /*
