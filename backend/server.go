@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -30,8 +31,17 @@ func main() {
 	// cors設定
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowCredentials: true,
-		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080", "https://portfolio-creator-shion0625.vercel.app", "https://backend-qqw7poodoa-an.a.run.app"},
-		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowOrigins: []string{
+			os.Getenv("FRONTEND_URL"),
+			os.Getenv("FRONTEND_URL"),
+			os.Getenv("FRONTEND_DEVELOP_URL"),
+		},
+		AllowMethods: []string{
+			http.MethodGet,
+			http.MethodPut,
+			http.MethodPost,
+			http.MethodDelete,
+		},
 	}))
 
 	d, _ := dig.BuildDigDependencies()
