@@ -50,7 +50,7 @@ func (w WorkUseCase) GetAll(ctx context.Context, sortBy domain.SortBy, searchedA
 		return nil, fmt.Errorf("GetAll - usecase: %w", err)
 	}
 
-	pageInfo := util.SettingPagination(limit, totalCount, numRows)
+	pageInfo := util.SetPaginationInfo(limit, totalCount, numRows)
 
 	workPagination := domain.WorkPagination{
 		Type:     domain.ModelWork,
@@ -80,7 +80,7 @@ func (w WorkUseCase) Search(ctx context.Context, keyword string, sortBy domain.S
 		return nil, fmt.Errorf("Search - GetByKeyword - usecase: %w", err)
 	}
 
-	pageInfo := util.SettingPagination(limit, totalCount, numRows)
+	pageInfo := util.SetPaginationInfo(limit, totalCount, numRows)
 
 	workPagination := domain.WorkPagination{
 		Type:     domain.ModelWork,
