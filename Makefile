@@ -78,3 +78,7 @@ migrate-server-down:
 
 migrate-server-force:
 	migrate -database postgres://shion0625:Xshion0912@localhost:5432/portfolio?sslmode=disable -path backend/infrastructure/migrations force 3
+
+deploy-backend:
+	gcloud builds submit --tag gcr.io/portfolio-creator-backend/backend
+	gcloud run deploy --image gcr.io/portfolio-creator-backend/backend --platform managed --max-instances 1
