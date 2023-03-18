@@ -1,4 +1,4 @@
-import { createTheme, CssBaseline, PaletteMode, ThemeProvider } from '@mui/material'
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { ReactNode } from 'react'
 import { usePaletteMode } from '~/stores/PaletteMode'
 import { primary, secondary, error, warning, info, success } from '~/styles/theme'

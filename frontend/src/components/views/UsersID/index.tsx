@@ -1,6 +1,5 @@
 import { Box } from '@mui/material'
 import { Session } from 'next-auth'
-import { useSession } from 'next-auth/react'
 import Link from '~/components/parts/Link'
 import PrimarySearchAppBar from '~/components/screens/NavBar'
 import { GetUserQuery } from '~/models/client'
