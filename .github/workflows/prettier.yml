@@ -35,7 +35,7 @@ jobs:
           git add -A .
           git diff-index --quiet HEAD || git commit -m "Auto-format code with Prettier [skip ci]"
           git pull origin ${GITHUB_REF}
-          git push origin HEAD:${{ github.head_ref }}
+          git push origin ${GITHUB_REF}
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
