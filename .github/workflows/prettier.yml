@@ -24,9 +24,9 @@ jobs:
         run: yarn install --frozen-lockfile
         working-directory: ./frontend
 
-    - name: Pull remote changes
-      run: git pull origin develop
-      working-directory: ./frontend
+      - name: Pull remote changes
+        run: git pull origin develop
+        working-directory: ./frontend
 
       - name: Run Prettier
         run: |
