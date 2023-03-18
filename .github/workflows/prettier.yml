@@ -1,7 +1,7 @@
 name: Prettier
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
@@ -24,10 +24,6 @@ jobs:
         run: yarn install --frozen-lockfile
         working-directory: ./frontend
 
-      - name: Pull remote changes
-        run: git pull --no-rebase origin develop
-        working-directory: ./frontend
-
       - name: Run Prettier
         run: |
           yarn format
@@ -35,7 +31,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add -A .
           git diff-index --quiet HEAD || git commit -m "Auto-format code with Prettier [skip ci]"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git pull origin main
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
