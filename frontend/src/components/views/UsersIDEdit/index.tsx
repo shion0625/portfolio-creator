@@ -17,7 +17,7 @@ const UserIDEditView: React.FC<UserIDEditViewProps> = ({ id, session }) => {
   const CHUNK_SIZE = 3
   const removeWorkIds = useRef<string[]>([''])
   //データの取得
-  const { userData, onUpdate } = useGetUserWork(id)
+  const { userData, onUpdate } = useGetUserWork({id})
   const { createWork, loading: createLoading, error: createError } = useCreateWork()
   const { updateWork, loading: updateLoading, error: updateError } = useUpdateWork()
   const { deleteWorks, loading: deleteLoading, error: deleteError } = useDeleteWorks()
