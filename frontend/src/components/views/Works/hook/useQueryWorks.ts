@@ -15,7 +15,7 @@ export type Variables = {
   num: number
 }
 
-export const useQueryWorks = (
+const useQueryWorks = (
   variables: Variables,
   setSearchData: Dispatch<SetStateAction<WorkPagination>>,
   lastDataRef: MutableRefObject<Node | undefined>,
@@ -45,3 +45,5 @@ export const useQueryWorks = (
     refetch,
   }
 }
+
+export default useQueryWorks

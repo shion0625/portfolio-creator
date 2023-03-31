@@ -7,13 +7,7 @@ import { useState } from 'react'
 import UserIDEditView from '~/components/views/UsersIDEdit'
 import { userRepository } from '~/repositories/index'
 
-// const useForceUpdate = () => {
-//   const [count, setCount] = useState(0);
-//   return () => setCount(e => count + 1);
-// }
-
 const UserIDEdit: NextPage = () => {
-  const [count, setCount] = useState(0)
   const router = useRouter()
   const { data: session, status } = useSession()
 
