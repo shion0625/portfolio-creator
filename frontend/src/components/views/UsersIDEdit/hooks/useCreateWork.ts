@@ -6,33 +6,28 @@ import { CreateWorkInput } from '~/models/types'
 
 type useCreateWorkProps = {
   onCompleted?: (data: CreateWorkMutation) => void
-  onError?: (error: any) => void
+  onError?: (error: Error) => void
 }
 
-const createWorkInputDTO = (session: Session, work: WorkFormData) => {
+const createWorkInputDTO = (session: Session, work: WorkFormData): CreateWorkInput | undefined => {
   if (!session.user) {
     return
   }
-  if (work.languages != undefined) {
-    work.language = JSON.stringify(work.languages)
-  }
-  if (work.urls != undefined) {
-    work.url = JSON.stringify(work.urls)
-  }
+  const { id } = session.user
+  const { brief_story, duration, image_url, languages, number_of_people, role, summary, title, urls } = work
 
-  const createWorkInput: CreateWorkInput = {
-    brief_story: work.brief_story,
-    duration: work.duration,
-    image_url: work.image_url,
-    language: work.language,
-    number_of_people: work.number_of_people,
-    role: work.role,
-    summary: work.summary,
-    title: work.title,
-    url: work.url,
-    user_id: session.user.id,
+  return {
+    brief_story,
+    duration,
+    image_url,
+    language: languages ? JSON.stringify(languages) : languages,
+    number_of_people,
+    role,
+    summary,
+    title,
+    url: urls ? JSON.stringify(urls) : urls,
+    user_id: id,
   }
-  return createWorkInput
 }
 
 export const useCreateWork = ({ onCompleted, onError }: useCreateWorkProps = {}) => {

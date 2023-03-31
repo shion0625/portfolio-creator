@@ -6,33 +6,27 @@ import { UpdateWorkInput } from '~/models/types'
 
 type useUpdateWorkProps = {
   onCompleted?: (data: UpdateWorkMutation) => void
-  onError?: (error: any) => void
+  onError?: (error: Error) => void
 }
 
-export const updateWorkInputDTO = (session: Session, work: WorkFormData) => {
+export const updateWorkInputDTO = (session: Session, work: WorkFormData): UpdateWorkInput | undefined => {
   if (!session.user) {
     return
   }
-  if (work.languages != undefined) {
-    work.language = JSON.stringify(work.languages)
-  }
-  if (work.urls != undefined) {
-    work.url = JSON.stringify(work.urls)
-  }
+  const { id, brief_story, duration, image_url, languages, number_of_people, role, summary, title, urls } = work
 
-  let updateWorkInput: UpdateWorkInput = {
-    id: work.id,
-    brief_story: work.brief_story,
-    duration: work.duration,
-    image_url: work.image_url,
-    language: work.language,
-    number_of_people: work.number_of_people,
-    role: work.role,
-    summary: work.summary,
-    title: work.title,
-    url: work.url,
+  return {
+    id,
+    brief_story,
+    duration,
+    image_url,
+    language: languages ? JSON.stringify(languages) : languages,
+    number_of_people,
+    role,
+    summary,
+    title,
+    url: urls ? JSON.stringify(urls) : urls,
   }
-  return updateWorkInput
 }
 
 export const useUpdateWork = ({ onCompleted, onError }: useUpdateWorkProps = {}) => {
