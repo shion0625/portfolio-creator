@@ -6,12 +6,12 @@ import React from 'react'
 // 利用したい React Hook Form のフックをimport
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form'
 import ImageCard from '~/components/screens/WorkFormImageCard'
-import { WorkFormInterface, addNewWork, resetNewWorks, DirtyWork } from '~/models/Work'
+import { WorkFormInput, addNewWorkFormData, resetNewWorkFormInput, DirtyWork } from '~/models/Work'
 import { GetUserAuthQuery } from '~/models/client'
 import { WorkFormContext } from '~/stores/workForm'
 
 type Props = GetUserAuthQuery & {
-  onSubmit: (data: WorkFormInterface, dirtyWorks?: DirtyWork[]) => void
+  onSubmit: (data: WorkFormInput, dirtyWorks?: DirtyWork[]) => void
   removeWorkIds: string[]
 }
 
@@ -38,7 +38,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }
     // errors オブジェクトには、各 input のフォームのエラーまたはエラーメッセージが含まれる
     // バリデーションとエラーメッセージで登録するとエラーメッセージが返される
     formState: { touchedFields, errors },
-  } = useForm<WorkFormInterface>({
+  } = useForm<WorkFormInput>({
     defaultValues: {
       works: userAuthCopy.works?.nodes,
     },
@@ -54,11 +54,11 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }
   })
 
   const addWork = () => {
-    append(addNewWork)
+    append(addNewWorkFormData)
   }
 
   const resetWorks = () => {
-    reset(resetNewWorks)
+    reset(resetNewWorkFormInput)
   }
 
   const removeWork = (index: number, workId: string) => {
@@ -66,7 +66,7 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }
     remove(index)
   }
 
-  const submitWork: SubmitHandler<WorkFormInterface> = (data: WorkFormInterface) => {
+  const submitWork: SubmitHandler<WorkFormInput> = (data: WorkFormInput) => {
     onSubmit(data, touchedFields.works)
     // touched状態とdirty状態のリセット
     // 値,エラーは保持したまま

@@ -1,26 +1,52 @@
 import { useMutation } from '@apollo/client'
-import { GetUserQuery, CreateWorkMutation, CreateWorkDocument, GetUserDocument } from '~/models/client'
+import { Session } from 'next-auth'
+import { WorkFormData } from '~/models/Work'
+import { CreateWorkMutation, CreateWorkDocument } from '~/models/client'
+import { CreateWorkInput } from '~/models/types'
 
-// create work mutation
-export const useCreateWork = (id: string) => {
-  const [CreateWork, { loading, error }] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
-    // ミューテーション後に実行される処理
-    update(cache, { data }) {
-      const newWork = data?.createWork // ミューテーションのレスポンス
-      const existingUser = cache.readQuery<GetUserQuery>({
-        query: GetUserDocument,
-        variables: { id: id },
-      })
-      if (newWork) {
-        let existingUserCopy = Object.assign({}, JSON.parse(JSON.stringify(existingUser)))
-        existingUserCopy?.user?.works?.nodes.push(newWork)
-        // FETCH_ALL_TASKSのキャッシュに新規タスクを追加
-        cache.writeQuery({
-          query: GetUserDocument,
-          data: existingUserCopy,
-        })
-      }
-    },
+type useCreateWorkProps = {
+  onCompleted?: (data: CreateWorkMutation) => void
+  onError?: (error: any) => void
+}
+
+const createWorkInputDTO = (session: Session, work: WorkFormData) => {
+  if (!session.user) {
+    return
+  }
+  if (work.languages != undefined) {
+    work.language = JSON.stringify(work.languages)
+  }
+  if (work.urls != undefined) {
+    work.url = JSON.stringify(work.urls)
+  }
+
+  const createWorkInput: CreateWorkInput = {
+    brief_story: work.brief_story,
+    duration: work.duration,
+    image_url: work.image_url,
+    language: work.language,
+    number_of_people: work.number_of_people,
+    role: work.role,
+    summary: work.summary,
+    title: work.title,
+    url: work.url,
+    user_id: session.user.id,
+  }
+  return createWorkInput
+}
+
+export const useCreateWork = ({ onCompleted, onError }: useCreateWorkProps = {}) => {
+  const [createWork, { loading, error }] = useMutation<CreateWorkMutation>(CreateWorkDocument, {
+    onCompleted,
+    onError,
   })
-  return [CreateWork, loading, error]
+
+  const handleCreateWork = async (session: Session, work: WorkFormData) => {
+    const createWorkDTO = createWorkInputDTO(session, work)
+    if (createWorkDTO) {
+      await createWork({ variables: { input: createWorkDTO } })
+    }
+  }
+
+  return { createWork: handleCreateWork, loading, error }
 }

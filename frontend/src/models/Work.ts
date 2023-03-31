@@ -1,14 +1,14 @@
 import { Work, PaginationInfo, CreateWorkInput } from '~/models/types'
 import { Weaken } from '~/utils/extendType'
 
-export interface WorkFormI extends CreateWorkInput {
+export interface WorkFormData extends CreateWorkInput {
   id: string
   urls?: string[]
   languages?: string[]
 }
 
-export type WorkFormInterface = {
-  works?: WorkFormI[]
+export type WorkFormInput = {
+  works?: WorkFormData[]
 }
 
 export type DirtyWork = {
@@ -25,7 +25,7 @@ export type DirtyWork = {
   user_id?: boolean
 }
 
-export const addNewWork = {
+export const addNewWorkFormData = {
   id: '',
   title: '',
   urls: [''],
@@ -39,7 +39,7 @@ export const addNewWork = {
   user_id: '',
 }
 
-export const resetNewWorks = {
+export const resetNewWorkFormInput = {
   works: [
     {
       id: '',

@@ -8,13 +8,13 @@ import * as React from 'react'
 import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
 import BasicModal from '~/components/parts/Modal'
 import WorkFormItem from '~/components/screens/WorkFormItem'
-import { WorkFormInterface } from '~/models/Work'
+import { WorkFormInput } from '~/models/Work'
 
 type Props = {
   workIndex: number
   removeWork: (index: number, id: string) => void
-  getValues: UseFormGetValues<WorkFormInterface>
-  control: Control<WorkFormInterface>
+  getValues: UseFormGetValues<WorkFormInput>
+  control: Control<WorkFormInput>
 }
 
 const ImageCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control }): JSX.Element => {

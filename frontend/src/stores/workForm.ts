@@ -1,11 +1,11 @@
 import { createContext } from 'react'
 // 利用したい React Hook Form のフックをimport
 import { Control, UseFormRegister } from 'react-hook-form'
-import { WorkFormInterface } from '~/models/Work'
+import { WorkFormInput } from '~/models/Work'
 
 type TWorkFormContext = {
-  register: UseFormRegister<WorkFormInterface>
-  control: Control<WorkFormInterface>
+  register: UseFormRegister<WorkFormInput>
+  control: Control<WorkFormInput>
   workIndex: number
   errors: any
 }
