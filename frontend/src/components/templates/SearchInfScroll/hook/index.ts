@@ -1,2 +1,2 @@
 export * from './useFetchSearchWorks'
-export * from './useSearch'
+export * from './useQuerySearch'

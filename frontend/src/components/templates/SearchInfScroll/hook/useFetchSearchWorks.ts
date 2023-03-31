@@ -1,4 +1,4 @@
-import { useSearch, Variables, SearchDataState } from './useSearch'
+import useQuerySearch, { Variables, SearchDataState } from './useQuerySearch'
 import { useState, useCallback, useRef } from 'react'
 import { Work, User, Model, SortBy, Node } from '~/models/types'
 import { useDidUpdateEffect } from '~/utils/hook/useDidUpdateEffect'
@@ -47,7 +47,7 @@ export const useFetchSearchWorks = <T extends Model>(
   //カーソルスクロール使用するための最後のデータ
   const lastDataRef = useRef<Node | undefined>(undefined)
 
-  const { refetch } = useSearch(variables, setSearchData, lastDataRef)
+  const { refetch } = useQuerySearch(variables, setSearchData, lastDataRef)
 
   //keywordが変更になった際にデータを
   useDidUpdateEffect(() => {

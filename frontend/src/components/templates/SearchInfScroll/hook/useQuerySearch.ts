@@ -19,7 +19,7 @@ export type Variables<T extends Model> = {
   num: number
 }
 
-export const useSearch = <T extends Model>(
+const useQuerySearch = <T extends Model>(
   variables: Variables<T>,
   setSearchData: Dispatch<SetStateAction<SearchDataState<T>>>,
   lastDataRef: MutableRefObject<Node | undefined>,
@@ -49,3 +49,4 @@ export const useSearch = <T extends Model>(
     refetch,
   }
 }
+export default useQuerySearch
