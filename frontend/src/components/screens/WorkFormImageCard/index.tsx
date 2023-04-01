@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { Control, useWatch, UseFormGetValues } from 'react-hook-form'
-import BasicModal from '~/components/parts/Modal'
+import Modal from '~/components/parts/Modal'
 import WorkFormItem from '~/components/screens/WorkFormItem'
 import { WorkFormInput } from '~/models/Work'
 
@@ -61,9 +61,9 @@ const ImageCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control 
         <Button size='small' color='primary'>
           画像の追加
         </Button>
-        <BasicModal buttonText='編集'>
+        <Modal buttonText='編集'>
           <WorkFormItem />
-        </BasicModal>
+        </Modal>
         {/* remove 関数は特定の位置の input を削除、位置を指定しない場合は全てを削除 */}
         <IconButton aria-label='delete' onClick={() => removeWork(workIndex, getWorkId)}>
           <DeleteOutlineIcon />
