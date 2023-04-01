@@ -1,5 +1,4 @@
-import { style } from './style'
-import Box from '@mui/material/Box'
+import { ChildrenBox } from './style'
 import Button from '@mui/material/Button'
 import { Modal as MuiModal } from '@mui/material';
 import * as React from 'react'
@@ -25,7 +24,7 @@ const Modal: React.FC<Props> = ({ buttonText, children }) => {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <Box sx={style}>{children}</Box>
+        <ChildrenBox>{children}</ChildrenBox>
       </MuiModal>
     </div>
   )
