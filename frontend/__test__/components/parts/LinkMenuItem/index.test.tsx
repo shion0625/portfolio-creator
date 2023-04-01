@@ -1,6 +1,5 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import LinkMenuItem from '~/components/parts/LinkMenuItem'
 
 describe('LinkMenuItem', () => {
@@ -15,7 +14,7 @@ describe('LinkMenuItem', () => {
     expect(menuItem).toHaveAttribute('href', href)
   })
 
-  it('calls the onClick callback when the menu item is clicked', () => {
+  it('calls the onClick callback when the menu item is clicked', async () => {
     render(<LinkMenuItem href={href} menuName={menuName} onClick={onClick} />)
     const menuItem = screen.getByRole('menuitem')
     menuItem.click()

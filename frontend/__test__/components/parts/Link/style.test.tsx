@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { MuiLink } from '~/components/parts/Link/style';
-import { alpha } from '@mui/material/styles'
 
 describe('MuiLink', () => {
   it('renders the component', () => {
