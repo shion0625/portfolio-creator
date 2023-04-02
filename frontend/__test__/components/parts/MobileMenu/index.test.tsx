@@ -4,7 +4,7 @@ import MobileMenu from '~/components/parts/MobileMenu';
 describe('MobileMenu', () => {
   const props = {
     mobileMenuId: 'mobile-menu',
-    mobileMoreAnchorEl: null,
+    mobileMoreAnchorEl: document.createElement('div'),
     isMobileMenuOpen: true,
     handleProfileMenuOpen: jest.fn(),
     handleMobileMenuClose: jest.fn(),
@@ -21,14 +21,26 @@ describe('MobileMenu', () => {
     expect(icons).toHaveLength(3);
   });
 
-  it('should open and close the MobileMenu component', () => {
-    render(<MobileMenu {...props} />);
+    it('should open and close the MobileMenu component (keydown Tab)', () => {
+    const handleMobileMenuClose = jest.fn()
+    render(<MobileMenu {...props} handleMobileMenuClose={handleMobileMenuClose} />);
     const menu = screen.getByRole('menu');
-    expect(menu).toHaveClass('MuiMenu-paper');
+    expect(menu).toBeInTheDocument();
 
-    const closeButton = screen.getByLabelText('close');
-    fireEvent.click(closeButton);
-    expect(props.handleMobileMenuClose).toHaveBeenCalled();
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Tab' });
+
+    expect(handleMobileMenuClose).toHaveBeenCalled();
+    });
+
+  it('should open and close the MobileMenu component (keydown Escape)', () => {
+    const handleMobileMenuClose = jest.fn()
+    render(<MobileMenu {...props}  handleMobileMenuClose={handleMobileMenuClose} />);
+    const menu = screen.getByRole('menu');
+    expect(menu).toBeInTheDocument();
+
+  fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+
+    expect(handleMobileMenuClose).toHaveBeenCalled();
   });
 
   it('should call handleProfileMenuOpen when Profile button is clicked', () => {
