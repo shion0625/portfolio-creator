@@ -11,16 +11,22 @@ const WorkItem: React.FC = () => {
   const { work } = useContext(WorkContext)
   const color = Color
 
-  let languages: string[] = []
-  let urls: string[] = []
+  const parseJson = (json?: string | null) => json ? JSON.parse(json).filter(Boolean) : [];
+  const languages = parseJson(work.language);
+  const urls = parseJson(work.url);
 
-  if (work.language) {
-    languages = JSON.parse(work.language).filter(Boolean)
-  }
-  if (work.url) {
-    urls = JSON.parse(work.url).filter(Boolean)
-  }
+  const renderLanguageChip = (language: string, i: number) => {
+    const num = Math.floor(Math.random() * color.length);
+    return <Chip key={language + ':' + i} label={language} variant='outlined' color={color[num]} />;
+  };
 
+    const renderUrl = (url: string, i: number) => (
+    <Box key={url + i}>
+      <Link linkProps={{ href: url }} target='_blank' rel='noopener noreferrer'>
+        {url}
+      </Link>
+    </Box>
+  );
   return (
     <Item key={'workItem' + work.id}>
       <>
@@ -32,22 +38,11 @@ const WorkItem: React.FC = () => {
         <Typography paragraph>{work.brief_story}</Typography>
 
         <Typography paragraph>
-          {languages.length != 0 &&
-            languages.map((language, i) => {
-              let num = Math.floor(Math.random() * color.length)
-              return <Chip key={language + ':' + i} label={language} variant='outlined' color={color[num]} />
-            })}
+          {languages.map(renderLanguageChip)}
         </Typography>
 
         <Typography paragraph>
-          {urls.length != 0 &&
-            urls.map((url, i) => (
-              <Box key={url + i}>
-                <Link linkProps={{ href: url }} target='_blank' rel='noopener noreferrer'>
-                  {url}
-                </Link>
-              </Box>
-            ))}
+          {urls.map(renderUrl)}
         </Typography>
       </>
     </Item>

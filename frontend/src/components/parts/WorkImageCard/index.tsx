@@ -7,7 +7,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import TransitionsModal from '~/components/parts/TransitionsModal'
-import WorkItem from '~/components/parts/WorkItem'
+import WorkItem from '~/components/screens/WorkItem'
 import { Work } from '~/models/types'
 import { WorkContext } from '~/stores/WorkView'
 
