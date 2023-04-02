@@ -1,24 +1,18 @@
 // React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
 import { Item } from './style'
-import { Box, Chip } from '@mui/material'
+import { Box } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React, { useContext } from 'react'
 import Link from '~/components/parts/Link'
-import { Color } from '~/constant/constant'
 import { WorkContext } from '~/stores/WorkView'
+import RandomColorChip from '~/components/parts/RandomColorChip'
 
 const WorkItem: React.FC = () => {
   const { work } = useContext(WorkContext)
-  const color = Color
 
   const parseJson = (json?: string | null) => json ? JSON.parse(json).filter(Boolean) : [];
   const languages = parseJson(work.language);
   const urls = parseJson(work.url);
-
-  const renderLanguageChip = (language: string, i: number) => {
-    const num = Math.floor(Math.random() * color.length);
-    return <Chip key={language + ':' + i} label={language} variant='outlined' color={color[num]} />;
-  };
 
     const renderUrl = (url: string, i: number) => (
     <Box key={url + i}>
@@ -38,7 +32,10 @@ const WorkItem: React.FC = () => {
         <Typography paragraph>{work.brief_story}</Typography>
 
         <Typography paragraph>
-          {languages.map(renderLanguageChip)}
+          {languages.map((language: string, index: number) => (
+            <RandomColorChip key={language + ':' + index} content={language} />
+          )
+          )}
         </Typography>
 
         <Typography paragraph>
