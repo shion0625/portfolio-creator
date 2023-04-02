@@ -1,6 +1,4 @@
-import { style } from './style'
-import Backdrop from '@mui/material/Backdrop'
-import Box from '@mui/material/Box'
+import { ChildrenBox } from './style'
 import Fade from '@mui/material/Fade'
 import Modal from '@mui/material/Modal'
 import * as React from 'react'
@@ -29,7 +27,7 @@ const TransitionsModal: React.FC<Props> = ({ handleOpen, handleClose, open, chil
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>{children}</Box>
+          <ChildrenBox>{children}</ChildrenBox>
         </Fade>
       </Modal>
     </div>
