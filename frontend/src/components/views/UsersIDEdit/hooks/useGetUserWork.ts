@@ -8,7 +8,7 @@ type useGetUserWorkProps = {
   onError?: (error: Error) => void
 }
 
-export const useGetUserWork = ({id, onCompleted, onError}:useGetUserWorkProps) => {
+export const useGetUserWork = ({ id, onCompleted, onError }: useGetUserWorkProps) => {
   const { data, refetch, loading, error } = useQuery<GetUserAuthQuery>(GetUserAuthDocument, {
     variables: { id: id },
     onCompleted,

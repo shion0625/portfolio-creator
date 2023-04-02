@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import React from 'react'
 import userEvent from '@testing-library/user-event'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import ChoiceInput from '~/components/parts/ChoiceInput'
 
@@ -41,10 +41,10 @@ describe('ChoiceInput component', () => {
   })
 
   it('should call register with the correct name', () => {
-    const { getByLabelText } = renderComponent();
-    const input = getByLabelText(label);
-    fireEvent.change(input, { target: { value: 'test' } });
-    expect(mockRegister).toBeCalledWith(name);
+    const { getByLabelText } = renderComponent()
+    const input = getByLabelText(label)
+    fireEvent.change(input, { target: { value: 'test' } })
+    expect(mockRegister).toBeCalledWith(name)
   })
 
   it('should call onAction when delete button is clicked', () => {
@@ -53,7 +53,7 @@ describe('ChoiceInput component', () => {
     expect(mockOnAction).toBeCalledTimes(1)
   })
 
-  it('should update input value on user typing', async() => {
+  it('should update input value on user typing', async () => {
     renderComponent()
     const input = screen.getByRole('textbox')
     await userEvent.type(input, 'New Choice')

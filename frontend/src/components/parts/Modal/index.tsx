@@ -1,6 +1,6 @@
 import { ChildrenBox } from './style'
+import { Modal as MuiModal } from '@mui/material'
 import Button from '@mui/material/Button'
-import { Modal as MuiModal } from '@mui/material';
 import * as React from 'react'
 
 type Props = {

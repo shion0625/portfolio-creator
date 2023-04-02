@@ -16,7 +16,7 @@ export const useDeleteWorks = ({ onCompleted, onError }: useDeleteWorksProps = {
   })
 
   const handleDeleteWorks = async (session: Session, workIds: string[]) => {
-const validWorkIds = getValidWorkIds(workIds)
+    const validWorkIds = getValidWorkIds(workIds)
     if (!session.user || !validWorkIds.length) {
       return
     }

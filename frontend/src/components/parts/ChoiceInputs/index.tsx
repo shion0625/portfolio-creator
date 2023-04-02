@@ -52,5 +52,4 @@ const ChoiceInputs: React.FC<ChoiceInputsProps> = ({ targetName, label, placehol
   )
 }
 
-
 export default ChoiceInputs

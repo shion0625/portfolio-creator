@@ -1,9 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react'
 import { createRef } from 'react'
-import SearchArea from '~/components/parts/SearchArea';
+import SearchArea from '~/components/parts/SearchArea'
 
 describe('SearchArea component', () => {
-  const inputElement = createRef<HTMLInputElement>();
+  const inputElement = createRef<HTMLInputElement>()
 
   it('renders correctly', () => {
     render(
@@ -12,41 +12,41 @@ describe('SearchArea component', () => {
         onEnterKey={() => {}}
         startComposition={() => {}}
         endComposition={() => {}}
-      />
-    );
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument();
-    expect(screen.getByLabelText('search')).toBeInTheDocument();
-  });
+      />,
+    )
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Search…')).toBeInTheDocument()
+    expect(screen.getByLabelText('search')).toBeInTheDocument()
+  })
 
   it('calls onEnterKey function when the enter key is pressed', () => {
-    const onEnterKey = jest.fn();
+    const onEnterKey = jest.fn()
     render(
       <SearchArea
         inputElement={inputElement}
         onEnterKey={onEnterKey}
         startComposition={() => {}}
         endComposition={() => {}}
-      />
-    );
-    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter', keyCode: 13 });
-    expect(onEnterKey).toHaveBeenCalledTimes(1);
-  });
+      />,
+    )
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter', keyCode: 13 })
+    expect(onEnterKey).toHaveBeenCalledTimes(1)
+  })
 
   it('calls startComposition and endComposition functions when the input starts and ends composition', () => {
-    const startComposition = jest.fn();
-    const endComposition = jest.fn();
+    const startComposition = jest.fn()
+    const endComposition = jest.fn()
     render(
       <SearchArea
         inputElement={inputElement}
         onEnterKey={() => {}}
         startComposition={startComposition}
         endComposition={endComposition}
-      />
-    );
-    fireEvent.compositionStart(screen.getByRole('textbox'));
-    fireEvent.compositionEnd(screen.getByRole('textbox'));
-    expect(startComposition).toHaveBeenCalledTimes(1);
-    expect(endComposition).toHaveBeenCalledTimes(1);
-  });
-});
+      />,
+    )
+    fireEvent.compositionStart(screen.getByRole('textbox'))
+    fireEvent.compositionEnd(screen.getByRole('textbox'))
+    expect(startComposition).toHaveBeenCalledTimes(1)
+    expect(endComposition).toHaveBeenCalledTimes(1)
+  })
+})

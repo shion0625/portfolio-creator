@@ -22,8 +22,8 @@ const TransitionsModal: React.FC<Props> = ({ handleOpen, handleClose, open, chil
         slotProps={{
           backdrop: {
             timeout: 500,
-            'aria-label': 'modal'
-          }
+            'aria-label': 'modal',
+          },
         }}
       >
         <Fade in={open}>

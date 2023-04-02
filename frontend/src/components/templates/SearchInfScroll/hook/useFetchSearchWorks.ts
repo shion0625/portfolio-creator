@@ -33,7 +33,7 @@ const INITIAL_VARIABLES = {
   sortBy: '',
   num: 9999,
   limit: DEFAULT_VOLUMES,
-};
+}
 
 export const useFetchSearchWorks = <T extends Model>(
   target: T,

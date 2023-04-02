@@ -14,7 +14,7 @@ describe('ChildrenBox', () => {
       // backgroundColor: 'red',
       border: '2px solid #000',
       boxShadow: '24',
-      padding:'4',
+      padding: '4',
     })
   })
 })

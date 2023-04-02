@@ -1,11 +1,9 @@
+import dotenv from 'dotenv'
 import * as fs from 'fs'
-import path from 'path';
-import dotenv from 'dotenv';
+import path from 'path'
 
 // Load all defined environment variables
-const environmentFiles = fs
-  .readdirSync(__dirname)
-  .filter((fileName) => fileName.startsWith('.env'))
+const environmentFiles = fs.readdirSync(__dirname).filter((fileName) => fileName.startsWith('.env'))
 
 describe('environmentFiles', () => {
   it('environmentFilesが存在する', () => {
@@ -19,13 +17,12 @@ environmentFiles.forEach((envFileName) => {
     const extension = envFileName.split('.').pop()
     if (extension === 'json') {
       env = {
-        ...require(`./${envFileName}`)
+        ...require(`./${envFileName}`),
       }
     } else {
-      const envPath = path.join(__dirname, `./${envFileName}`);
-      env= dotenv.parse(fs.readFileSync(envPath));
+      const envPath = path.join(__dirname, `./${envFileName}`)
+      env = dotenv.parse(fs.readFileSync(envPath))
     }
-
 
     it('APP_ENV が必ずセットされている。', () => {
       expect(env['APP_ENV']).toBeDefined()
