@@ -12,13 +12,9 @@ export const useInfiniteScroll = (onScroll: () => void) => {
         const offsetHeight = document.documentElement.offsetHeight
 
         if (offsetHeight - scroll_Y <= 1000 && !isLoading && offsetHeight > 1500) {
-          act(() => {
-            setIsLoading(true)
-          })
+          setIsLoading(true)
           onScroll()
-          act(() => {
-            setIsLoading(false)
-          })
+          setIsLoading(false)
         }
       }, 1000)
     })

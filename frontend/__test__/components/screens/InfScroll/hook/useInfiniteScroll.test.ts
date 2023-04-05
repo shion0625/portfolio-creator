@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react'
-import { createRoot } from 'react-dom/client'
+import { renderHook, act } from '@testing-library/react'
 import { useInfiniteScroll } from '~/components/screens/InfScroll/hook'
 
 describe('useInfiniteScroll', () => {
@@ -34,8 +33,10 @@ describe('useInfiniteScroll', () => {
     Object.defineProperty(document.documentElement, 'scrollHeight', { value: 3000, writable: true })
     Object.defineProperty(window, 'innerHeight', { value: 1000, writable: true })
 
-    window.dispatchEvent(new Event('scroll'))
-    jest.runOnlyPendingTimers()
+    act(() => {
+      window.dispatchEvent(new Event('scroll'))
+      jest.runOnlyPendingTimers()
+    })
 
     expect(mockOnScroll).toHaveBeenCalled()
   })
