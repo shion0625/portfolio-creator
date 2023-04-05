@@ -3,7 +3,7 @@ import { Box, TextField, IconButton } from '@mui/material'
 import React from 'react'
 import { UseFormRegister } from 'react-hook-form'
 
-type ChoiceInputProps = {
+export type Props = {
   name: string // input要素のname属性に使用される値
   label: string // input要素のラベルとして使用される文字列
   placeholder?: string // input要素のプレースホルダーとして使用される文字列
@@ -12,7 +12,7 @@ type ChoiceInputProps = {
   type?: React.HTMLInputTypeAttribute // input要素のタイプ属性
 }
 
-const ChoiceInput: React.FC<ChoiceInputProps> = ({ name, label, placeholder, register, onAction, type = 'text' }) => {
+const ChoiceInput: React.FC<Props> = ({ name, label, placeholder, register, onAction, type = 'text' }) => {
   return (
     <Box>
       <TextField
