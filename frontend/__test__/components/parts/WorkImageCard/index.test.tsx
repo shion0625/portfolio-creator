@@ -1,8 +1,30 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+// WorkImageCardコンポーネントをテストする
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import React from 'react'
+import type { Props as TransitionsModalProps } from '~/components/parts/TransitionsModal'
 import { WorkImageCard } from '~/components/parts/WorkImageCard'
 import { Work } from '~/models/types'
 
-describe('WorkImageCard', () => {
+// WorkItemコンポーネントをモック化する
+jest.mock('~/components/screens/WorkItem', () => ({
+  __esModule: true,
+  default: () => <div>Mock WorkItem</div>,
+}))
+
+// TransitionsModalコンポーネントをモック化する
+jest.mock('~/components/parts/TransitionsModal', () => ({
+  __esModule: true,
+  default: ({ children, handleOpen, handleClose, open }: TransitionsModalProps) => {
+    const onClick = open ? handleClose : handleOpen
+    return (
+      <div role='presentation' onClick={onClick}>
+        {children}
+      </div>
+    )
+  },
+}))
+
+describe('WorkImageCardコンポーネント', () => {
   const user = {
     id: '1',
     name: 'Test User',
@@ -22,28 +44,42 @@ describe('WorkImageCard', () => {
     user: user,
   }
 
-  it('should render the title, summary and user name correctly', () => {
+  it('The title, summary and user name must be correctly displayed on the card.', () => {
     render(<WorkImageCard work={work} />)
     expect(screen.getByText('Test Work')).toBeInTheDocument()
     expect(screen.getByText('This is a test work')).toBeInTheDocument()
     expect(screen.getByText('Test User')).toBeInTheDocument()
   })
 
-  it('should open the modal when the card is clicked', () => {
+  it('Clicking on a card should open a modal.', () => {
     render(<WorkImageCard work={work} />)
     const card = screen.getByRole('img')
     fireEvent.click(card)
     expect(screen.getByRole('presentation')).toBeInTheDocument()
   })
 
-  it('should render the modal when it is open', () => {
+  it('Modal should display correctly when opened.', () => {
+    render(<WorkImageCard work={work} />)
+    const card = screen.getByRole('img')
+    const titleElement = screen.getByText('Test Work')
+    expect(titleElement).toBeInTheDocument()
+
+    fireEvent.click(card)
+    const modal = screen.getByText('Mock WorkItem')
+    expect(modal).toBeInTheDocument()
+  })
+
+  it('Modal being closed.', () => {
     render(<WorkImageCard work={work} />)
     const card = screen.getByRole('img')
     fireEvent.click(card)
-    const modalTitle = screen.getAllByText('Test Work')
-    //cardに表示されるtitle
-    expect(modalTitle[0]).toBeInTheDocument()
-    //modalに表示されるタイトル
-    expect(modalTitle[1]).toBeInTheDocument()
+
+    const modal = screen.getByText('Mock WorkItem')
+    fireEvent.click(modal)
+
+    waitFor(() => {
+      const modalElement = screen.queryByText('Mock WorkItem')
+      expect(modalElement).not.toBeInTheDocument()
+    })
   })
 })

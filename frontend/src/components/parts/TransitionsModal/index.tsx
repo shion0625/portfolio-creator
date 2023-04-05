@@ -3,7 +3,7 @@ import Fade from '@mui/material/Fade'
 import Modal from '@mui/material/Modal'
 import * as React from 'react'
 
-type Props = {
+export type Props = {
   handleOpen: () => void
   handleClose: () => void
   open: boolean
