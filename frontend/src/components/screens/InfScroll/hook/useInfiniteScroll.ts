@@ -1,3 +1,4 @@
+import { act } from '@testing-library/react'
 import { useEffect, useState } from 'react'
 
 export const useInfiniteScroll = (onScroll: () => void) => {
@@ -9,10 +10,15 @@ export const useInfiniteScroll = (onScroll: () => void) => {
       queue = setTimeout(() => {
         const scroll_Y = document.documentElement.scrollTop + window.innerHeight
         const offsetHeight = document.documentElement.offsetHeight
+
         if (offsetHeight - scroll_Y <= 1000 && !isLoading && offsetHeight > 1500) {
-          setIsLoading(true)
+          act(() => {
+            setIsLoading(true)
+          })
           onScroll()
-          setIsLoading(false)
+          act(() => {
+            setIsLoading(false)
+          })
         }
       }, 1000)
     })

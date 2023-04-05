@@ -39,7 +39,7 @@ const InfScroll = <T extends unknown>({ pageInfo, items, renderItem, onScroll }:
           const item = items[virtualRow.index]
           return (
             <Grid item key={virtualRow.index} xs={6} md={4} lg={3}>
-              {isLoaderRow ? <CircularProgress /> : renderItem(item)}
+              {isLoaderRow || isLoading ? <CircularProgress /> : renderItem(item)}
             </Grid>
           )
         })}
