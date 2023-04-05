@@ -4,15 +4,15 @@ import React from 'react'
 import { UseFormRegister } from 'react-hook-form'
 
 type ChoiceInputProps = {
-  name: string
-  label: string
-  placeholder?: string
-  register: UseFormRegister<any>
-  onAction: () => void
-  type?: React.HTMLInputTypeAttribute | 'text'
+  name: string // input要素のname属性に使用される値
+  label: string // input要素のラベルとして使用される文字列
+  placeholder?: string // input要素のプレースホルダーとして使用される文字列
+  register: UseFormRegister<any> // react-hook-formで提供されるregister関数
+  onAction: () => void // 削除ボタンがクリックされた時に呼び出される関数
+  type?: React.HTMLInputTypeAttribute // input要素のタイプ属性
 }
 
-const ChoiceInput: React.FC<ChoiceInputProps> = ({ name, label, placeholder, register, onAction, type }) => {
+const ChoiceInput: React.FC<ChoiceInputProps> = ({ name, label, placeholder, register, onAction, type = 'text' }) => {
   return (
     <Box>
       <TextField
