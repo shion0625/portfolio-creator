@@ -11,8 +11,8 @@ import React from 'react'
 import Link from '~/components/parts/Link'
 import MobileMenu from '~/components/parts/MobileMenu'
 import ProfileMenu from '~/components/parts/ProfileMenu'
-import { usePaletteMode } from '~/stores/PaletteMode'
 import Search from '~/components/screens/Search'
+import { usePaletteMode } from '~/stores/PaletteMode'
 
 const NavBar: React.FC = () => {
   const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
@@ -34,7 +34,7 @@ const NavBar: React.FC = () => {
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
             <Link linkProps={{ href: '/' }}>portfolio</Link>
           </Typography>
-          <Search/>
+          <Search />
           <IconButton color='inherit' onClick={toggleChangePaletteMode}>
             <InvertColorsIcon />
           </IconButton>
