@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import ChoiceInputs from '~/components/parts/ChoiceInputs'
 
 describe('ChoiceInputs', () => {
@@ -24,7 +24,8 @@ describe('ChoiceInputs', () => {
     const addButton = screen.getByRole('button', { name: 'add' })
     fireEvent.click(addButton)
 
-    expect(screen.getAllByRole('textbox')).toHaveLength(2) // 1 ChoiceInput is already there
+    // テキストボックスの数が2であることを確認
+    expect(screen.getAllByRole('textbox')).toHaveLength(2)
   })
 
   it('should remove ChoiceInput on click of remove button', () => {
@@ -33,8 +34,13 @@ describe('ChoiceInputs', () => {
     const removeButton = screen.getAllByRole('button', { name: 'delete' })[0]
     fireEvent.click(removeButton)
 
+    // テキストボックスの数が1であることを確認
     expect(screen.getAllByRole('textbox')).toHaveLength(1)
+
+    // 削除されたchoice 1が存在しないことを確認
     expect(screen.queryByDisplayValue('choice 1')).not.toBeInTheDocument()
+
+    // 残っているchoice 2が存在することを確認
     expect(screen.getByDisplayValue('choice 2')).toBeInTheDocument()
   })
 })
