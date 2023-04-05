@@ -1,4 +1,4 @@
-import { useOnEnterKey, useProfileMenu, useMobileMenu } from './hooks'
+import { useProfileMenu, useMobileMenu } from './hooks'
 import {
   AccountCircle,
   Mail as MailIcon,
@@ -7,19 +7,14 @@ import {
   InvertColors as InvertColorsIcon,
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
-import { useRouter } from 'next/router'
-import React, { useRef } from 'react'
-import { useRecoilState } from 'recoil'
+import React from 'react'
 import Link from '~/components/parts/Link'
 import MobileMenu from '~/components/parts/MobileMenu'
 import ProfileMenu from '~/components/parts/ProfileMenu'
-import SearchArea from '~/components/parts/SearchArea'
-import { currentTabState } from '~/stores/CurrentTab'
 import { usePaletteMode } from '~/stores/PaletteMode'
+import Search from '~/components/screens/Search'
 
-export default function NavBar() {
-  const router = useRouter()
-  const currentPathName = router.pathname
+const NavBar: React.FC = () => {
   const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
   const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
   const [, , toggleChangePaletteMode] = usePaletteMode()
@@ -27,41 +22,9 @@ export default function NavBar() {
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
 
-  const [currentTab] = useRecoilState(currentTabState) // Recoil状態を使用する
-
-  const { onEnterKey, startComposition, endComposition } = useOnEnterKey(() => onSearchClick())
-  const searchElement = useRef<HTMLInputElement>(null) //searchAreaの入力DOM要素を取得
-
-  const onSearchClick = () => {
-    if (searchElement.current != null) {
-      console.log('search click', checkPath(currentPathName))
-      router.push({
-        pathname: '/search',
-        query: {
-          target: checkPath(currentPathName),
-          keyword: searchElement.current.value,
-        },
-      })
-    }
-  }
-
   const handleMenuClose = () => {
     handleProfileMenuClose()
     handleMobileMenuClose()
-  }
-
-  const checkPath = (pathName: string): string => {
-    const firstPath = pathName.split('/')[1]
-    switch (firstPath) {
-      case 'users':
-        return 'users'
-      case 'works':
-        return 'works'
-      case 'search':
-        return currentTab
-      default:
-        return 'works'
-    }
   }
 
   return (
@@ -71,12 +34,7 @@ export default function NavBar() {
           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
             <Link linkProps={{ href: '/' }}>portfolio</Link>
           </Typography>
-          <SearchArea
-            inputElement={searchElement}
-            onEnterKey={onEnterKey}
-            startComposition={startComposition}
-            endComposition={endComposition}
-          />
+          <Search/>
           <IconButton color='inherit' onClick={toggleChangePaletteMode}>
             <InvertColorsIcon />
           </IconButton>
@@ -129,3 +87,5 @@ export default function NavBar() {
     </Box>
   )
 }
+
+export default NavBar
