@@ -21,7 +21,6 @@ export const useOnEnterKey = <T>(
 
   // Enterキーが押されたときに呼び出されるイベントハンドラ
   const onEnterKey: KeyboardEventHandler<T> = (event): void => {
-    console.log(composing)
     if (event.key === 'Enter' && !composing) {
       // 入力中でなく、Enterキーが押された場合
       func(event) // 渡された関数を呼び出す
