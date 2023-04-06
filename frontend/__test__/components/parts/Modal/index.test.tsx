@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import Modal from '~/components/parts/Modal'
 
 describe('Modal', () => {
@@ -16,15 +16,29 @@ describe('Modal', () => {
     expect(screen.getByText(children)).toBeInTheDocument()
   })
 
-  it('should close the modal when the close button is clicked', () => {
+  it('should close the modal when the backdrop is clicked', () => {
     render(<Modal buttonText={buttonText}>{children}</Modal>)
     fireEvent.click(screen.getByText(buttonText))
-    expect(screen.getByText(children)).toBeInTheDocument()
-
+    // Wait for the modal to be displayed
+    waitFor(() => {
+      expect(screen.getByText(children)).toBeInTheDocument()
+    })
     fireEvent.click(screen.getByRole('presentation'))
     // Wait for the modal to transition out of the DOM
-    setTimeout(() => {
+    waitFor(() => {
       expect(screen.queryByText(children)).not.toBeInTheDocument()
-    }, 500)
+    })
+  })
+
+  it('should close the modal when the escape key is pressed', async () => {
+    render(<Modal buttonText={buttonText}>{children}</Modal>)
+    fireEvent.click(screen.getByText(buttonText))
+    await waitFor(() => {
+      expect(screen.getByText(children)).toBeInTheDocument()
+    })
+    fireEvent.keyDown(screen.getByRole('presentation'), { key: 'Escape' })
+    await waitFor(() => {
+      expect(screen.queryByText(children)).not.toBeInTheDocument()
+    })
   })
 })

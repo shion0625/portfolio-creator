@@ -35,7 +35,7 @@ describe('ChoiceInput component', () => {
     const { getByLabelText } = renderComponent()
     const input = getByLabelText(props.label)
     fireEvent.change(input, { target: { value: 'test' } })
-    expect(props.register).toBeCalledWith(name)
+    expect(props.register).toBeCalledWith(props.name)
   })
 
   it('should call onAction when delete button is clicked', () => {
