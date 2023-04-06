@@ -6,6 +6,7 @@ describe('Link', () => {
   const linkProps = {
     href: '/example',
   }
+
   const children = 'Example Link'
   const target = '_blank'
   const rel = 'noopener noreferrer'
