@@ -4,7 +4,6 @@ import {
   Mail as MailIcon,
   Notifications as NotificationsIcon,
   MoreVert as MoreIcon,
-  InvertColors as InvertColorsIcon,
 } from '@mui/icons-material'
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/material'
 import React from 'react'
@@ -12,12 +11,11 @@ import Link from '~/components/parts/Link'
 import MobileMenu from '~/components/parts/MobileMenu'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import Search from '~/components/screens/Search'
-import { usePaletteMode } from '~/stores/PaletteMode'
+import PaletteModeButton from '~/components/parts/PaletteModeButton'
 
 const NavBar: React.FC = () => {
   const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
   const { mobileMoreAnchorEl, isMobileMenuOpen, handleMobileMenuOpen, handleMobileMenuClose } = useMobileMenu()
-  const [, , toggleChangePaletteMode] = usePaletteMode()
 
   const menuId = 'profile-menu'
   const mobileMenuId = 'menu-mobile'
@@ -35,9 +33,7 @@ const NavBar: React.FC = () => {
             <Link linkProps={{ href: '/' }}>portfolio</Link>
           </Typography>
           <Search />
-          <IconButton color='inherit' onClick={toggleChangePaletteMode}>
-            <InvertColorsIcon />
-          </IconButton>
+          <PaletteModeButton />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
