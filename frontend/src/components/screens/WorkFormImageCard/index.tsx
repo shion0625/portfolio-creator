@@ -28,7 +28,7 @@ const ImageCard: React.FC<Props> = ({ workIndex, removeWork, getValues, control 
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardActionArea>
-        <CardMedia component='img' height='140' image='/vercel.svg' alt='green iguana' />
+        <CardMedia component='img' height='140' image='/vercel.svg' alt='image' />
         <CardContent>
           <Typography
             gutterBottom
