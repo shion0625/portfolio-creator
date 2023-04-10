@@ -4,10 +4,11 @@ import React from 'react'
 import { usePaletteMode } from '~/stores/PaletteMode'
 
 const PaletteModeButton: React.FC = () => {
-  const [, , toggleChangePaletteMode] = usePaletteMode()
+  const [color, , toggleChangePaletteMode] = usePaletteMode()
+
 
   return (
-    <IconButton color='inherit' onClick={toggleChangePaletteMode}>
+    <IconButton color='inherit' aria-label={color} onClick={toggleChangePaletteMode}>
       <InvertColorsIcon />
     </IconButton>
   )
