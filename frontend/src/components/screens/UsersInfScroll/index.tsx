@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserCard } from '~/components/parts/UserImageCard'
+import UserCard from '~/components/parts/UserCard'
 import InfScroll from '~/components/screens/InfScroll'
 import { UserPagination, User } from '~/models/types'
 

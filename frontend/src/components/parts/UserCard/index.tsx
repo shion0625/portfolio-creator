@@ -3,11 +3,11 @@ import React from 'react'
 import Link from '~/components/parts/Link'
 import { User } from '~/models/types'
 
-type Props = {
+export type Props = {
   user: User
 }
 
-export const UserCard: React.FC<Props> = ({ user }): JSX.Element => {
+const UserCard: React.FC<Props> = ({ user }): JSX.Element => {
   return (
     <Box key={user.id}>
       <Link linkProps={{ href: `/users/${user.id}` }}>
@@ -18,3 +18,5 @@ export const UserCard: React.FC<Props> = ({ user }): JSX.Element => {
     </Box>
   )
 }
+
+export default UserCard

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import { UserCard } from '~/components/parts/UserImageCard'
+import UserCard from '~/components/parts/UserCard'
 
 const user = {
   id: '1',
