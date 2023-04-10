@@ -9,7 +9,7 @@ jest.mock('~/components/screens/Search', () => ({
 
 jest.mock('~/components/parts/ProfileMenu', () => ({
   __esModule: true,
-  default: ({handleMenuClose}:any) => {
+  default: ({ handleMenuClose }: any) => {
     return (
       <div aria-label='ProfileMenu' role='presentation' onClick={handleMenuClose}>
         ProfileMenu
@@ -47,10 +47,10 @@ describe('NavBar', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     ;(hooks.useProfileMenu as jest.Mock).mockImplementation(() => ({
-        isMenuOpen: false,
-        anchorEl: null,
-        handleProfileMenuOpen: jest.fn(),
-        handleProfileMenuClose: jest.fn(),
+      isMenuOpen: false,
+      anchorEl: null,
+      handleProfileMenuOpen: jest.fn(),
+      handleProfileMenuClose: jest.fn(),
     }))
     ;(hooks.useMobileMenu as jest.Mock).mockImplementation(() => ({
       isMobileMenuOpen: false,
@@ -77,8 +77,6 @@ describe('NavBar', () => {
 
     fireEvent.click(screen.getByLabelText('ProfileMenu'))
     expect(handleProfileMenuCloseMock).toHaveBeenCalledTimes(1)
-
-
   })
 
   it('mobile menu button can click', () => {

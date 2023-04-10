@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react'
-import { useProfileMenu } from '~/components/screens/NavBar/hooks'
 import { MouseEvent } from 'react'
+import { useProfileMenu } from '~/components/screens/NavBar/hooks'
 
 describe('useProfileMenu', () => {
   it('should initialize anchorEl to null and isMenuOpen to false', () => {

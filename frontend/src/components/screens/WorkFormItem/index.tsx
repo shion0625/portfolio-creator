@@ -1,4 +1,3 @@
-// React Hook Form でエラーメッセージを表示するための ErrorMessage コンポーネントを import
 import { Item } from './style'
 import { ErrorMessage } from '@hookform/error-message'
 import { Box, TextField } from '@mui/material'
@@ -58,7 +57,7 @@ const WorkFormItem: React.FC = () => {
           errors={errors}
           name={`works.${workIndex}.number_of_people`}
           as='p'
-          message='⚠ 数量欄に1~100の数字を入力してください'
+          message='⚠ 1人以上100人以下で入力してください'
         />
       </Box>
 

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+import { useForm } from 'react-hook-form'
 import ImageCard from '~/components/screens/WorkFormImageCard'
 import { WorkFormInput } from '~/models/Work'
-import { useForm } from 'react-hook-form'
 
 jest.mock('~/components/screens/WorkFormItem', () => ({
   __esModule: true,
@@ -20,12 +20,14 @@ describe('ImageCard', () => {
     getValues: jest.fn().mockReturnValue(0),
   }
   const defaultValues = {
-      works: [{
+    works: [
+      {
         id: '1',
         title: 'works 1',
         summary: 'works',
-        user_id: '1'
-      }]
+        user_id: '1',
+      },
+    ],
   }
 
   const renderComponent = (defaultValues: WorkFormInput) => {
@@ -33,14 +35,8 @@ describe('ImageCard', () => {
       const methods = useForm({ defaultValues })
       return children(methods)
     }
-    return render(
-      <Wrapper>
-        {(methods: any) => (
-          <ImageCard {...Props} control={methods.control} />
-        )}
-      </Wrapper>,
-    )
-    }
+    return render(<Wrapper>{(methods: any) => <ImageCard {...Props} control={methods.control} />}</Wrapper>)
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()

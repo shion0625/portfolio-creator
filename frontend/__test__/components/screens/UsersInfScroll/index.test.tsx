@@ -35,19 +35,23 @@ describe('UsersInfScroll', () => {
         totalCount: 1,
         hasNextPage: true,
       },
-      users:[
-      {
-        id: '1',
-        name: 'test user 1',
-        created_at: new Date(Date.now()).toISOString(), updated_at: new Date(Date.now()).toISOString(), serial_number: 1
-      },
-      {
-        id: '2',
-        name: 'test user 2',
-        created_at: new Date(Date.now()).toISOString(), updated_at: new Date(Date.now()).toISOString(), serial_number: 2
-      }
+      users: [
+        {
+          id: '1',
+          name: 'test user 1',
+          created_at: new Date(Date.now()).toISOString(),
+          updated_at: new Date(Date.now()).toISOString(),
+          serial_number: 1,
+        },
+        {
+          id: '2',
+          name: 'test user 2',
+          created_at: new Date(Date.now()).toISOString(),
+          updated_at: new Date(Date.now()).toISOString(),
+          serial_number: 2,
+        },
       ],
-      onScroll: jest.fn()
+      onScroll: jest.fn(),
     }
 
     render(<UsersInfScroll {...Props} />)
