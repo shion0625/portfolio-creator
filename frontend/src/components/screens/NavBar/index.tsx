@@ -9,9 +9,9 @@ import { AppBar, Box, Toolbar, IconButton, Typography, Badge } from '@mui/materi
 import React from 'react'
 import Link from '~/components/parts/Link'
 import MobileMenu from '~/components/parts/MobileMenu'
+import PaletteModeButton from '~/components/parts/PaletteModeButton'
 import ProfileMenu from '~/components/parts/ProfileMenu'
 import Search from '~/components/screens/Search'
-import PaletteModeButton from '~/components/parts/PaletteModeButton'
 
 const NavBar: React.FC = () => {
   const { anchorEl, isMenuOpen, handleProfileMenuOpen, handleProfileMenuClose } = useProfileMenu()
@@ -61,7 +61,7 @@ const NavBar: React.FC = () => {
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
-              aria-label='show more'
+              aria-label='mobile show more'
               aria-controls={mobileMenuId}
               aria-haspopup='true'
               onClick={handleMobileMenuOpen}

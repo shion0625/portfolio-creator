@@ -2,7 +2,7 @@ import { AccountCircle, Mail as MailIcon, Notifications as NotificationsIcon } f
 import { Menu, MenuItem, IconButton, Badge } from '@mui/material'
 import React, { memo } from 'react'
 
-type Props = {
+export type Props = {
   mobileMenuId: string // モバイルメニューに設定するID
   mobileMoreAnchorEl: null | HTMLElement //押されたボタンの位置を取得
   isMobileMenuOpen: boolean // メニューが開いているかを取得

@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import React, { memo } from 'react'
 import LinkMenuItem from '~/components/parts/LinkMenuItem'
 
-type Props = {
+export type Props = {
   anchorEl: null | HTMLElement //押されたボタンの位置を取得
   menuId: string //プロフィールメニューのID
   isMenuOpen: boolean //メニューが開いているかを取得

@@ -1,10 +1,7 @@
-import React from 'react'
-import {
-  InvertColors as InvertColorsIcon,
-} from '@mui/icons-material'
+import { InvertColors as InvertColorsIcon } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
+import React from 'react'
 import { usePaletteMode } from '~/stores/PaletteMode'
-
 
 const PaletteModeButton: React.FC = () => {
   const [, , toggleChangePaletteMode] = usePaletteMode()
