@@ -24,20 +24,32 @@ const WorkItem: React.FC = () => {
   return (
     <Item key={'workItem' + work.id}>
       <>
-        <Typography paragraph>{work.title}</Typography>
-        <Typography paragraph>{work.summary}</Typography>
-        <Typography paragraph>開発期間: {work.duration}ヶ月</Typography>
-        <Typography paragraph>開発人数: {work.number_of_people}人</Typography>
-        <Typography paragraph>{work.role}</Typography>
-        <Typography paragraph>{work.brief_story}</Typography>
+        <Typography paragraph aria-label='title'>
+          {work.title}
+        </Typography>
+        <Typography paragraph aria-label='summary'>
+          {work.summary}
+        </Typography>
+        <Typography paragraph aria-label='duration'>
+          開発期間: {work.duration}ヶ月
+        </Typography>
+        <Typography paragraph aria-label='number_of_people'>
+          開発人数: {work.number_of_people}人
+        </Typography>
+        <Typography paragraph aria-label='role'>
+          {work.role}
+        </Typography>
+        <Typography paragraph aria-label='brief_story'>
+          {work.brief_story}
+        </Typography>
 
-        <Typography paragraph>
+        <Typography role='list'>
           {languages.map((language: string, index: number) => (
             <RandomColorChip key={language + ':' + index} content={language} />
           ))}
         </Typography>
 
-        <Typography paragraph>{urls.map(renderUrl)}</Typography>
+        <Typography component='div'>{urls.map(renderUrl)}</Typography>
       </>
     </Item>
   )

@@ -2,7 +2,7 @@ import { MuiLink } from './style'
 import NextLink, { LinkProps } from 'next/link'
 import React, { ReactNode, memo } from 'react'
 
-type Props = {
+export type Props = {
   linkProps: LinkProps // Next.jsのLinkProps
   children?: ReactNode // 子要素
   target?: string // クリックしたリンクの開く場所
