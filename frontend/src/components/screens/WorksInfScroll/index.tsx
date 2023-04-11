@@ -1,5 +1,5 @@
 import React from 'react'
-import { WorkImageCard } from '~/components/parts/WorkImageCard'
+import WorkImageCard from '~/components/parts/WorkImageCard'
 import InfScroll from '~/components/screens/InfScroll'
 import { WorkPagination, Work } from '~/models/types'
 

@@ -15,7 +15,7 @@ type Props = {
   work: Work
 }
 
-export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
+const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -88,3 +88,5 @@ export const WorkImageCard: React.FC<Props> = ({ work }): JSX.Element => {
     </>
   )
 }
+
+export default WorkImageCard

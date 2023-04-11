@@ -3,8 +3,8 @@ import UsersInfScroll from '~/components/screens/UsersInfScroll'
 
 jest.mock('~/components/screens/InfScroll', () => ({
   __esModule: true,
-  default: ({ renderItem }: any) => {
-    const children = renderItem()
+  default: ({ renderItem, items }: any) => {
+    const children = renderItem(items[0])
     return (
       <div aria-label='InfScroll' role='presentation'>
         {children}
@@ -15,10 +15,10 @@ jest.mock('~/components/screens/InfScroll', () => ({
 
 jest.mock('~/components/parts/UserCard', () => ({
   __esModule: true,
-  default: () => {
+  default: ({user}: any) => {
     return (
       <div aria-label='UserCard' role='presentation'>
-        UserCard
+        {user.name}
       </div>
     )
   },
@@ -56,6 +56,9 @@ describe('UsersInfScroll', () => {
 
     render(<UsersInfScroll {...Props} />)
 
-    expect(screen.getByLabelText('InfScroll')).toBeInTheDocument()
+    const InfScroll = screen.getByLabelText('InfScroll')
+    expect(InfScroll).toBeInTheDocument()
+
+      expect(InfScroll.children[0]).toHaveTextContent(Props.users[0].name)
   })
 })
