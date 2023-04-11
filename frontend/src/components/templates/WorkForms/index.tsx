@@ -15,7 +15,7 @@ type Props = GetUserAuthQuery & {
   removeWorkIds: string[]
 }
 
-export const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }): JSX.Element => {
+const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }): JSX.Element => {
   //userAuthオブジェクトのデータの複製
   const userAuthCopy = Object.assign({}, JSON.parse(JSON.stringify(userAuth)))
   userAuthCopy.works?.nodes.forEach((workItem: any) => {
@@ -115,3 +115,5 @@ export const WorkForms: React.FC<Props> = ({ onSubmit, userAuth, removeWorkIds }
     </Container>
   )
 }
+
+export default WorkForms

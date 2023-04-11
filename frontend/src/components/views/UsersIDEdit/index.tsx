@@ -4,7 +4,7 @@ import lo from 'lodash'
 import { Session } from 'next-auth'
 import React, { useRef } from 'react'
 import PrimarySearchAppBar from '~/components/screens/NavBar'
-import { WorkForms } from '~/components/templates/WorkForms'
+import WorkForms from '~/components/templates/WorkForms'
 import { useCreateWork, useGetUserWork, useUpdateWork, useDeleteWorks } from '~/components/views/UsersIDEdit/hooks'
 import { WorkFormData, WorkFormInput, DirtyWork } from '~/models/Work'
 
