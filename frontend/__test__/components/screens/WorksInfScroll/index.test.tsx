@@ -3,7 +3,7 @@ import WorksInfScroll from '~/components/screens/WorksInfScroll'
 
 jest.mock('~/components/parts/WorkImageCard', () => ({
   __esModule: true,
-  default: ({work}: any) => {
+  default: ({ work }: any) => {
     return (
       <div aria-label='WorkImageCard' role='presentation'>
         {work.title}
@@ -49,7 +49,7 @@ describe('WorksInfScroll', () => {
             serial_number: 1,
             created_at: new Date(Date.now()).toISOString(),
             updated_at: new Date(Date.now()).toISOString(),
-      },
+          },
         },
       ],
       onScroll: jest.fn(),

@@ -15,7 +15,7 @@ jest.mock('~/components/screens/InfScroll', () => ({
 
 jest.mock('~/components/parts/UserCard', () => ({
   __esModule: true,
-  default: ({user}: any) => {
+  default: ({ user }: any) => {
     return (
       <div aria-label='UserCard' role='presentation'>
         {user.name}
@@ -59,6 +59,6 @@ describe('UsersInfScroll', () => {
     const InfScroll = screen.getByLabelText('InfScroll')
     expect(InfScroll).toBeInTheDocument()
 
-      expect(InfScroll.children[0]).toHaveTextContent(Props.users[0].name)
+    expect(InfScroll.children[0]).toHaveTextContent(Props.users[0].name)
   })
 })

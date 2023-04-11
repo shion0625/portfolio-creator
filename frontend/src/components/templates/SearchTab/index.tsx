@@ -1,8 +1,5 @@
-import TabContext from '@mui/lab/TabContext'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
-import Box from '@mui/material/Box'
-import Tab from '@mui/material/Tab'
+import { TabContext, TabList, TabPanel } from '@mui/lab'
+import { Box, Tab } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { useRecoilState } from 'recoil'
@@ -30,7 +27,6 @@ const SearchTab: React.FC = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue)
-    console.log(currentTab)
   }
 
   return (
