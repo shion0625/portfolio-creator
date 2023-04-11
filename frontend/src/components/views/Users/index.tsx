@@ -1,7 +1,7 @@
 import { Box, Paper } from '@mui/material'
 import React from 'react'
 import NavBar from '~/components/screens/NavBar'
-import { UserList } from '~/components/templates/UserList'
+import { UserList } from '~/components/screens/UserList'
 import { UserPagination } from '~/models/types'
 
 type Props = {
