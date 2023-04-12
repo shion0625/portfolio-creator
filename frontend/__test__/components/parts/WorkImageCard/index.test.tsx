@@ -2,7 +2,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 import type { Props as TransitionsModalProps } from '~/components/parts/TransitionsModal'
-import { WorkImageCard } from '~/components/parts/WorkImageCard'
+import WorkImageCard from '~/components/parts/WorkImageCard'
 import { Work } from '~/models/types'
 
 // WorkItemコンポーネントをモック化する

@@ -52,6 +52,7 @@
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-react-apollo": "^3.3.5",
     "@graphql-codegen/typescript-resolvers": "^2.7.3",
+    "@graphql-tools/mock": "^8.7.19",
     "@next/eslint-plugin-next": "^13.2.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",

@@ -8,6 +8,8 @@ export type SearchDataState<T extends Model> = T extends Model.Work ? WorkPagina
 export interface SearchResult<T extends Model> {
   searchResult: (T extends Model.Work ? WorkPagination : UserPagination) | undefined
   refetch: (variables?: Partial<OperationVariables> | undefined) => Promise<ApolloQueryResult<SearchQuery>>
+  loading: boolean
+  error: any
 }
 
 export type Variables<T extends Model> = {
@@ -24,7 +26,7 @@ const useQuerySearch = <T extends Model>(
   setSearchData: Dispatch<SetStateAction<SearchDataState<T>>>,
   lastDataRef: MutableRefObject<Node | undefined>,
 ): SearchResult<T> => {
-  const { data, loading, error, refetch } = useQuery<SearchQuery>(SearchDocument, {
+  const { data, loading, error, refetch } = useQuery(SearchDocument, {
     variables: variables,
     onCompleted: (data) => {
       const searchResult = data.search as SearchResult<T>['searchResult']
@@ -33,7 +35,7 @@ const useQuerySearch = <T extends Model>(
           ...prev,
           pageInfo: {
             ...prev.pageInfo,
-            hasNextPage: searchResult.pageInfo.hasNextPage ?? prev.pageInfo.hasNextPage,
+            hasNextPage: searchResult.pageInfo.hasNextPage,
           },
           nodes: [...prev.nodes, ...searchResult.nodes],
         }))
@@ -46,7 +48,9 @@ const useQuerySearch = <T extends Model>(
 
   return {
     searchResult: data?.search as SearchResult<T>['searchResult'],
+    loading,
     refetch,
+    error,
   }
 }
 export default useQuerySearch
