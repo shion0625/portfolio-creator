@@ -1,7 +1,6 @@
 import useQuerySearch, { Variables, SearchDataState } from './useQuerySearch'
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { Work, User, Model, SortBy, Node } from '~/models/types'
-import { useDidUpdateEffect } from '~/utils/hook/useDidUpdateEffect'
 
 // targetによって、返されるsearchDataの型を切り替える
 type SearchNodeDataState<T extends Model> = T extends Model.Work ? Work : User
@@ -57,10 +56,26 @@ export const useFetchSearchWorks = <T extends Model>(
   //カーソルスクロール使用するための最後のデータ
   const lastDataRef = useRef<Node | undefined>(undefined)
 
-  const { refetch } = useQuerySearch(variables, setSearchData, lastDataRef)
+  const { searchResult,loading, error } = useQuerySearch(variables)
+
+  useEffect(() => {
+    if (!loading && !error && searchResult) {
+      setSearchData((prev) => ({
+        ...prev,
+        pageInfo: {
+          ...prev.pageInfo,
+          hasNextPage: searchResult.pageInfo.hasNextPage,
+        },
+        nodes: [...prev.nodes, ...searchResult.nodes],
+      }))
+      if (searchResult.nodes.length !== 0) {
+        lastDataRef.current = searchResult.nodes[searchResult.nodes.length - 1]
+      }
+    }
+  }, [searchResult, loading, error])
 
   // keywordが変更されたら、searchDataを初期化してvariablesを更新
-  useDidUpdateEffect(() => {
+  useEffect(() => {
     setSearchData((prev) => ({
       ...prev,
       ...INITIAL_STATE,
@@ -73,11 +88,6 @@ export const useFetchSearchWorks = <T extends Model>(
       num: 9999,
     }))
   }, [keyword])
-
-  // variablesが変更されたら、refetchが発火する
-  useDidUpdateEffect(() => {
-    refetch(variables)
-  }, [variables, refetch])
 
   // lastDataRef.currentをvariablesに反映
   const onScroll = useCallback((): void => {
