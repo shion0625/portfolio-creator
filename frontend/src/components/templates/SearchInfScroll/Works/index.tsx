@@ -1,5 +1,5 @@
 import { useFetchSearchWorks } from '../hook'
-import React,{memo} from 'react'
+import React, { memo } from 'react'
 import WorksInfScroll from '~/components/screens/WorksInfScroll'
 import { Model, SortBy } from '~/models/types'
 

@@ -1,8 +1,8 @@
 import { useQuery, ApolloQueryResult, OperationVariables } from '@apollo/client'
 import { Dispatch, SetStateAction, MutableRefObject } from 'react'
-import { SearchQuery, SearchDocument} from '~/models/client'
-import { WorkPagination, UserPagination, Model, SortBy, Node } from '~/models/types'
 import { useSearchQuery } from '~/libs/graphql/query/common.generated'
+import { SearchQuery, SearchDocument } from '~/models/client'
+import { WorkPagination, UserPagination, Model, SortBy, Node } from '~/models/types'
 
 export type SearchDataState<T extends Model> = T extends Model.Work ? WorkPagination : UserPagination
 
@@ -22,9 +22,7 @@ export type Variables<T extends Model> = {
   num: number
 }
 
-const useQuerySearch = <T extends Model>(
-  variables: Variables<T>,
-): SearchResult<T> => {
+const useQuerySearch = <T extends Model>(variables: Variables<T>): SearchResult<T> => {
   const { data, loading, error, refetch } = useSearchQuery({ variables })
 
   return {

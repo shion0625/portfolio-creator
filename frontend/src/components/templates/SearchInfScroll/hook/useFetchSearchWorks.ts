@@ -8,12 +8,14 @@ type SearchNodeDataState<T extends Model> = T extends Model.Work ? Work : User
 type UseFetchSearchWorks<T extends Model> = {
   searchData: SearchDataState<T>
   onScroll: () => void
+  loading: boolean
+  error: any
 }
 
 const DEFAULT_VOLUMES: number = Number(process.env.NEXT_PUBLIC_DEFAULT_VOLUMES)
 const CURRENT_TIME: string = new Date().toISOString()
 // 初期のsearchData
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   pageInfo: {
     count: 0,
     hasNextPage: true,
@@ -56,15 +58,14 @@ export const useFetchSearchWorks = <T extends Model>(
   //カーソルスクロール使用するための最後のデータ
   const lastDataRef = useRef<Node | undefined>(undefined)
 
-  const { searchResult,loading, error } = useQuerySearch(variables)
-
+  const { searchResult, loading, error } = useQuerySearch(variables)
   useEffect(() => {
     if (!loading && !error && searchResult) {
       setSearchData((prev) => ({
         ...prev,
         pageInfo: {
           ...prev.pageInfo,
-          hasNextPage: searchResult.pageInfo.hasNextPage,
+          ...searchResult.pageInfo,
         },
         nodes: [...prev.nodes, ...searchResult.nodes],
       }))
@@ -104,5 +105,7 @@ export const useFetchSearchWorks = <T extends Model>(
   return {
     searchData: searchData,
     onScroll,
+    error,
+    loading,
   }
 }

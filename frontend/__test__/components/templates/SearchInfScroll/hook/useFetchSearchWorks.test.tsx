@@ -163,32 +163,31 @@ describe('useFetchSearchWorks', () => {
     const fakeWorkPagination = createFakeWorkPagination()
     const fakeWorkPaginationSecond = createFakeWorkPagination()
 
-      ; (useQuerySearch as jest.Mock).mockImplementation(() => {
-        count++
-        if (count == 1) {
-          return ({
+    ;(useQuerySearch as jest.Mock).mockImplementation(() => {
+      count++
+      if (count == 1) {
+        return {
           searchResult: createFakeWorkPagination(),
           loading: false,
           error: null,
           refetch: jest.fn(),
-        })
-        } else if (count == 2) {
-          return ({
-            searchResult: fakeWorkPagination,
-            loading: false,
-            error: null,
-            refetch: jest.fn(),
-          })
-        } else {
-          return ({
-            searchResult: fakeWorkPaginationSecond,
-            loading: false,
-            error: null,
-            refetch: jest.fn(),
-          })
         }
-
-      })
+      } else if (count == 2) {
+        return {
+          searchResult: fakeWorkPagination,
+          loading: false,
+          error: null,
+          refetch: jest.fn(),
+        }
+      } else {
+        return {
+          searchResult: fakeWorkPaginationSecond,
+          loading: false,
+          error: null,
+          refetch: jest.fn(),
+        }
+      }
+    })
 
     const { result } = renderHook(() => useFetchSearchWorks(target, sortBy, keyword))
 

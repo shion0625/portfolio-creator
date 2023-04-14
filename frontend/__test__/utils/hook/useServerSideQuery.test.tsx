@@ -1,9 +1,8 @@
 import {
-  fakeUser,
-  fakeWorkPaginationWithoutType,
-  fakeIds,
-  fakePageInfo,
-  fakeUserPaginationWithoutType,
+  createFakeUser,
+  createFakeWorkPaginationWithoutType,
+  createFakeIds,
+  createFakeUserPaginationWithoutType,
 } from '__mocks__'
 import { GraphQLClient } from 'graphql-request'
 import sinon from 'sinon'
@@ -35,10 +34,11 @@ describe('executeQuery', () => {
 
   it('should execute query at GetUser', async () => {
     // スタブ化したGraphQLClient.requestに渡す値として返却するデータを定義
+    const fakeUser = createFakeUser()
     const expectedData: GetUserQuery = {
       user: {
         ...fakeUser,
-        works: fakeWorkPaginationWithoutType,
+        works: createFakeWorkPaginationWithoutType(),
       },
     }
     const variables: GetUserQueryVariables = { id: fakeUser.id }
@@ -54,6 +54,7 @@ describe('executeQuery', () => {
 
   it('should execute query at GetUserIds', async () => {
     // スタブ化したGraphQLClient.requestに渡す値として返却するデータを定義
+    const fakeIds = createFakeIds()
     const expectedData: GetUserIdsQuery = {
       users: fakeIds,
     }
@@ -70,6 +71,7 @@ describe('executeQuery', () => {
 
   it('should execute query at GetUsersName', async () => {
     // スタブ化したGraphQLClient.requestに渡す値として返却するデータを定義
+    const fakeUserPaginationWithoutType = createFakeUserPaginationWithoutType()
     const expectedData: GetUsersNameQuery = {
       users: fakeUserPaginationWithoutType,
     }
@@ -86,7 +88,7 @@ describe('executeQuery', () => {
   })
 
   it('should show alert when data is not returned', async () => {
-    const variables: GetUserQueryVariables = { id: fakeUser.id }
+    const variables: GetUserQueryVariables = { id: createFakeUser().id }
 
     requestStub.resolves(null) // データが取得できない場合
 
@@ -106,8 +108,8 @@ describe('executeQuery', () => {
   it('should execute query when variable is not defined', async () => {
     const expectedData: GetUserQuery = {
       user: {
-        ...fakeUser,
-        works: fakeWorkPaginationWithoutType,
+        ...createFakeUser(),
+        works: createFakeWorkPaginationWithoutType(),
       },
     }
 
