@@ -1,14 +1,6 @@
 # schema.graphqlsのQueryの内容に従って定義
 
-# フラグメント名        フラグメントを適用するデータ型
-fragment UserFragment on User {
-  id
-  name
-  email
-  created_at
-  updated_at
-  serial_number
-}
+
 
 query GetUser($id: ID!) {
   user(id: $id) {

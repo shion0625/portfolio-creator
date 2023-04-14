@@ -1,125 +1,99 @@
-import * as Types from '../../../models/types'
-import { UserFragmentFragmentDoc } from './user.generated'
-import { WorkFragmentFragmentDoc } from './work.generated'
-import { gql } from '@apollo/client'
-import * as Apollo from '@apollo/client'
+import * as Types from '../../../models/types';
 
-const defaultOptions = {} as const
-export type PaginationFragmentFragment = {
-  page: number
-  hasNextPage: boolean
-  count: number
-  totalCount: number
-  paginationLength: number
-  hasPreviousPage: boolean
-}
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+const defaultOptions = {} as const;
+export type PaginationFragmentFragment = { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean };
+
+export type WorkFragmentFragment = { id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, serial_number: number };
+
+export type UserFragmentFragment = { id: string, name?: string | null, email?: string | null, created_at: any, updated_at: any, serial_number: number };
 
 export type SearchQueryVariables = Types.Exact<{
-  target: Types.Scalars['String']
-  keyword: Types.Scalars['String']
-  sortBy: Types.SortBy
-  searchedAt: Types.Scalars['String']
-  num: Types.Scalars['Int']
-  limit: Types.Scalars['Int']
-}>
+  target: Types.Scalars['String'];
+  keyword: Types.Scalars['String'];
+  sortBy: Types.SortBy;
+  searchedAt: Types.Scalars['String'];
+  num: Types.Scalars['Int'];
+  limit: Types.Scalars['Int'];
+}>;
 
-export type SearchQuery = {
-  search:
-    | {
-        type: Types.Model
-        pageInfo: {
-          page: number
-          hasNextPage: boolean
-          count: number
-          totalCount: number
-          paginationLength: number
-          hasPreviousPage: boolean
-        }
-        nodes: Array<{
-          id: string
-          name?: string | null
-          email?: string | null
-          created_at: any
-          updated_at: any
-          serial_number: number
-        }>
-      }
-    | {
-        type: Types.Model
-        pageInfo: {
-          page: number
-          hasNextPage: boolean
-          count: number
-          totalCount: number
-          paginationLength: number
-          hasPreviousPage: boolean
-        }
-        nodes: Array<{
-          id: string
-          title: string
-          summary?: string | null
-          image_url?: string | null
-          duration?: string | null
-          number_of_people?: number | null
-          language?: string | null
-          role?: string | null
-          url?: string | null
-          brief_story?: string | null
-          created_at: any
-          updated_at: any
-          serial_number: number
-          user: {
-            id: string
-            name?: string | null
-            email?: string | null
-            created_at: any
-            updated_at: any
-            serial_number: number
-          }
-        }>
-      }
-}
+
+export type SearchQuery = { search: { type: Types.Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, name?: string | null, email?: string | null, created_at: any, updated_at: any, serial_number: number }> } | { type: Types.Model, pageInfo: { page: number, hasNextPage: boolean, count: number, totalCount: number, paginationLength: number, hasPreviousPage: boolean }, nodes: Array<{ id: string, title: string, summary?: string | null, image_url?: string | null, duration?: string | null, number_of_people?: number | null, language?: string | null, role?: string | null, url?: string | null, brief_story?: string | null, created_at: any, updated_at: any, serial_number: number, user: { id: string, name?: string | null, email?: string | null, created_at: any, updated_at: any, serial_number: number } }> } };
 
 export const PaginationFragmentFragmentDoc = gql`
-  fragment PaginationFragment on PaginationInfo {
-    page
-    hasNextPage
-    count
-    totalCount
-    paginationLength
-    hasPreviousPage
-  }
-`
+    fragment PaginationFragment on PaginationInfo {
+  page
+  hasNextPage
+  count
+  totalCount
+  paginationLength
+  hasPreviousPage
+}
+    `;
+export const WorkFragmentFragmentDoc = gql`
+    fragment WorkFragment on Work {
+  id
+  title
+  summary
+  image_url
+  duration
+  number_of_people
+  language
+  role
+  url
+  brief_story
+  created_at
+  updated_at
+  serial_number
+}
+    `;
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  id
+  name
+  email
+  created_at
+  updated_at
+  serial_number
+}
+    `;
 export const SearchDocument = gql`
-  query Search($target: String!, $keyword: String!, $sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
-    search(target: $target, keyword: $keyword, sortBy: $sortBy, searchedAt: $searchedAt, num: $num, limit: $limit) {
-      ... on UserPagination {
-        type
-        pageInfo {
-          ...PaginationFragment
-        }
-        nodes {
-          ...UserFragment
-        }
+    query Search($target: String!, $keyword: String!, $sortBy: SortBy!, $searchedAt: String!, $num: Int!, $limit: Int!) {
+  search(
+    target: $target
+    keyword: $keyword
+    sortBy: $sortBy
+    searchedAt: $searchedAt
+    num: $num
+    limit: $limit
+  ) {
+    ... on UserPagination {
+      type
+      pageInfo {
+        ...PaginationFragment
       }
-      ... on WorkPagination {
-        type
-        pageInfo {
-          ...PaginationFragment
-        }
-        nodes {
-          ...WorkFragment
-          user {
-            ...UserFragment
-          }
+      nodes {
+        ...UserFragment
+      }
+    }
+    ... on WorkPagination {
+      type
+      pageInfo {
+        ...PaginationFragment
+      }
+      nodes {
+        ...WorkFragment
+        user {
+          ...UserFragment
         }
       }
     }
   }
-  ${PaginationFragmentFragmentDoc}
-  ${UserFragmentFragmentDoc}
-  ${WorkFragmentFragmentDoc}
-`
+}
+    ${PaginationFragmentFragmentDoc}
+${UserFragmentFragmentDoc}
+${WorkFragmentFragmentDoc}`;
 
 /**
  * __useSearchQuery__
@@ -143,13 +117,13 @@ export const SearchDocument = gql`
  * });
  */
 export function useSearchQuery(baseOptions: Apollo.QueryHookOptions<SearchQuery, SearchQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options)
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+      }
 export function useSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchQuery, SearchQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options)
-}
-export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>
-export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>
-export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchQuery, SearchQueryVariables>(SearchDocument, options);
+        }
+export type SearchQueryHookResult = ReturnType<typeof useSearchQuery>;
+export type SearchLazyQueryHookResult = ReturnType<typeof useSearchLazyQuery>;
+export type SearchQueryResult = Apollo.QueryResult<SearchQuery, SearchQueryVariables>;
