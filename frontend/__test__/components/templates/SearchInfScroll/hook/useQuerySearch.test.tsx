@@ -2,32 +2,14 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { SchemaLink } from '@apollo/client/link/schema'
 import { addMocksToSchema } from '@graphql-tools/mock'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { MutableRefObject, useState } from 'react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
+import { MutableRefObject } from 'react'
 import useQuerySearch, {
-  SearchDataState,
-  SearchResult,
   Variables,
 } from '~/components/templates/SearchInfScroll/hook/useQuerySearch'
 import { typeDefs } from '~/libs/graphql/typeDefs'
-import { SearchDocument } from '~/models/client'
 import { Model, SortBy } from '~/models/types'
-import { User } from '~/models/types'
 
-// 初期のvariables
-const INITIAL_STATE = {
-  type: Model.User,
-  pageInfo: {
-    count: 0,
-    hasNextPage: true,
-    hasPreviousPage: false,
-    page: 0,
-    paginationLength: 0,
-    totalCount: 0,
-  },
-  nodes: [],
-}
 
 const variables: Variables<Model.User> = {
   target: Model.User,
@@ -129,8 +111,7 @@ interface TestComponentProps<T extends Model> {
 }
 
 const TestComponent = <T extends Model>({ lastDataRef, variables }: TestComponentProps<T>): JSX.Element => {
-  const [searchData, setSearchData] = useState<SearchDataState<T>>(() => INITIAL_STATE)
-  const { searchResult, loading, refetch, error } = useQuerySearch(variables, setSearchData, lastDataRef)
+  const { searchResult, loading, refetch, error } = useQuerySearch(variables)
 
   if (!searchResult || loading) {
     return <div data-testid='loading'>Loading</div>
