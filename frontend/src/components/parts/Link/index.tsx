@@ -14,7 +14,7 @@ const Link: React.FC<Props> = memo(function Link({ linkProps, children, target, 
   // hrefとpassHrefを指定して、クリックされたときに正しいURLにリダイレクトできるようにする
   return (
     <NextLink href={linkProps.href} passHref legacyBehavior>
-      <MuiLink underline='none' target={target} rel={rel}>
+      <MuiLink underline='none' target={target} rel={rel} aria-label='MuiLink'>
         {children}
       </MuiLink>
     </NextLink>

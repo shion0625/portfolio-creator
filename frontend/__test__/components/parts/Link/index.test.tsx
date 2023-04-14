@@ -1,30 +1,35 @@
 import { render } from '@testing-library/react'
 import React from 'react'
-import Link from '~/components/parts/Link'
+import Link, { Props } from '~/components/parts/Link'
+
 
 describe('Link', () => {
   const linkProps = {
     href: '/example',
   }
+  const Props:Props = {
+    linkProps: linkProps,
+    children: 'Example Link',
+    target: '_blank',
+    rel : 'noopener noreferrer'
+  }
 
-  const children = 'Example Link'
-  const target = '_blank'
-  const rel = 'noopener noreferrer'
 
   it('renders a link with the correct href', () => {
-    const { getByRole } = render(<Link linkProps={linkProps}>{children}</Link>)
-    const link = getByRole('link', { name: children })
+    const { getByLabelText } = render(<Link linkProps={Props.linkProps}>{Props.children}</Link>)
+    const link = getByLabelText('MuiLink')
     expect(link).toHaveAttribute('href', linkProps.href)
   })
 
-  it('renders a link with the correct target and rel', () => {
-    const { getByRole } = render(
-      <Link linkProps={linkProps} target={target} rel={rel}>
-        {children}
+  it('renders a link with the correct children, target and rel', () => {
+    const { getByLabelText } = render(
+      <Link {...Props}>
+        {Props.children}
       </Link>,
     )
-    const link = getByRole('link', { name: children })
-    expect(link).toHaveAttribute('target', target)
-    expect(link).toHaveAttribute('rel', rel)
+    const link = getByLabelText('MuiLink')
+    expect(link.textContent).toBe(Props.children)
+    expect(link).toHaveAttribute('target', Props.target)
+    expect(link).toHaveAttribute('rel', Props.rel)
   })
 })
