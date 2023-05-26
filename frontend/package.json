@@ -12,6 +12,8 @@
     "lint:fix": "eslint src --ext .js,jsx,.ts,.tsx --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,json,css}' --ignore-path ../.gitignore",
     "format:check": "prettier --check './**/*.{js,jsx,ts,tsx,json,css}' --ignore-path ../.gitignore",
+    "test:unit": "node -e \"require('./src/utils/checkUnitTests.ts').checkUnitTests('./src', './__test__',['components', 'utils'])\"",
+    "test:unit-only": "node -e \"require('./src/utils/checkUnitTests.ts').checkUnitTests('./src', './__test__',['components', 'utils'], true)\"",
     "test": "jest --watch",
     "test:ci": "jest",
     "test-diff": "jest -o",
