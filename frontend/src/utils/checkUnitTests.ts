@@ -2,8 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 const SRC_DIRECTORY = 'src'
-function checkUnitTests(srcDirectory, testDirectory, targetDirectories, choice) {
-  fs.readdir(srcDirectory, (err, files) => {
+
+export function checkUnitTests(srcDirectory: string, testDirectory: string, targetDirectories: string[], choice: boolean) {
+  fs.readdir(srcDirectory, (err: NodeJS.ErrnoException | null, files: string[]) => {
     if (err) {
       console.error('ディレクトリの読み込み中にエラーが発生しました:', err);
       return;
@@ -13,7 +14,7 @@ function checkUnitTests(srcDirectory, testDirectory, targetDirectories, choice) 
       const srcFilePath = path.join(srcDirectory, file);
       const testFilePath = getTestFilePath(srcFilePath, testDirectory);
 
-      fs.stat(srcFilePath, (err, stats) => {
+      fs.stat(srcFilePath, (err: NodeJS.ErrnoException | null, stats: any) => {
         if (err) {
           console.error('ファイルの状態を取得中にエラーが発生しました:', err);
           return;
@@ -24,13 +25,12 @@ function checkUnitTests(srcDirectory, testDirectory, targetDirectories, choice) 
             checkUnitTests(srcFilePath, testDirectory, targetDirectories, choice);
           }
 } else if (stats.isFile()) {
-          fs.access(testFilePath, fs.constants.F_OK, (err) => {
+          fs.access(testFilePath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
             if (!err && choice) {
               console.log(`👍${srcFilePath} の単体テストが見つかりました。`);
             }
             if(err){
               console.log(`${srcFilePath} の単体テストが見つかりませんでした。`);
-
             }
           });
         }
@@ -39,7 +39,7 @@ function checkUnitTests(srcDirectory, testDirectory, targetDirectories, choice) 
   });
 }
 
-function getTestFilePath(srcFilePath, testDirectory) {
+function getTestFilePath(srcFilePath: string, testDirectory: string): string {
   const relativePath = path.relative(SRC_DIRECTORY, srcFilePath);
   const testFilePath = path.join(testDirectory, relativePath);
 
@@ -52,9 +52,8 @@ function getTestFilePath(srcFilePath, testDirectory) {
   }
 }
 
-function isTargetDirectory(directoryName, targetDirectories) {
+function isTargetDirectory(directoryName: string, targetDirectories: string[]): boolean {
   return targetDirectories.some((target) => directoryName.includes(target))
 }
-module.exports = {
-  checkUnitTests
-}
+
+checkUnitTests('./src', './__test__',['components', 'utils'], true)
