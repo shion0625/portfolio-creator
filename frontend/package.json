@@ -12,7 +12,7 @@
     "lint:fix": "eslint src --ext .js,jsx,.ts,.tsx --fix",
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,json,css}' --ignore-path ../.gitignore",
     "format:check": "prettier --check './**/*.{js,jsx,ts,tsx,json,css}' --ignore-path ../.gitignore",
-    "test:unit": "ts-node -P ./tsconfig.node.json -r ./src/utils/checkUnitTests.ts",
+    "test:unit": "ts-node -P ./tsconfig.node.json ./src/utils/checkUnitTests.ts",
     "test": "jest --watch",
     "test:ci": "jest",
     "test-diff": "jest -o",

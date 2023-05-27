@@ -56,4 +56,4 @@ function isTargetDirectory(directoryName: string, targetDirectories: string[]): 
   return targetDirectories.some((target) => directoryName.includes(target))
 }
 
-checkUnitTests('./src', './__test__',['components', 'utils'], true)
+checkUnitTests('./src', './__test__',['components', 'utils'], false)
