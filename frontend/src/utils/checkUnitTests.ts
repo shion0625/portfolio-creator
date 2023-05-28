@@ -48,7 +48,15 @@ function getTestFilePath(srcFilePath: string, testDirectory: string): string {
   const testFilePath = path.join(testDirectory, relativePath)
 
   if (srcFilePath.endsWith('.ts')) {
-    return testFilePath.replace('.ts', '.test.ts')
+    const testPathWithTS = testFilePath.replace('.ts', '.test.ts')
+    const testPathWithTSX = testFilePath.replace('.ts', '.test.tsx')
+    if (fs.existsSync(testPathWithTS)) {
+      return testPathWithTS;
+    } else if (fs.existsSync(testPathWithTSX)) {
+      return testPathWithTSX;
+    } else {
+      return testFilePath;
+    }
   } else if (srcFilePath.endsWith('.tsx')) {
     return testFilePath.replace('.tsx', '.test.tsx')
   } else {
