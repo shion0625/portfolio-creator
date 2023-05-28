@@ -1,4 +1,4 @@
-import { render, act } from '@testing-library/react'
+import { render, renderHook } from '@testing-library/react'
 import React from 'react'
 import { useDidUpdateEffect } from '~/utils/hook/useDidUpdateEffect'
 
@@ -11,6 +11,24 @@ describe('useDidUpdateEffect', () => {
     rerender(<TestComponent effectCallback={effectCallback} dependencyValue={2} />)
     expect(effectCallback).toHaveBeenCalledTimes(1)
   })
+
+  it('should call the effect function on update', () => {
+    const effectFn = jest.fn();
+    const deps = ['dependency'];
+
+  const { rerender } = renderHook(({ deps }) => useDidUpdateEffect(effectFn, deps), {
+    initialProps: { deps },
+  });
+
+
+    expect(effectFn).not.toHaveBeenCalled();
+
+    const newDeps = [...deps, 'newDependency'];
+
+    rerender({deps: newDeps});
+
+    expect(effectFn).toHaveBeenCalled();
+  });
 })
 
 type TestComponentProps = {
