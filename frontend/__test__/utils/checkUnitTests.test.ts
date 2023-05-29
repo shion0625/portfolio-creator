@@ -15,6 +15,7 @@ describe('checkUnitTests', () => {
     const readdirMock = jest.spyOn(fs, 'readdir')
     const statMock = jest.spyOn(fs, 'stat')
     const accessMock = jest.spyOn(fs, 'access')
+    jest.spyOn(fs, 'existsSync').mockReturnValueOnce(true); // Simulate existence of .test.ts file
 
     readdirMock.mockImplementation((dir, callback: any) => {
       callback(null, ['file.ts'])
@@ -47,6 +48,7 @@ describe('checkUnitTests', () => {
     const readdirMock = jest.spyOn(fs, 'readdir')
     const statMock = jest.spyOn(fs, 'stat')
     const accessMock = jest.spyOn(fs, 'access')
+    jest.spyOn(fs, 'existsSync').mockReturnValueOnce(true); // Simulate existence of .test.ts file
 
     readdirMock.mockImplementation((dir, callback: any) => {
       callback(null, ['file.ts'])
@@ -62,6 +64,48 @@ describe('checkUnitTests', () => {
 
     accessMock.mockImplementation((file, mode, callback: any) => {
       if (file === '__test__/file.test.ts') {
+        callback(null) // テストファイルが存在する場合はエラーなしでコールバックを呼び出す
+      } else {
+        const error = new Error('ファイルが存在しません')
+        callback(error) // テストファイルが存在しない場合はエラーを返す
+      }
+    })
+
+    const logMock = jest.spyOn(console, 'log')
+    checkUnitTests('./src', './__test__', ['components', 'utils'])
+
+    expect(logMock).not.toHaveBeenCalled()
+  })
+
+    test('should not log when test file is hooks/index.ts', () => {
+    const readdirMock = jest.spyOn(fs, 'readdir')
+    const statMock = jest.spyOn(fs, 'stat')
+    const accessMock = jest.spyOn(fs, 'access')
+    jest.spyOn(fs, 'existsSync').mockReturnValueOnce(false); // Simulate not-existence of .test.ts file
+    jest.spyOn(fs, 'existsSync').mockReturnValueOnce(true); // Simulate existence of .test.tsx file
+
+    readdirMock.mockImplementation((dir, callback: any) => {
+      if (dir === './src') {
+        callback(null, ['components'])
+      } else if (dir === 'src/components') {
+        callback(null, ['hooks'])
+      } else if (dir === 'src/components/hooks' ) {
+        callback(null, ['index.ts'])
+      } else {
+        callback(new Error('ディレクトリが見つかりません'))
+      }
+    })
+
+    statMock.mockImplementation((file: any, callback: any) => {
+      const stats = {
+        isDirectory: jest.fn().mockImplementation(() => !file.endsWith('.ts') && !file.endsWith('.tsx')),
+        isFile: jest.fn().mockImplementation(() => file.endsWith('.ts') || file.endsWith('.tsx')),
+      }
+      callback(null, stats)
+    })
+
+    accessMock.mockImplementation((file, mode, callback: any) => {
+      if (file === '__test__/hooks/index.tsx') {
         callback(null) // テストファイルが存在する場合はエラーなしでコールバックを呼び出す
       } else {
         const error = new Error('ファイルが存在しません')
@@ -185,4 +229,5 @@ describe('checkUnitTests', () => {
 
     expect(logMock).toHaveBeenCalledWith('ファイルの状態を取得中にエラーが発生しました:', 'error')
   })
+
 })
