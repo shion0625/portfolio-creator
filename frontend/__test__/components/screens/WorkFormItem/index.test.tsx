@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import WorkFormItem from '~/components/screens/WorkFormItem'
@@ -11,11 +11,11 @@ jest.mock('~/components/parts/ChoiceInputs', () => ({
 }))
 
 describe('WorkFormItem', () => {
-  const defaultValues = {
+  const defaultValues: WorkFormInput = {
     works: [
       {
         id: '1',
-        title: '',
+        title: '私の名前は',
         user_id: 'user1',
       },
     ],
@@ -68,28 +68,37 @@ describe('WorkFormItem', () => {
     fireEvent.change(titleInput, { target: { value: 'Valid Title' } })
     fireEvent.blur(titleInput) // フォームからフォーカスを外す
 
-    expect(queryByText('⚠ タイトルを入力してください')).not.toBeInTheDocument()
+    waitFor(() => {
+      expect(queryByText('⚠ タイトルを入力してください')).toBeNull()
+    })
 
     const numberOfPeopleInput = getByLabelText('開発人数')
     fireEvent.change(numberOfPeopleInput, { target: { value: 10 } })
     fireEvent.blur(numberOfPeopleInput) // フォームからフォーカスを外す
-
-    expect(queryByText('⚠ 1人以上100人以下で入力してください')).not.toBeInTheDocument()
+    waitFor(() => {
+      expect(queryByText('⚠ 1人以上100人以下で入力してください')).toBeNull()
+    })
   })
 
   it('should display error message when input is invalid', () => {
-    const { queryByText, getByLabelText } = renderComponent(defaultValues)
+    const { getByText, queryByText, getByLabelText } = renderComponent(defaultValues)
 
     const titleInput = getByLabelText('タイトル')
-    fireEvent.change(titleInput, { target: { value: '' } })
-    fireEvent.blur(titleInput) // フォームからフォーカスを外す
+    expect(queryByText('⚠ タイトルを入力してください')).toBeNull()
 
-    expect(queryByText('⚠ タイトルを入力してください')).not.toBeInTheDocument()
+    fireEvent.change(titleInput, { target: { value: '' } })
+    fireEvent.blur(titleInput)
+    waitFor(() => {
+      expect(getByText('⚠ タイトルを入力してください')).toBeInTheDocument()
+    })
 
     const numberOfPeopleInput = getByLabelText('開発人数')
-    fireEvent.change(numberOfPeopleInput, { target: { value: 10000 } })
-    fireEvent.blur(numberOfPeopleInput) // フォームからフォーカスを外す
+    expect(queryByText('⚠ 1人以上100人以下で入力してください')).toBeNull()
 
-    expect(queryByText('⚠ 1人以上100人以下で入力してください')).not.toBeInTheDocument()
+    fireEvent.change(numberOfPeopleInput, { target: { value: 10000 } })
+    fireEvent.blur(numberOfPeopleInput)
+    waitFor(() => {
+      expect(getByText('⚠ 1人以上100人以下で入力してください')).toBeInTheDocument()
+    })
   })
 })
