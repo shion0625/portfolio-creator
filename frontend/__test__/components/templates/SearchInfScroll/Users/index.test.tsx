@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 import SearchInfScrollUsers from '~/components/templates/SearchInfScroll/Users'
-import * as hooks from '~/components/templates/SearchInfScroll/hook'
+import * as hooks from '~/components/templates/SearchInfScroll/hooks'
 import { Model } from '~/models/types'
 
 jest.mock('~/components/screens/UsersInfScroll', () => ({
@@ -16,7 +16,7 @@ jest.mock('~/components/screens/UsersInfScroll', () => ({
 }))
 
 // hooks.tsをモック化
-jest.mock('~/components/templates/SearchInfScroll/hook')
+jest.mock('~/components/templates/SearchInfScroll/hooks')
 
 const searchData = {
   pageInfo: {

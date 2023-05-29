@@ -30,6 +30,9 @@ export function checkUnitTests(
           }
         } else if (stats.isFile()) {
           fs.access(testFilePath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
+            if (srcFilePath.endsWith('/hooks/index.ts')) {
+              return; // hooks/index.ts は例外として処理せず、ログを出力しない
+            }
             if (!err && choice) {
               console.log(`👍${srcFilePath} の単体テストが見つかりました。`)
             }

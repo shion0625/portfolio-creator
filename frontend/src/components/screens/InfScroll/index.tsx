@@ -1,4 +1,4 @@
-import { useInfiniteScroll } from './hook'
+import { useInfiniteScroll } from './hooks'
 import { Box } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'

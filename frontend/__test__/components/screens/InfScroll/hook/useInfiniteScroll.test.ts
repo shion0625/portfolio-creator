@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react'
-import { useInfiniteScroll } from '~/components/screens/InfScroll/hook'
+import { useInfiniteScroll } from '~/components/screens/InfScroll/hooks'
 
 describe('useInfiniteScroll', () => {
   let addEventListenerSpy: any, removeEventListenerSpy: any

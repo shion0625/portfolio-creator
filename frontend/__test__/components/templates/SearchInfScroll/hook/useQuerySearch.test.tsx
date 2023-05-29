@@ -4,7 +4,7 @@ import { addMocksToSchema } from '@graphql-tools/mock'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MutableRefObject } from 'react'
-import useQuerySearch, { Variables } from '~/components/templates/SearchInfScroll/hook/useQuerySearch'
+import useQuerySearch, { Variables } from '~/components/templates/SearchInfScroll/hooks/useQuerySearch'
 import { typeDefs } from '~/libs/graphql/typeDefs'
 import { Model, SortBy } from '~/models/types'
 

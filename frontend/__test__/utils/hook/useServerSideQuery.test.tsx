@@ -17,7 +17,7 @@ import {
   GetUsersNameQuery,
   GetUsersNameQueryVariables,
 } from '~/models/client'
-import { executeQuery } from '~/utils/hook/useServerSideQuery'
+import { executeQuery } from '~/utils/hooks/useServerSideQuery'
 
 describe('executeQuery', () => {
   let requestStub: sinon.SinonStub

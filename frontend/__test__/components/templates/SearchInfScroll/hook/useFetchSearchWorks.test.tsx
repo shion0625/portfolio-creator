@@ -1,15 +1,15 @@
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { createFakeWorkPagination, createFakeUserPagination } from '__mocks__'
-import { useFetchSearchWorks, INITIAL_STATE } from '~/components/templates/SearchInfScroll/hook'
+import { useFetchSearchWorks, INITIAL_STATE } from '~/components/templates/SearchInfScroll/hooks'
 import useQuerySearch, {
   SearchResult,
   Variables,
   SearchDataState,
-} from '~/components/templates/SearchInfScroll/hook/useQuerySearch'
+} from '~/components/templates/SearchInfScroll/hooks/useQuerySearch'
 import { Work, WorkPagination } from '~/models/client'
 import { Model, SortBy } from '~/models/types'
 
-jest.mock('~/components/templates/SearchInfScroll/hook/useQuerySearch')
+jest.mock('~/components/templates/SearchInfScroll/hooks/useQuerySearch')
 
 const mockUseQuerySearch = useQuerySearch as jest.MockedFunction<typeof useQuerySearch>
 

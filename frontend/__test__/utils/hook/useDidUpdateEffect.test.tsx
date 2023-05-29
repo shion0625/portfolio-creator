@@ -1,6 +1,6 @@
 import { render, renderHook } from '@testing-library/react'
 import React from 'react'
-import { useDidUpdateEffect } from '~/utils/hook/useDidUpdateEffect'
+import { useDidUpdateEffect } from '~/utils/hooks/useDidUpdateEffect'
 
 describe('useDidUpdateEffect', () => {
   it('should skip first effect run', () => {

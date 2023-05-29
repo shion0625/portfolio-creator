@@ -1,7 +1,7 @@
 import useQueryWorks, { Variables } from './useQueryWorks'
 import { useState, useCallback, useRef } from 'react'
 import { WorkPagination, Work, Model, SortBy, Node } from '~/models/types'
-import { useDidUpdateEffect } from '~/utils/hook/useDidUpdateEffect'
+import { useDidUpdateEffect } from '~/utils/hooks/useDidUpdateEffect'
 
 type UseFetchSearchWorks = {
   fetchData: WorkPagination

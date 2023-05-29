@@ -1,4 +1,4 @@
-import { useFetchWorks } from './hook/useFetchWorks'
+import { useFetchWorks } from './hooks/useFetchWorks'
 import React from 'react'
 import { memo } from 'react'
 import NavBar from '~/components/screens/NavBar'
