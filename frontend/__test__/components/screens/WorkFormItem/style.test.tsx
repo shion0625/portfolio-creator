@@ -1,11 +1,9 @@
 import { render } from '@testing-library/react'
-import {Item} from '~/components/screens//WorkFormItem/style'
+import { Item } from '~/components/screens//WorkFormItem/style'
 
 describe('Item', () => {
   test('renders with correct styles', () => {
-    const { container } = render(
-        <Item />
-    )
+    const { container } = render(<Item />)
 
     const itemElement = container.firstChild
     expect(itemElement).toHaveStyle(`

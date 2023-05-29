@@ -13,22 +13,21 @@ describe('useDidUpdateEffect', () => {
   })
 
   it('should call the effect function on update', () => {
-    const effectFn = jest.fn();
-    const deps = ['dependency'];
+    const effectFn = jest.fn()
+    const deps = ['dependency']
 
-  const { rerender } = renderHook(({ deps }) => useDidUpdateEffect(effectFn, deps), {
-    initialProps: { deps },
-  });
+    const { rerender } = renderHook(({ deps }) => useDidUpdateEffect(effectFn, deps), {
+      initialProps: { deps },
+    })
 
+    expect(effectFn).not.toHaveBeenCalled()
 
-    expect(effectFn).not.toHaveBeenCalled();
+    const newDeps = [...deps, 'newDependency']
 
-    const newDeps = [...deps, 'newDependency'];
+    rerender({ deps: newDeps })
 
-    rerender({deps: newDeps});
-
-    expect(effectFn).toHaveBeenCalled();
-  });
+    expect(effectFn).toHaveBeenCalled()
+  })
 })
 
 type TestComponentProps = {

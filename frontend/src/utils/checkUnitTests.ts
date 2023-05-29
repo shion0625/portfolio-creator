@@ -31,7 +31,7 @@ export function checkUnitTests(
         } else if (stats.isFile()) {
           fs.access(testFilePath, fs.constants.F_OK, (err: NodeJS.ErrnoException | null) => {
             if (srcFilePath.endsWith('/hooks/index.ts')) {
-              return; // hooks/index.ts は例外として処理せず、ログを出力しない
+              return // hooks/index.ts は例外として処理せず、ログを出力しない
             }
             if (!err && choice) {
               console.log(`👍${srcFilePath} の単体テストが見つかりました。`)
@@ -54,11 +54,11 @@ function getTestFilePath(srcFilePath: string, testDirectory: string): string {
     const testPathWithTS = testFilePath.replace('.ts', '.test.ts')
     const testPathWithTSX = testFilePath.replace('.ts', '.test.tsx')
     if (fs.existsSync(testPathWithTS)) {
-      return testPathWithTS;
+      return testPathWithTS
     } else if (fs.existsSync(testPathWithTSX)) {
-      return testPathWithTSX;
+      return testPathWithTSX
     } else {
-      return testFilePath;
+      return testFilePath
     }
   } else if (srcFilePath.endsWith('.tsx')) {
     return testFilePath.replace('.tsx', '.test.tsx')
